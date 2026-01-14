@@ -84,7 +84,7 @@ export default function DetonadoBritado() {
           </Row>
         </Container>
       </section>
-      <Paginacao next="/estoque" back="/substancia" />
+      <Paginacao next="/producao" back="/estoque" />
     </>
   );
 }

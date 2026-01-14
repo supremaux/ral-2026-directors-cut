@@ -31,8 +31,8 @@ export default function AppRoutes() {
             <Route path="/dadoscadastrais" element={<Dadoscadastrais />} />
             <Route path="/termo" element={<Termo />} />
             <Route path="/substancia" element={<Substancia />} />
-            <Route path="/detonadobritado" element={<DetonadoBritado />} />
             <Route path="/estoque" element={<Estoque />} />
+            <Route path="/detonadobritado" element={<DetonadoBritado />} />
             <Route path="/producao" element={<Producao />} />
             <Route path="/maodeobra" element={<Maodeobra />} />
             <Route path="/custodalavra" element={<CustodaLavra />} />

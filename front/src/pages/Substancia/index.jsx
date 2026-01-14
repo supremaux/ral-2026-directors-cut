@@ -49,7 +49,7 @@ export default function Substancia() {
           {console.log("Dados enviados:", formData)}
         </Container>
       </section>
-      <Paginacao next="/detonadobritado" back="/termo" />
+      <Paginacao next="/estoque" back="/termo" />
     </>
   );
 }

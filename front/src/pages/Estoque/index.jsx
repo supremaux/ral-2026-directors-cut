@@ -1,3 +1,4 @@
+// Estoque.jsx
 import { Container, Row, Col } from "react-bootstrap";
 import styles from "./Estoque.module.css";
 import { useContext } from "react";
@@ -10,18 +11,29 @@ export default function Estoque() {
   const confirmaEstoque = (e) => {
     setFormData({
       ...formData,
-      possuiEstoque: e.target.value, // Atualiza o estado com a opção selecionada
+      possuiEstoque: e.target.value,
     });
   };
 
-  const handleChange = (index, value) => {
-    const newEstoque = [...formData.estoque];
-    newEstoque[index].quantidade = value;
+  const handleEstoqueLavraChange = (e) => {
     setFormData({
       ...formData,
-      estoque: newEstoque,
+      estoqueLavra: Number(e.target.value) || 0,
     });
   };
+
+  const handleEstoqueBritadoChange = (e) => {
+    setFormData({
+      ...formData,
+      estoqueBritado: Number(e.target.value) || 0,
+    });
+  };
+
+  // Verifica se a substância mineral é Basalto, Granito ou Calcário
+  const substanciasComEstoqueBritado = ["basalto", "granito", "calcario"];
+  const deveExibirEstoqueBritado = substanciasComEstoqueBritado.includes(
+    formData.substanciaMineral
+  );
 
   return (
     <>
@@ -51,54 +63,35 @@ export default function Estoque() {
           {formData.possuiEstoque === "sim" && (
             <Row>
               <Col>
-                <table
-                  border="1"
-                  style={{ borderCollapse: "collapse", width: "100%" }}
-                >
-                  <thead>
-                    <tr>
-                      <th
-                        style={{ padding: "8px", backgroundColor: "#f2f2f2" }}
-                      >
-                        Mês
-                      </th>
-                      <th
-                        style={{ padding: "8px", backgroundColor: "#f2f2f2" }}
-                      >
-                        Quantidade
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {formData.estoque.map((item, index) => (
-                      <tr
-                        key={index}
-                        style={{
-                          backgroundColor:
-                            index % 2 === 0 ? "#f9f9f9" : "#e6e6e6",
-                        }}
-                      >
-                        <td style={{ padding: "8px" }}>{item.mes}</td>
-                        <td style={{ padding: "8px" }}>
-                          <input
-                            type="number"
-                            value={item.quantidade}
-                            onChange={(e) =>
-                              handleChange(index, e.target.value)
-                            }
-                            style={{ width: "100%" }}
-                          />
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+                <div style={{ marginTop: "20px" }}>
+                  <h4>Estoque Anual</h4>
+                  <div style={{ marginBottom: "15px" }}>
+                    <label>Estoque na Lavra:</label>
+                    <input
+                      type="number"
+                      value={formData.estoqueLavra}
+                      onChange={handleEstoqueLavraChange}
+                      style={{ width: "100%", padding: "8px" }}
+                    />
+                  </div>
+                  {deveExibirEstoqueBritado && (
+                    <div style={{ marginBottom: "15px" }}>
+                      <label>Estoque Britado:</label>
+                      <input
+                        type="number"
+                        value={formData.estoqueBritado}
+                        onChange={handleEstoqueBritadoChange}
+                        style={{ width: "100%", padding: "8px" }}
+                      />
+                    </div>
+                  )}
+                </div>
               </Col>
             </Row>
           )}
         </Container>
       </section>
-      <Paginacao next="/producao" back="/detonadobritado" />
+      <Paginacao next="/detonadobritado" back="/substancia" />
     </>
   );
 }

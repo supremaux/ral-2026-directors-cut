@@ -21,11 +21,8 @@ export default function Producao() {
         <Container>
           <Row>
             <Col>
-              <h2>Produção - Detonado</h2>
-              <p>
-                Neste campo devem ser preenchidos os dados referentes às
-                detonações!
-              </p>
+              <h2>Módulo de Beneficiamento</h2>
+              <p>Declarar aqui os valores referentes a venda do produto:</p>
             </Col>
           </Row>
         </Container>
@@ -58,7 +55,7 @@ export default function Producao() {
           </Row>
         </Container>
       </section>
-      <Paginacao next="/maodeobra" back="/estoque" />
+      <Paginacao next="/maodeobra" back="/detonadobritado" />
     </>
   );
 }

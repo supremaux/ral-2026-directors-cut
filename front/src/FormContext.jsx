@@ -134,22 +134,10 @@ export const FormProvider = ({ children }) => {
     ],
 
     // Estoque
-    confirmaEstoque: "",
     possuiEstoque: "",
-    estoque: [
-      { mes: "Janeiro", quantidade: 0 },
-      { mes: "Fevereiro", quantidade: 0 },
-      { mes: "Março", quantidadeDetonado: 0 },
-      { mes: "Abril", quantidadeDetonado: 0 },
-      { mes: "Maio", quantidadeDetonado: 0 },
-      { mes: "Junho", quantidadeDetonado: 0 },
-      { mes: "Julho", quantidadeDetonado: 0 },
-      { mes: "Agosto", quantidadeDetonado: 0 },
-      { mes: "Setembro", quantidadeDetonado: 0 },
-      { mes: "Outubro", quantidadeDetonado: 0 },
-      { mes: "Novembro", quantidadeDetonado: 0 },
-      { mes: "Dezembro", quantidadeDetonado: 0 },
-    ],
+    estoqueLavra: 0, // Novo campo para Estoque na Lavra
+    estoqueBritado: 0, // Novo campo para Estoque Britado
+    // Outros campos...
 
     // Produção
     unidadeProducao: "",
