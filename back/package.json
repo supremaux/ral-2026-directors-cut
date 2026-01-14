@@ -16,8 +16,20 @@
     "express": "^5.2.1",
     "fs": "^0.0.1-security",
     "multer": "^2.0.2",
-    "nodemon": "^3.1.11",
     "papaparse": "^5.5.3",
     "path": "^0.12.7"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.11"
+  },
+  "nodemonConfig": {
+    "watch": [
+      "src"
+    ],
+    "ext": "cjs",
+    "ignore": [
+      "src/**/*.spec.cjs"
+    ],
+    "exec": "node server.cjs"
   }
 }

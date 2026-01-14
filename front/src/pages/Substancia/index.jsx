@@ -24,41 +24,28 @@ export default function Substancia() {
     <>
       <section className={styles.substanciaOptions}>
         <Container>
-          <Row>
-            <Col>
-              <h2>Substância Mineral</h2>
-              <p>Qual a substância mineral do processo?</p>
-            </Col>
-          </Row>
+          <h2>Substância Mineral</h2>
+          <p>Qual a substância mineral do processo?</p>
         </Container>
         {/* Dropdown novo - Form.Select */}
         <Container className={styles.novoDropdown}>
-          <Row>
-            <Col>
-              <select
-                className={styles.select}
-                onChange={handleSubstanciaMineralChange}
-                value={formData.substanciaMineral}
-              >
-                <option value="">Selecione a Substância Mineral</option>
-                <option value="Basalto">Basalto</option>
-                <option value="Granito">Granito</option>
-                <option value="Arenito">Arenito</option>
-                <option value="Cascalho">Cascalho</option>
-              </select>
-            </Col>
-          </Row>
-          <Row></Row>
-          <Button
-            className="btn mt-3"
-            type="submit"
-            onClick={sendData}
-            variant="primary"
-            size="lg"
+          <select
+            className={styles.select}
+            onChange={handleSubstanciaMineralChange}
+            value={formData.substanciaMineral}
           >
-            {" "}
-            Salvar e Continuar &nbsp; <FaArrowRight />
-          </Button>
+            <option value="">Selecione a Substância Mineral</option>
+            <option value="aguaMineral">Água Mineral</option>
+            <option value="Areia">Areia</option>
+            <option value="Basalto">Basalto</option>
+            <option value="Granito">Granito</option>
+            <option value="Arenito">Arenito</option>
+            <option value="Cascalho">Cascalho</option>
+            <option value="Argila">Argila</option>
+            <option value="Marmore">Mármore</option>
+            <option value="Saibro">Saibro</option>
+            <option value="Calcario">Calcário</option>
+          </select>
           {console.log("Dados enviados:", formData)}
         </Container>
       </section>

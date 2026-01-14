@@ -26,7 +26,7 @@ export default function Paginacao({ next, back }) {
   return (
     <>
       {/* Paginação */}
-      <Container class="my-4">
+      <Container class="my-3">
         <h3 className="text-center small">
           Clique no botão <strong>Próxima</strong> para ir para a próxima etapa!
         </h3>
@@ -52,17 +52,6 @@ export default function Paginacao({ next, back }) {
                 type="button"
               >
                 <BsFillHouseFill /> &nbsp; Início
-              </Button>
-              <Button
-                variant="secondary"
-                as={Link}
-                to="/finalizar"
-                href="/finalizar"
-                rel="noopener noreferrer"
-                type="button"
-              >
-                Final &nbsp;
-                <BsChevronBarRight />
               </Button>
               <Button
                 variant="secondary"
