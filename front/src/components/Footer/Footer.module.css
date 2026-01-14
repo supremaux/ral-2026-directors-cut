@@ -1,0 +1,11 @@
+.bottomBar {
+  width: 100%;
+  background-color: #394048;
+  padding-block: 10px;
+  font-size: 14px;
+  color: white;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}

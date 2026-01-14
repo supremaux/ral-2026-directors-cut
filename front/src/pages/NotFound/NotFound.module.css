@@ -1,0 +1,40 @@
+.container404 {
+  width: 100%;
+  background-image: url("../../assets/mineracao-de-brita.jpeg");
+  background-color: #00000095;
+  background-blend-mode: darken;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  height: 80vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  vertical-align: middle;
+  justify-content: center;
+}
+
+.container404 h2 {
+  text-align: center;
+  padding-bottom: 15px;
+  color: white;
+  text-shadow: 2px 2px 4px #000000;
+}
+
+.container404 p {
+  font: bold 175pt Roboto, sans-serif;
+  text-shadow: 5px 5px 10px #000000;
+  text-align: center;
+  padding-bottom: 15px;
+  color: white;
+}
+
+@media (max-width: 480px) {
+  .container404 h2 {
+    font-size: 20pt;
+  }
+
+  .container404 p {
+    font: bold 100pt Roboto, sans-serif;
+  }
+}

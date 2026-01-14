@@ -1,0 +1,23 @@
+{
+  "name": "ral-2026-full-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.cjs",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.cjs"
+  },
+  "keywords": [],
+  "author": "Suprema",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^5.2.1",
+    "fs": "^0.0.1-security",
+    "multer": "^2.0.2",
+    "nodemon": "^3.1.11",
+    "papaparse": "^5.5.3",
+    "path": "^0.12.7"
+  }
+}

@@ -1,0 +1,9 @@
+@media (max-width: 480px) {
+  .thableContainer th {
+    font-size: normal 6pt Roboto, sans-serif;
+  }
+
+  .thableContainer td {
+    font-size: normal 8pt Roboto, sans-serif;
+  }
+}

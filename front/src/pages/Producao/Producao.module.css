@@ -1,0 +1,45 @@
+.producaoOpt {
+  background-color: #f0f0f0;
+  padding: 50px 50px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  vertical-align: middle;
+  justify-content: center;
+}
+
+.producaoOpt h2 {
+  text-align: center;
+  padding-bottom: 15px;
+}
+
+.producaoOpt p {
+  text-align: center;
+  padding-bottom: 15px;
+}
+
+.novoDropdown {
+  text-align: center;
+  padding-bottom: 15px;
+}
+
+.select {
+  width: 300px;
+  height: 40px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  padding: 5px 10px;
+  font-size: 16px;
+}
+
+.tabelaOpt {
+  background-color: white;
+}
+
+@media (max-width: 480px) {
+  .tabelaOpt {
+    width: 100%;
+    margin: 0;
+  }
+}

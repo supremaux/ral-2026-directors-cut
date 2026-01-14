@@ -1,0 +1,65 @@
+.matrizEnergetica {
+  background-color: #f0f0f0;
+  padding: 50px 50px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  vertical-align: middle;
+  justify-content: center;
+}
+
+.matrizEnergetica h2 {
+  text-align: center;
+  padding-bottom: 15px;
+}
+
+.matrizEnergetica p {
+  text-align: center;
+  padding-bottom: 15px;
+}
+
+.input {
+  border-radius: 5px;
+  margin-bottom: 25px;
+}
+
+.colInput {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.containerExemplo {
+  margin-block: 30px;
+  text-align: center;
+}
+
+.containerExemplo p {
+  text-align: center;
+  padding-bottom: 15px;
+}
+.containerExemplo img {
+  max-width: 100%;
+  height: auto;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.containerUpload {
+  margin-block: 20px;
+  text-align: center;
+}
+
+@media (max-width: 480px) {
+  .containerUpload {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-block: 20px;
+    text-align: center;
+  }
+}

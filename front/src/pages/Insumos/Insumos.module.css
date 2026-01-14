@@ -1,0 +1,30 @@
+.insumosSection {
+  background-color: #f0f0f0;
+  padding: 20px;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  vertical-align: middle;
+  justify-content: center;
+}
+
+.insumosSection h2 {
+  text-align: center;
+  padding-bottom: 15px;
+}
+
+.insumosSection p {
+  text-align: center;
+  padding-bottom: 15px;
+}
+
+.insumosTable {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  vertical-align: middle;
+  justify-content: center;
+  padding-bottom: 15px;
+}

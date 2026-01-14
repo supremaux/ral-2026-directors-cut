@@ -1,0 +1,26 @@
+.inicioRal {
+  background-color: #f0f0f0;
+  padding: 20px;
+  height: 75vh;
+  display: flex;
+  align-items: center;
+  vertical-align: middle;
+  justify-content: center;
+}
+
+.inicioRal h2 {
+  text-align: center;
+  padding-block: 15px;
+}
+
+.inicioRal p {
+  justify-content: left;
+  text-align: justify;
+  padding-bottom: 15px;
+}
+
+.botaoDeclarar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

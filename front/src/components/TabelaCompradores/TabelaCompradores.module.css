@@ -1,0 +1,37 @@
+.tabelaContainer {
+  width: 100%;
+  text-align: center;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  clear: both;
+}
+
+.totalVendido {
+  margin-bottom: 20px;
+  gap: 10px;
+  display: flex;
+  flex-direction: row;
+  align-items: left;
+  justify-content: left;
+}
+
+.botoesFinal {
+  margin-top: 20px;
+  gap: 10px;
+  display: flex;
+  flex-direction: row;
+  align-items: left;
+  justify-content: left;
+}
+
+@media (max-width: 768px) {
+  .tabelaContainer {
+    width: 100%;
+    display: table-row;
+    flex-direction: column;
+    overflow-x: scroll;
+    clear: both;
+  }
+}

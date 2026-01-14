@@ -1,0 +1,20 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "front/package.json",
+      "use": "@vercel/static-build",
+      "config": { "distDir": "dist" }
+    },
+    {
+      "src": "back/server.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    { "src": "/api/(.*)", "dest": "back/server.js" },
+    { "src": "/paineladmin", "dest": "front/paineladmin.html" },
+    { "src": "/login", "dest": "front/login.html" },
+    { "src": "/(.*)", "dest": "front/$1" }
+  ]
+}

@@ -1,0 +1,24 @@
+.maodeobraSection {
+  background-color: #f0f0f0;
+  padding: 50px 50px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  vertical-align: middle;
+  justify-content: center;
+}
+
+.maodeobraSection h2 {
+  text-align: center;
+  padding-bottom: 15px;
+}
+
+.maodeobraSection p {
+  text-align: center;
+  padding-bottom: 15px;
+}
+
+.maodeobraTable {
+  background-color: white;
+}

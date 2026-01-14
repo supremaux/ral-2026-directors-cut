@@ -1,0 +1,33 @@
+.impostos {
+  width: 100%;
+  background-color: #f9f9f9;
+  padding-block: 25px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  vertical-align: middle;
+  justify-content: center;
+}
+
+.impostos h2 {
+  text-align: center;
+  font-size: 2.5rem;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.impostos p {
+  text-align: center;
+  font-size: 1.2rem;
+  color: #666;
+  margin-bottom: 20px;
+}
+
+@media (max-width: 480px) {
+  .tabelaMobile {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: scroll;
+  }
+}

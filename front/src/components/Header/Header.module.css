@@ -1,0 +1,67 @@
+.topBar {
+  background-color: #394048;
+  padding: 15px 50px;
+  text-align: left;
+  color: white;
+}
+
+.topBar h1 {
+  font-size: 25px;
+}
+
+.headerParte2 {
+  width: 100%;
+  background-color: white;
+  padding-block: 25px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  vertical-align: middle;
+  text-align: center;
+  font-size: 14px;
+  color: black;
+}
+
+.link {
+  text-decoration: none;
+  color: black;
+  cursor: pointer;
+}
+
+.link:hover {
+  transition: all 0.5s ease-in-out;
+  color: #007bff; /* Cor de destaque ao passar o mouse */
+}
+
+.headerParte2 Col h2 {
+  font-size: 14px;
+  margin: 0;
+}
+
+.logo img {
+  height: 50px;
+  width: auto; /* Adicione esta linha para garantir que a imagem seja responsiva */
+}
+
+@media (min-width: 769px) {
+  .headerParte2 {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: left;
+    padding-block: 15px;
+  }
+
+  .headerParte2 Col h2 {
+    font-size: 16px;
+  }
+
+  .logo img {
+    height: 50px;
+    width: auto; /* Adicione esta linha para garantir que a imagem seja responsiva */
+    text-align: right;
+  }
+}
