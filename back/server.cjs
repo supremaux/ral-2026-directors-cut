@@ -111,6 +111,15 @@ app.get("/files", (req, res) => {
   });
 });
 
+// Rota para upload de notas fiscais
+app.post("/upload-notas-fiscais", upload.single("file"), (req, res) => {
+  if (!req.file) {
+    return res.status(400).send("Nenhum arquivo enviado.");
+  }
+  const fileUrl = `/uploads/${req.file.filename}`;
+  res.status(200).json({ fileUrl });
+});
+
 // Painel do engenheiro
 // Listar arquivos
 app.get("/download", (req, res) => {

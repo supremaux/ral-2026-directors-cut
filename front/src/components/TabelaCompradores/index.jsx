@@ -1,27 +1,22 @@
+// TabelaCompradores.jsx
 import React, { useContext, useState } from "react";
 import styles from "./TabelaCompradores.module.css";
 import { Col, Container, Row } from "react-bootstrap";
+import { MdCloudUpload } from "react-icons/md";
+import { FaCheck, FaPlus } from "react-icons/fa";
 import { FormContext } from "../../FormContext";
+import axios from "axios";
 
 const TabelaCompradores = () => {
   const { formData, setFormData } = useContext(FormContext);
-
-  const [novosCompradores, setNovosCompradores] = useState([]);
-
-  const apuraCompradores = () => {
-    setFormData({ ...formData, compradores, totalVendido, novosCompradores });
-    setCompradores([]);
-    setNovosCompradores([]);
-  };
-
   const [compradores, setCompradores] = useState([
-    { cpfCnpj: "", nome: "", municipio: "", quantidade: 0, valorTotal: 0 },
-    { cpfCnpj: "", nome: "", municipio: "", quantidade: 0, valorTotal: 0 },
-    { cpfCnpj: "", nome: "", municipio: "", quantidade: 0, valorTotal: 0 },
+    { cpfCnpj: "", nome: "", quantidade: 0, valorTotal: 0 },
+    { cpfCnpj: "", nome: "", quantidade: 0, valorTotal: 0 },
+    { cpfCnpj: "", nome: "", quantidade: 0, valorTotal: 0 },
   ]);
-
   const [totalVendido, setTotalVendido] = useState(0);
   const [erro, setErro] = useState("");
+  const [file, setFile] = useState(null);
 
   const handleInputChange = (index, campo, valor) => {
     const novosCompradores = [...compradores];
@@ -35,7 +30,7 @@ const TabelaCompradores = () => {
   const adicionarLinha = () => {
     setCompradores([
       ...compradores,
-      { cpfCnpj: "", nome: "", municipio: "", quantidade: 0, valorTotal: 0 },
+      { cpfCnpj: "", nome: "", quantidade: 0, valorTotal: 0 },
     ]);
   };
 
@@ -57,12 +52,49 @@ const TabelaCompradores = () => {
     }
   };
 
+  const handleFileChange = (e) => {
+    setFile(e.target.files[0]);
+  };
+
+  const handleUpload = async () => {
+    if (!file) {
+      alert("Selecione um arquivo primeiro.");
+      return;
+    }
+
+    const data = new FormData();
+    data.append("file", file);
+
+    try {
+      const response = await axios.post(
+        "http://localhost:3001/upload-notas-fiscais",
+        data,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      // Atualiza o contexto com o link do arquivo
+      setFormData({
+        ...formData,
+        arquivoNotasFiscaisUrl: `http://localhost:3001${response.data.fileUrl}`,
+      });
+
+      alert("Arquivo enviado com sucesso!");
+    } catch (error) {
+      console.error("Erro ao enviar arquivo:", error);
+      alert("Erro ao enviar arquivo.");
+    }
+  };
+
   return (
     <Container className={styles.tabelaContainer}>
       <div>
         <div className={styles.totalVendido}>
           <label>
-            Total Vendido:
+            Total Vendido: &nbsp;
             <input
               type="number"
               value={totalVendido}
@@ -75,7 +107,6 @@ const TabelaCompradores = () => {
             <tr>
               <th>CPF/CNPJ Comprador</th>
               <th>Nome/Razão Social</th>
-              <th>Município</th>
               <th>Quantidade (t)</th>
               <th>Valor Total (R$)</th>
             </tr>
@@ -103,15 +134,6 @@ const TabelaCompradores = () => {
                 </td>
                 <td>
                   <input
-                    type="text"
-                    value={comprador.municipio}
-                    onChange={(e) =>
-                      handleInputChange(index, "municipio", e.target.value)
-                    }
-                  />
-                </td>
-                <td>
-                  <input
                     type="number"
                     value={comprador.quantidade}
                     onChange={(e) =>
@@ -133,9 +155,20 @@ const TabelaCompradores = () => {
           </tbody>
         </table>
         <div className={styles.botoesFinal}>
-          <button onClick={adicionarLinha}>Adicionar Linha</button>
-          <button onClick={validarRequisito}>Validar Requisito</button>
+          <button className="btn btn-primary" onClick={adicionarLinha}>
+            <FaPlus /> &nbsp; Adicionar Linha
+          </button>
+          <button className="btn btn-success" onClick={validarRequisito}>
+            <FaCheck /> &nbsp; Validar Requisito
+          </button>
           {erro && <p style={{ color: "red" }}>{erro}</p>}
+        </div>
+        <div className={styles.uploadContainer + " mt-4"}>
+          <h4 className="mx-2">Enviar Arquivo de Notas Fiscais &nbsp;</h4>
+          <input type="file" onChange={handleFileChange} />
+          <button onClick={handleUpload} className="btn btn-success">
+            <MdCloudUpload /> &nbsp; Enviar
+          </button>
         </div>
       </div>
     </Container>

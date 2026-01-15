@@ -40,6 +40,9 @@ export const GerarCSV = () => {
         compradores: JSON.stringify(formData.compradores || []),
         totalVendido: formData.totalVendido || "",
         novosCompradores: formData.novosCompradores || "",
+        "Arquivo Notas Fiscais":
+          formData.arquivoNotasFiscaisUrl || "Não enviado",
+        // ... outros campos
       };
 
       const response = await axios.post(

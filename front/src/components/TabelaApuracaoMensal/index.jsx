@@ -19,6 +19,7 @@ const TabelaApuracaoMensal = () => {
     "Dezembro",
   ];
 
+  // Removi a propriedade `dataPagamentoCFEM` do estado inicial
   const [apuracao, setApuracao] = useState(
     () =>
       formData.apuracaoMensal ||
@@ -28,7 +29,6 @@ const TabelaApuracaoMensal = () => {
         pis: 0,
         cofins: 0,
         cfem: 0,
-        dataPagamentoCFEM: "",
       }))
   );
 
@@ -39,8 +39,7 @@ const TabelaApuracaoMensal = () => {
 
   const handleValorChange = (index, campo, valor) => {
     const novaApuracao = [...apuracao];
-    novaApuracao[index][campo] =
-      campo === "dataPagamentoCFEM" ? valor : Number(valor) || 0;
+    novaApuracao[index][campo] = Number(valor) || 0;
     setApuracao(novaApuracao);
   };
 
@@ -58,7 +57,6 @@ const TabelaApuracaoMensal = () => {
             <th>PIS</th>
             <th>COFINS</th>
             <th>CFEM</th>
-            <th>Data de pagamento do CFEM</th>
           </tr>
         </thead>
         <tbody>
@@ -101,19 +99,6 @@ const TabelaApuracaoMensal = () => {
                   }
                 />
               </td>
-              <td>
-                <input
-                  type="date"
-                  value={mes.dataPagamentoCFEM}
-                  onChange={(e) =>
-                    handleValorChange(
-                      index,
-                      "dataPagamentoCFEM",
-                      e.target.value
-                    )
-                  }
-                />
-              </td>
             </tr>
           ))}
           <tr>
@@ -132,7 +117,6 @@ const TabelaApuracaoMensal = () => {
             <td>
               <strong>R$ {calcularTotal("cfem").toFixed(2)}</strong>
             </td>
-            <td></td>
           </tr>
         </tbody>
       </table>

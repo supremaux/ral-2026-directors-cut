@@ -278,6 +278,7 @@ export const FormProvider = ({ children }) => {
     compradores: [],
     totalVendido: 0,
     novosCompradores: [],
+    arquivoNotasFiscaisUrl: "",
   });
 
   return (
