@@ -164,17 +164,7 @@ export const FormProvider = ({ children }) => {
     costData: costItems.map((item) => ({ ...item, value: "" })),
 
     // Insumos
-    insumos: [
-      { item: "Diesel", quantidade: 0 },
-      { item: "Explosivos encartuchados", quantidade: 0 },
-      { item: "Explosivos Bombeado", quantidade: 0 },
-      { item: "ANFO", quantidade: 0 },
-      { item: "Cordel", quantidade: 0 },
-      { item: "Tubo de choque/Linha silenciosa", quantidade: 0 },
-      { item: "Estopim espoletado", quantidade: 0 },
-      { item: "Retardo", quantidade: 0 },
-      { item: "Booster", quantidade: 0 },
-    ],
+    insumosSelecionados: [], // Array para armazenar itens selecionados e suas quantidades
 
     // Matriz Energetica
     matrizEnergetica: "",

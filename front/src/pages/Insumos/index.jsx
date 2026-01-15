@@ -12,9 +12,9 @@ export default function Insumos() {
             <Col ms>
               <h2>Insumos</h2>
               <p>
-                Preencher a tabela abaixo com o item específico, com sua
-                qunatidade e valor em R$. Caso necessário pode ser acrescentados
-                mais itens não listados!
+                Selecione o item específico, e adicione sua respectiva
+                quantidade. Caso necessário, podem ser acrescentados mais itens
+                não listados!
               </p>
             </Col>
           </Row>
