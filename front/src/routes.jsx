@@ -14,6 +14,7 @@ import MatrizEnergetica from "./pages/MatrizEnergetica";
 import Impostos from "./pages/Impostos";
 import Investimentos from "./pages/Investimentos";
 import ListadeCompradores from "./pages/ListadeCompradores";
+import PilhaEsteril from "./pages/PilhaEsteril";
 import Finalizar from "./pages/Finalizar";
 import ThankU from "./pages/ThankU";
 import Paineladmin from "./pages/Paineladmin";
@@ -44,6 +45,7 @@ export default function AppRoutes() {
               path="/listadecompradores"
               element={<ListadeCompradores />}
             />
+            <Route path="/pilhaesteril" element={<PilhaEsteril />} />
             <Route path="/finalizar" element={<Finalizar />} />
           </Route>
           <Route path="/thanku" element={<ThankU />} />

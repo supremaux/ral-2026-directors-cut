@@ -279,6 +279,10 @@ export const FormProvider = ({ children }) => {
     totalVendido: 0,
     novosCompradores: [],
     arquivoNotasFiscaisUrl: "",
+
+    // Pilha de estéril
+    existePilhaEsteril: "",
+    quantidadeEsteril: "",
   });
 
   return (

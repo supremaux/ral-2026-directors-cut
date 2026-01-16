@@ -1,0 +1,35 @@
+/* PilhaEsteril.module.css */
+.pilhaEsterilSection {
+  background-color: #f0f0f0;
+  width: 100%;
+  min-height: 70vh;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.select {
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+
+.quantidadeEsterilRow {
+  margin-top: 20px;
+}
+
+.quantidadeEsterilRow input {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+}
+
+.mensagem {
+  color: #007bff;
+  font-weight: bold;
+  margin-top: 20px;
+}

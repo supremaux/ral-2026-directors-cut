@@ -42,6 +42,8 @@ export const GerarCSV = () => {
         novosCompradores: formData.novosCompradores || "",
         "Arquivo Notas Fiscais":
           formData.arquivoNotasFiscaisUrl || "Não enviado",
+        "Pilha Esteril": JSON.stringify(formData.pilhaEsteril || []),
+
         // ... outros campos
       };
 

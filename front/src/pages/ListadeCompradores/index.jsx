@@ -45,7 +45,7 @@ export default function ListadeCompradores() {
           </Row>
         </Container>
       </section>
-      <Paginacao next="/finalizar" back="/investimentos" />
+      <Paginacao next="/pilhaesteril" back="/investimentos" />
     </>
   );
 }
