@@ -29,7 +29,7 @@ export default function Inicio() {
             type="submit"
           >
             <strong>
-              Prosseguir &nbsp; <FaArrowRight />
+              Começar &nbsp; <FaArrowRight />
             </strong>
           </Button>
         </Container>
