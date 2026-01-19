@@ -29,10 +29,10 @@ export default function DetonadoBritado() {
         <Container>
           <Row>
             <Col>
-              <h2>Produção - Detonado</h2>
+              <h2>Produção</h2>
               <p>
-                Neste campo devem ser preenchidos os dados referentes às
-                detonações!
+                Neste campo devem ser preenchidos os dados referentes à
+                produção!
               </p>
             </Col>
           </Row>
