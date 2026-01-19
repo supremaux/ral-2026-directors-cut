@@ -15,6 +15,13 @@ export default function Estoque() {
     });
   };
 
+  const handleUnidadeEstoqueChange = (e) => {
+    setFormData({
+      ...formData,
+      unidadeEstoque: e.target.value,
+    });
+  };
+
   const handleEstoqueLavraChange = (e) => {
     setFormData({
       ...formData,
@@ -32,7 +39,7 @@ export default function Estoque() {
   // Verifica se a substância mineral é Basalto, Granito ou Calcário
   const substanciasComEstoqueBritado = ["basalto", "granito", "calcario"];
   const deveExibirEstoqueBritado = substanciasComEstoqueBritado.includes(
-    formData.substanciaMineral
+    formData.substanciaMineral,
   );
 
   return (
@@ -64,9 +71,25 @@ export default function Estoque() {
             <Row>
               <Col>
                 <div style={{ marginTop: "20px" }}>
+                  <h4>Unidade de Medida</h4>
+                  <select
+                    className={styles.select}
+                    onChange={handleUnidadeEstoqueChange}
+                    value={formData.unidadeEstoque || ""}
+                  >
+                    <option value="" disabled>
+                      Selecione uma unidade
+                    </option>
+                    <option value="m3">m³</option>
+                    <option value="toneladas">Toneladas</option>
+                  </select>
+                </div>
+                <div style={{ marginTop: "20px" }}>
                   <h4>Estoque Anual</h4>
                   <div style={{ marginBottom: "15px" }}>
-                    <label>Estoque na Lavra:</label>
+                    <label>
+                      Estoque na Lavra ({formData.unidadeEstoque || "unidade"}):
+                    </label>
                     <input
                       type="number"
                       value={formData.estoqueLavra}
@@ -76,7 +99,10 @@ export default function Estoque() {
                   </div>
                   {deveExibirEstoqueBritado && (
                     <div style={{ marginBottom: "15px" }}>
-                      <label>Estoque Britado:</label>
+                      <label>
+                        Estoque Britado ({formData.unidadeEstoque || "unidade"}
+                        ):
+                      </label>
                       <input
                         type="number"
                         value={formData.estoqueBritado}

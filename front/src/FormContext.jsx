@@ -135,9 +135,9 @@ export const FormProvider = ({ children }) => {
 
     // Estoque
     possuiEstoque: "",
-    estoqueLavra: 0, // Novo campo para Estoque na Lavra
-    estoqueBritado: 0, // Novo campo para Estoque Britado
-    // Outros campos...
+    unidadeEstoque: "", // Nova propriedade para armazenar a unidade de estoque
+    estoqueLavra: 0,
+    estoqueBritado: 0,
 
     // Produção
     unidadeProducao: "",
