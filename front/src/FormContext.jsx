@@ -36,16 +36,17 @@ export const FormProvider = ({ children }) => {
     telefone: "",
     email: "",
 
-    // Termo de Compromisso
-    termoAssinadoUrl: "",
-
     // Substância Mineral
     substanciaMineral: "",
 
-    // Detonado Britado
-    unidadeDetonadoBritado: "",
+    // Estoque
+    possuiEstoque: "",
+    unidadeEstoque: "",
+    estoqueBritado: "",
 
     // Produção Detonado Britado
+    substanciaProduzida: "",
+    unidadeDetonadoBritado: "",
     detonadoBritado: [
       {
         mes: "Janeiro",
@@ -139,7 +140,7 @@ export const FormProvider = ({ children }) => {
     estoqueLavra: 0,
     estoqueBritado: 0,
 
-    // Produção
+    // Módulo de Beneficiamento
     unidadeProducao: "",
     unidadeMedida: "",
     salesData: [

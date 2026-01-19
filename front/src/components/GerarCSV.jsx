@@ -11,24 +11,41 @@ export const GerarCSV = () => {
     try {
       // Simplificando os dados para um formato que o papaparse consiga processar
       const simplifiedData = {
+        // Dados Cadastrais
         "Razão Social": formData.razaoSocial || "",
         CNPJ: formData.cnpj || "",
         Endereço: formData.endereco || "",
         Telefone: formData.telefone || "",
         "E-mail": formData.email || "",
-        "Substância Mineral": formData.substanciaMineral || "",
+
+        // Termo de Responsabilidade
         "Termo Assinado": formData.termoAssinadoUrl || "Não enviado",
+
+        // Substância Mineral
+        "Substância Mineral": formData.substanciaMineral || "",
+
+        // Estoque
+        "Possui Estoque": formData.possuiEstoque || "",
+        "Unidade de Estoque": formData.unidadeEstoque || "",
+        "Estoque Lavrado": JSON.stringify(formData.estoqueLavra || []),
+
+        // Produção Detonado Britado
+        "Substância Produzida": formData.substanciaProduzida || "",
+        "Unidade de Produção": formData.unidadeDetonadoBritado || "",
         "Produção - Detonado": JSON.stringify(formData.detonadoBritado || []),
+
+        // Módulo de Beneficiamento
+        "Unidade de Produção": formData.unidadeProducao || "",
+        "Unidade de Medida": formData.unidadeMedida || "",
+        "Venda - Produção": JSON.stringify(formData.salesData || []),
+
         "Estoque Britado": JSON.stringify(formData.estoqueBritado || []),
         "Quantidade em Estoque Britado": JSON.stringify(
-          [formData.quantidadeEstoqueBritado, formData.estoqueBritado] || []
+          [formData.quantidadeEstoqueBritado, formData.estoqueBritado] || [],
         ),
         estoqueBritado: JSON.stringify(formData.estoque || []),
         confirmaEstoque: formData.confirmaEstoque || "",
         possuiEstoque: formData.possuiEstoque || "",
-        unidadeProducao: formData.unidadeProducao || "",
-        unidadeMedida: formData.unidadeMedida || "",
-        salesData: JSON.stringify(formData.salesData || []),
         salesByCategory: JSON.stringify(formData.salesByCategory || []),
         costData: JSON.stringify(formData.costData || []),
         insumos: JSON.stringify(formData.insumos || []),
@@ -49,7 +66,7 @@ export const GerarCSV = () => {
 
       const response = await axios.post(
         "http://localhost:3001/api/finalizar-relatorio",
-        simplifiedData
+        simplifiedData,
       );
       alert("Relatório finalizado e CSV gerado com sucesso!");
     } catch (error) {

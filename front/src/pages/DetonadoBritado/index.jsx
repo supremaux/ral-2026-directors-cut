@@ -12,7 +12,7 @@ export default function DetonadoBritado() {
   const handleSubstanciaChange = (e) => {
     setFormData({
       ...formData,
-      substanciaMineral: e.target.value,
+      substanciaProduzida: e.target.value,
     });
   };
 
@@ -43,7 +43,7 @@ export default function DetonadoBritado() {
               <select
                 className={styles.select}
                 onChange={handleSubstanciaChange}
-                value={formData.substanciaMineral || ""}
+                value={formData.substanciaProduzida || ""}
               >
                 <option value="" disabled>
                   Selecione uma Substância

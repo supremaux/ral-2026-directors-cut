@@ -2,7 +2,6 @@
 import styles from "./TabelaDetonadoBritado.module.css";
 import { Container } from "react-bootstrap";
 import { useContext } from "react";
-import { FaTable } from "react-icons/fa";
 import { FormContext } from "../../FormContext";
 
 export default function TabelaDetonadoBritado() {
@@ -19,12 +18,17 @@ export default function TabelaDetonadoBritado() {
 
   const calcularTotais = () => {
     if (!formData.detonadoBritado) {
-      return { totalDetonado: 0, totalBritado: 0 };
+      return {
+        totalDetonado: 0,
+        totalBritado: 0,
+        totalLavrado: 0,
+        totalVendido: 0,
+      };
     }
 
     const reducer = (
       acc,
-      { quantidadeDetonado, britado, lavrado, vendido }
+      { quantidadeDetonado, britado, lavrado, vendido },
     ) => {
       acc.totalDetonado += parseFloat(quantidadeDetonado) || 0;
       acc.totalBritado += parseFloat(britado) || 0;
@@ -47,7 +51,6 @@ export default function TabelaDetonadoBritado() {
   const { totalDetonado, totalBritado, totalLavrado, totalVendido } =
     calcularTotais();
 
-  // Verifica qual tabela renderizar com base na substância selecionada
   const renderizarTabela = () => {
     const substanciasBrita = ["basalto", "granito", "calcario"];
     const substanciasLavradoVendido = [
@@ -58,7 +61,7 @@ export default function TabelaDetonadoBritado() {
       "saibro",
     ];
 
-    if (substanciasBrita.includes(formData.substanciaMineral)) {
+    if (substanciasBrita.includes(formData.substanciaProduzida)) {
       return (
         <>
           <thead>
@@ -116,7 +119,9 @@ export default function TabelaDetonadoBritado() {
           </tbody>
         </>
       );
-    } else if (substanciasLavradoVendido.includes(formData.substanciaMineral)) {
+    } else if (
+      substanciasLavradoVendido.includes(formData.substanciaProduzida)
+    ) {
       return (
         <>
           <thead>
@@ -173,9 +178,9 @@ export default function TabelaDetonadoBritado() {
       );
     } else {
       return (
-        <p className="m-2 p-2 bg-dark text-bg-dark">
-          <FaTable /> Selecione uma substância para visualizar a tabela.
-        </p>
+        <Container className={styles.selecionarTabela}>
+          <p>Selecione uma substância para visualizar a tabela.</p>
+        </Container>
       );
     }
   };
