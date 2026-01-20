@@ -141,7 +141,6 @@ export const FormProvider = ({ children }) => {
     estoqueBritado: 0,
 
     // Módulo de Beneficiamento
-    unidadeProducao: "",
     unidadeMedida: "",
     salesData: [
       { month: "Janeiro", quantity: "", amount: "" },

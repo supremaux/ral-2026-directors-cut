@@ -35,7 +35,6 @@ export const GerarCSV = () => {
         "Produção - Detonado": JSON.stringify(formData.detonadoBritado || []),
 
         // Módulo de Beneficiamento
-        "Unidade de Produção": formData.unidadeProducao || "",
         "Unidade de Medida": formData.unidadeMedida || "",
         "Venda - Produção": JSON.stringify(formData.salesData || []),
 

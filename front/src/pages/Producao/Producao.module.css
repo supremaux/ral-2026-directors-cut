@@ -37,6 +37,14 @@
   background-color: white;
 }
 
+/* Producao.module.css */
+.toastContainer {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1050;
+}
+
 @media (max-width: 480px) {
   .tabelaOpt {
     width: 100%;
