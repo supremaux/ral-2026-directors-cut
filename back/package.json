@@ -12,6 +12,7 @@
   "license": "ISC",
   "type": "module",
   "dependencies": {
+    "@supabase/supabase-js": "^2.91.0",
     "cors": "^2.8.5",
     "express": "^5.2.1",
     "fs": "^0.0.1-security",
@@ -20,7 +21,8 @@
     "path": "^0.12.7"
   },
   "devDependencies": {
-    "nodemon": "^3.1.11"
+    "nodemon": "^3.1.11",
+    "supabase": "^2.72.8"
   },
   "nodemonConfig": {
     "watch": [

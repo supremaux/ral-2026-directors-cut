@@ -2,10 +2,9 @@
 const express = require("express");
 const multer = require("multer");
 const papaparse = require("papaparse");
-const fs = require("fs");
-const path = require("path");
 const cors = require("cors");
 const bodyParser = require("body-parser");
+const { createClient } = require("@supabase/supabase-js");
 
 // Carregando usuários do arquivo JSON
 const users = require("./users.json");
@@ -16,47 +15,111 @@ if (!Array.isArray(users)) {
   process.exit(1);
 }
 
-// Diretório atual
-const downloadDir = path.join(__dirname, "download");
+// Configuração do Supabase
+const supabaseUrl = "https://emfmvsbrfawmsuuwavae.supabase.co";
+const supabaseKey =
+  process.env.SUPABASE_SECRET_KEY ||
+  "sb_secret_bIvVbrrcclCl41CcSIbVYA_AhVm-ssU";
+const supabase = createClient(supabaseUrl, supabaseKey);
 
 const app = express();
 app.use(bodyParser.json());
 app.use(cors());
 
-// Configurar o Multer para salvar arquivos na pasta 'uploads'
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, path.join(__dirname, "uploads/"));
-  },
-  filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-    cb(null, uniqueSuffix + "-" + file.originalname);
-  },
-});
+// Rota para upload de termos (usando Supabase Storage)
+app.post("/upload-termo", async (req, res) => {
+  try {
+    if (!req.files || !req.files.file) {
+      return res.status(400).send("Nenhum arquivo enviado.");
+    }
+    const file = req.files.file;
+    const fileExt = file.name.split(".").pop();
+    const fileName = `${Date.now()}-termo.${fileExt}`;
+    const filePath = `upload/${fileName}`;
 
-const upload = multer({ storage });
+    const { data, error } = await supabase.storage
+      .from("upload")
+      .upload(filePath, file.data, { contentType: file.mimetype });
 
-// Rota para upload de termos
-app.post("/upload-termo", upload.single("file"), (req, res) => {
-  if (!req.file) {
-    return res.status(400).send("Nenhum arquivo enviado.");
+    if (error) {
+      console.error("Erro ao fazer upload:", error);
+      return res.status(500).json({ error: "Erro ao fazer upload." });
+    }
+
+    const { publicURL } = supabase.storage
+      .from("upload")
+      .getPublicUrl(filePath);
+
+    res.status(200).json({ fileUrl: publicURL });
+  } catch (error) {
+    console.error("Erro no servidor:", error);
+    res.status(500).json({ error: "Erro no servidor." });
   }
-
-  const fileUrl = `/uploads/${req.file.filename}`;
-  res.status(200).json({ fileUrl });
 });
 
-// Rota para upload de faturas
-app.post("/upload-fatura", upload.single("file"), (req, res) => {
-  if (!req.file) {
-    return res.status(400).send("Nenhum arquivo enviado.");
+// Rota para upload de faturas (usando Supabase Storage)
+app.post("/upload-fatura", async (req, res) => {
+  try {
+    if (!req.files || !req.files.file) {
+      return res.status(400).send("Nenhum arquivo enviado.");
+    }
+    const file = req.files.file;
+    const fileExt = file.name.split(".").pop();
+    const fileName = `${Date.now()}-fatura.${fileExt}`;
+    const filePath = `upload/${fileName}`;
+
+    const { data, error } = await supabase.storage
+      .from("upload")
+      .upload(filePath, file.data, { contentType: file.mimetype });
+
+    if (error) {
+      console.error("Erro ao fazer upload:", error);
+      return res.status(500).json({ error: "Erro ao fazer upload." });
+    }
+
+    const { publicURL } = supabase.storage
+      .from("upload")
+      .getPublicUrl(filePath);
+
+    res.status(200).json({ fileUrl: publicURL });
+  } catch (error) {
+    console.error("Erro no servidor:", error);
+    res.status(500).json({ error: "Erro no servidor." });
   }
-
-  const fileUrl = `/uploads/${req.file.filename}`;
-  res.status(200).json({ fileUrl });
 });
 
-// Rota para finalizar relatório e gerar CSV
+// Rota para upload de notas fiscais (usando Supabase Storage)
+app.post("/upload-notas-fiscais", async (req, res) => {
+  try {
+    if (!req.files || !req.files.file) {
+      return res.status(400).send("Nenhum arquivo enviado.");
+    }
+    const file = req.files.file;
+    const fileExt = file.name.split(".").pop();
+    const fileName = `${Date.now()}-nota-fiscal.${fileExt}`;
+    const filePath = `upload/${fileName}`;
+
+    const { data, error } = await supabase.storage
+      .from("upload")
+      .upload(filePath, file.data, { contentType: file.mimetype });
+
+    if (error) {
+      console.error("Erro ao fazer upload:", error);
+      return res.status(500).json({ error: "Erro ao fazer upload." });
+    }
+
+    const { publicURL } = supabase.storage
+      .from("upload")
+      .getPublicUrl(filePath);
+
+    res.status(200).json({ fileUrl: publicURL });
+  } catch (error) {
+    console.error("Erro no servidor:", error);
+    res.status(500).json({ error: "Erro no servidor." });
+  }
+});
+
+// Rota para finalizar relatório e gerar CSV (usando Supabase Storage)
 app.post("/api/finalizar-relatorio", async (req, res) => {
   try {
     if (!req.body) {
@@ -64,8 +127,6 @@ app.post("/api/finalizar-relatorio", async (req, res) => {
     }
 
     const dados = req.body;
-
-    // Garantir que todos os campos sejam strings ou números simples
     const simplifiedData = {};
     for (const key in dados) {
       simplifiedData[key] =
@@ -74,96 +135,123 @@ app.post("/api/finalizar-relatorio", async (req, res) => {
           : dados[key];
     }
 
-    // Certifique-se de que os dados estão em um formato que o papaparse consiga processar
     const csv = papaparse.unparse([simplifiedData]);
-
-    if (!fs.existsSync(downloadDir)) {
-      fs.mkdirSync(downloadDir);
-    }
-
     const csvFileName = `${simplifiedData["Razão Social"].replace(
       /[^a-zA-Z0-9]/g,
       "_",
     )}_${simplifiedData.CNPJ}.csv`;
-    fs.writeFileSync(path.join(downloadDir, csvFileName), csv);
+    const filePath = `download/${csvFileName}`;
+
+    const { data, error } = await supabase.storage
+      .from("download")
+      .upload(filePath, csv, { contentType: "text/csv" });
+
+    if (error) {
+      console.error("Erro ao fazer upload do CSV:", error);
+      return res.status(500).json({ error: "Erro ao finalizar relatório." });
+    }
+
+    const { publicURL } = supabase.storage
+      .from("download")
+      .getPublicUrl(filePath);
 
     res
       .status(200)
-      .json({ message: "Relatório finalizado e CSV gerado com sucesso!" });
+      .json({
+        message: "Relatório finalizado e CSV gerado com sucesso!",
+        fileUrl: publicURL,
+      });
   } catch (error) {
     console.error("Erro ao finalizar relatório:", error);
     res.status(500).json({ error: "Erro ao finalizar relatório." });
   }
 });
 
-// Função para converter dados em CSV
-function convertToCSV(data) {
-  const headers = Object.keys(data).join(",");
-  const values = Object.values(data)
-    .map((value) => {
-      if (Array.isArray(value)) {
-        return JSON.stringify(value);
-      } else if (typeof value === "object") {
-        return JSON.stringify(value);
-      } else {
-        return value;
-      }
-    })
-    .join(",");
+// Rota para listar arquivos (usando Supabase Storage)
+app.get("/files", async (req, res) => {
+  try {
+    const { data, error } = await supabase.storage.from("upload").list();
 
-  return `${headers}\n${values}`;
-}
-
-// Tornar a pasta 'uploads' acessível estaticamente
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
-
-// Rota para listar arquivos
-app.get("/files", (req, res) => {
-  const directoryPath = path.join(__dirname, "uploads");
-  fs.readdir(directoryPath, (err, files) => {
-    if (err) {
-      return res.status(500).send("Não foi possível listar os arquivos.");
+    if (error) {
+      return res
+        .status(500)
+        .json({ error: "Não foi possível listar os arquivos." });
     }
-    const fileUrls = files.map((file) => `/uploads/${file}`);
+
+    const fileUrls = data.map((file) => {
+      const { publicURL } = supabase.storage
+        .from("upload")
+        .getPublicUrl(file.name);
+      return publicURL;
+    });
+
     res.json(fileUrls);
-  });
-});
-
-// Rota para upload de notas fiscais
-app.post("/upload-notas-fiscais", upload.single("file"), (req, res) => {
-  if (!req.file) {
-    return res.status(400).send("Nenhum arquivo enviado.");
+  } catch (error) {
+    console.error("Erro ao listar arquivos:", error);
+    res.status(500).json({ error: "Erro ao listar arquivos." });
   }
-  const fileUrl = `/uploads/${req.file.filename}`;
-  res.status(200).json({ fileUrl });
 });
 
-// Painel do engenheiro
-// Listar arquivos
-app.get("/download", (req, res) => {
-  fs.readdir(downloadDir, (err, files) => {
-    if (err) {
-      return res.status(500).send("Unable to scan files!");
+// Rota para listar arquivos de download (usando Supabase Storage)
+app.get("/download", async (req, res) => {
+  try {
+    const { data, error } = await supabase.storage.from("download").list();
+
+    if (error) {
+      return res
+        .status(500)
+        .json({ error: "Não foi possível listar os arquivos." });
     }
-    res.json(files);
-  });
+
+    res.json(data);
+  } catch (error) {
+    console.error("Erro ao listar arquivos de download:", error);
+    res.status(500).json({ error: "Erro ao listar arquivos de download." });
+  }
 });
 
-// Baixar arquivo
-app.get("/download/:filename", (req, res) => {
-  const filePath = path.join(downloadDir, req.params.filename);
-  res.download(filePath);
-});
+// Rota para baixar arquivo (usando Supabase Storage)
+app.get("/download/:filename", async (req, res) => {
+  try {
+    const { filename } = req.params;
+    const { data, error } = await supabase.storage
+      .from("download")
+      .download(filename);
 
-// Deletar arquivo
-app.delete("/delete/:filename", (req, res) => {
-  const filePath = path.join(downloadDir, req.params.filename);
-  fs.unlink(filePath, (err) => {
-    if (err) {
-      return res.status(500).send("Unable to delete the file");
+    if (error) {
+      return res
+        .status(500)
+        .json({ error: "Não foi possível baixar o arquivo." });
     }
-    res.send("File deleted successfully");
-  });
+
+    res.setHeader("Content-Type", "text/csv");
+    res.setHeader("Content-Disposition", `attachment; filename=${filename}`);
+    res.send(data);
+  } catch (error) {
+    console.error("Erro ao baixar arquivo:", error);
+    res.status(500).json({ error: "Erro ao baixar arquivo." });
+  }
+});
+
+// Rota para deletar arquivo (usando Supabase Storage)
+app.delete("/delete/:filename", async (req, res) => {
+  try {
+    const { filename } = req.params;
+    const { error } = await supabase.storage
+      .from("download")
+      .remove([filename]);
+
+    if (error) {
+      return res
+        .status(500)
+        .json({ error: "Não foi possível deletar o arquivo." });
+    }
+
+    res.send("Arquivo deletado com sucesso!");
+  } catch (error) {
+    console.error("Erro ao deletar arquivo:", error);
+    res.status(500).json({ error: "Erro ao deletar arquivo." });
+  }
 });
 
 // Rota para fazer login
@@ -189,6 +277,7 @@ app.get("/paineladmin", (req, res) => {
   if (!token) {
     return res.status(401).json({ success: false, message: "Acesso negado!" });
   }
+  res.status(200).json({ success: true, message: "Acesso permitido!" });
 });
 
 // Rota para fazer logout
@@ -197,7 +286,7 @@ app.post("/logout", (req, res) => {
 });
 
 // Iniciar o servidor
-const PORT = 3001;
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT}`);
 });
