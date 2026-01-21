@@ -26,6 +26,8 @@ const app = express();
 app.use(bodyParser.json());
 app.use(cors());
 
+const upload = multer({ storage: multer.memoryStorage() }); // Armazena o arquivo na memória
+
 // Rota para upload de termos (usando Supabase Storage)
 app.post("/upload-termo", async (req, res) => {
   try {
@@ -58,19 +60,26 @@ app.post("/upload-termo", async (req, res) => {
 });
 
 // Rota para upload de faturas (usando Supabase Storage)
-app.post("/upload-fatura", async (req, res) => {
+app.post("/upload-fatura", upload.single("file"), async (req, res) => {
   try {
-    if (!req.files || !req.files.file) {
+    if (!req.file) {
       return res.status(400).send("Nenhum arquivo enviado.");
     }
-    const file = req.files.file;
-    const fileExt = file.name.split(".").pop();
+
+    const file = req.file;
+    const fileExt = file.originalname.split(".").pop();
     const fileName = `${Date.now()}-fatura.${fileExt}`;
     const filePath = `upload/${fileName}`;
 
+    const supabase = createClient(
+      "https://emfmvsbrfawmsuuwavae.supabase.co",
+      process.env.SUPABASE_SECRET_KEY ||
+        "sb_secret_bIvVbrrcclCl41CcSIbVYA_AhVm-ssU",
+    );
+
     const { data, error } = await supabase.storage
       .from("upload")
-      .upload(filePath, file.data, { contentType: file.mimetype });
+      .upload(filePath, file.buffer, { contentType: file.mimetype });
 
     if (error) {
       console.error("Erro ao fazer upload:", error);
@@ -155,12 +164,10 @@ app.post("/api/finalizar-relatorio", async (req, res) => {
       .from("download")
       .getPublicUrl(filePath);
 
-    res
-      .status(200)
-      .json({
-        message: "Relatório finalizado e CSV gerado com sucesso!",
-        fileUrl: publicURL,
-      });
+    res.status(200).json({
+      message: "Relatório finalizado e CSV gerado com sucesso!",
+      fileUrl: publicURL,
+    });
   } catch (error) {
     console.error("Erro ao finalizar relatório:", error);
     res.status(500).json({ error: "Erro ao finalizar relatório." });
