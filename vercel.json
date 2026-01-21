@@ -7,14 +7,12 @@
       "config": { "distDir": "dist" }
     },
     {
-      "src": "back/server.js",
+      "src": "back/server.cjs",
       "use": "@vercel/node"
     }
   ],
   "routes": [
-    { "src": "/api/(.*)", "dest": "back/server.js" },
-    { "src": "/paineladmin", "dest": "front/paineladmin.html" },
-    { "src": "/login", "dest": "front/login.html" },
+    { "src": "/api/(.*)", "dest": "back/server.cjs" },
     { "src": "/(.*)", "dest": "front/$1" }
   ]
 }
