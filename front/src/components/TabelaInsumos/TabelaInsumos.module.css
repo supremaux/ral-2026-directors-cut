@@ -5,14 +5,30 @@
   margin: 0 auto;
 }
 
-.dropdownContainer {
+.listaCheckbox {
   margin-bottom: 20px;
 }
 
-.dropdownContainer select {
-  width: 100%;
-  padding: 10px;
-  font-size: 16px;
+.checkboxGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.checkboxItem {
+  display: flex;
+  align-items: center;
+}
+
+.checkboxItem label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.checkboxItem input[type="checkbox"] {
+  margin-right: 8px;
 }
 
 .listaInsumos {
@@ -22,6 +38,7 @@
 .tabelaInsumos {
   width: 100%;
   border-collapse: collapse;
+  margin-top: 10px;
 }
 
 .tabelaInsumos th,
@@ -32,13 +49,14 @@
 }
 
 .botaoRemover {
-  background-color: #0b5ed7;
+  background-color: #ff6b6b;
   color: white;
   border: none;
   padding: 5px 10px;
   cursor: pointer;
+  border-radius: 4px;
 }
 
 .botaoRemover:hover {
-  background-color: blue;
+  background-color: #ff5252;
 }

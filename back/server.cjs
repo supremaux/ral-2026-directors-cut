@@ -83,7 +83,7 @@ app.post("/api/finalizar-relatorio", async (req, res) => {
 
     const csvFileName = `${simplifiedData["Razão Social"].replace(
       /[^a-zA-Z0-9]/g,
-      "_"
+      "_",
     )}_${simplifiedData.CNPJ}.csv`;
     fs.writeFileSync(path.join(downloadDir, csvFileName), csv);
 
@@ -95,6 +95,24 @@ app.post("/api/finalizar-relatorio", async (req, res) => {
     res.status(500).json({ error: "Erro ao finalizar relatório." });
   }
 });
+
+// Função para converter dados em CSV
+function convertToCSV(data) {
+  const headers = Object.keys(data).join(",");
+  const values = Object.values(data)
+    .map((value) => {
+      if (Array.isArray(value)) {
+        return JSON.stringify(value);
+      } else if (typeof value === "object") {
+        return JSON.stringify(value);
+      } else {
+        return value;
+      }
+    })
+    .join(",");
+
+  return `${headers}\n${values}`;
+}
 
 // Tornar a pasta 'uploads' acessível estaticamente
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
@@ -152,7 +170,7 @@ app.delete("/delete/:filename", (req, res) => {
 app.post("/login", (req, res) => {
   const { username, password } = req.body;
   const user = users.find(
-    (u) => u.username === username && u.password === password
+    (u) => u.username === username && u.password === password,
   );
 
   if (user) {

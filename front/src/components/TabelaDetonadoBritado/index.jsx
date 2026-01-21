@@ -3,6 +3,7 @@ import styles from "./TabelaDetonadoBritado.module.css";
 import { Container } from "react-bootstrap";
 import { useContext } from "react";
 import { FormContext } from "../../FormContext";
+import { FaTable } from "react-icons/fa";
 
 export default function TabelaDetonadoBritado() {
   const { formData, setFormData } = useContext(FormContext);
@@ -178,9 +179,9 @@ export default function TabelaDetonadoBritado() {
       );
     } else {
       return (
-        <Container className={styles.selecionarTabela}>
-          <p>Selecione uma substância para visualizar a tabela.</p>
-        </Container>
+        <p className="m-2 p-2 bg-secondary text-bg-dark">
+          <FaTable /> Selecione uma substância para visualizar a tabela.
+        </p>
       );
     }
   };

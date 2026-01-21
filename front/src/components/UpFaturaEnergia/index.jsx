@@ -26,13 +26,13 @@ export default function UpFaturaEnergia() {
           headers: {
             "Content-Type": "multipart/form-data",
           },
-        }
+        },
       );
 
       // Atualizar o contexto com o link do arquivo
       setFormData({
         ...formData,
-        termoAssinadoUrl: `http://localhost:3001${response.data.fileUrl}`,
+        faturaEnergia: `http://localhost:3001${response.data.fileUrl}`,
       });
 
       alert("Arquivo enviado com sucesso!");

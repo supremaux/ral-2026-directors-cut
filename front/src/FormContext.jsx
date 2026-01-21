@@ -168,6 +168,7 @@ export const FormProvider = ({ children }) => {
 
     // Matriz Energetica
     matrizEnergetica: "",
+    faturaEnergia: "",
 
     // Impostos/Tributos
     apuracaoMensal: [
@@ -277,7 +278,6 @@ export const FormProvider = ({ children }) => {
     // Lista de Compradores
     compradores: [],
     totalVendido: 0,
-    novosCompradores: [],
     arquivoNotasFiscaisUrl: "",
 
     // Pilha de estéril

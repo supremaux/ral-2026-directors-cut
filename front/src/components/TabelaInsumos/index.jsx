@@ -37,7 +37,12 @@ export const TabelaInsumos = () => {
 
   // Estado local para itens selecionados e suas quantidades
   const [insumosSelecionados, setInsumosSelecionados] = useState(
-    formData.insumosSelecionados || []
+    formData.insumosSelecionados || [],
+  );
+
+  // Estado para controlar quais itens estão marcados na lista
+  const [itensMarcados, setItensMarcados] = useState(
+    insumosSelecionados.map((insumo) => insumo.valor),
   );
 
   // Atualiza o contexto global sempre que insumosSelecionados mudar
@@ -45,16 +50,25 @@ export const TabelaInsumos = () => {
     setFormData((prev) => ({ ...prev, insumosSelecionados }));
   }, [insumosSelecionados, setFormData]);
 
-  // Adiciona um novo item à lista de selecionados
-  const handleAdicionarInsumo = (itemSelecionado) => {
-    if (
-      !insumosSelecionados.some(
-        (insumo) => insumo.valor === itemSelecionado.valor
-      )
-    ) {
+  // Atualiza os itens marcados sempre que insumosSelecionados mudar
+  useEffect(() => {
+    setItensMarcados(insumosSelecionados.map((insumo) => insumo.valor));
+  }, [insumosSelecionados]);
+
+  // Adiciona ou remove um item da lista de selecionados
+  const handleToggleInsumo = (item) => {
+    const valor = item.valor;
+    if (itensMarcados.includes(valor)) {
+      // Remove o item se já estiver marcado
+      const updatedInsumos = insumosSelecionados.filter(
+        (insumo) => insumo.valor !== valor,
+      );
+      setInsumosSelecionados(updatedInsumos);
+    } else {
+      // Adiciona o item se não estiver marcado
       setInsumosSelecionados([
         ...insumosSelecionados,
-        { ...itemSelecionado, quantidade: 0 },
+        { ...item, quantidade: 0 },
       ]);
     }
   };
@@ -62,7 +76,7 @@ export const TabelaInsumos = () => {
   // Atualiza a quantidade de um item selecionado
   const handleQuantidadeChange = (index, value) => {
     const updatedInsumos = insumosSelecionados.map((insumo, i) =>
-      i === index ? { ...insumo, quantidade: Number(value) || 0 } : insumo
+      i === index ? { ...insumo, quantidade: Number(value) || 0 } : insumo,
     );
     setInsumosSelecionados(updatedInsumos);
   };
@@ -79,66 +93,64 @@ export const TabelaInsumos = () => {
         <HiOutlineClipboardList /> &nbsp; Selecionar Insumos
       </h3>
 
-      {/* Dropdown para selecionar novos itens */}
-      <div className={styles.dropdownContainer}>
-        <select
-          onChange={(e) => {
-            const selectedItem = todosInsumos.find(
-              (item) => item.valor === e.target.value
-            );
-            if (selectedItem) {
-              handleAdicionarInsumo(selectedItem);
-            }
-          }}
-          value=""
-        >
-          <option value="" disabled>
-            Selecione um item
-          </option>
+      {/* Lista de checkboxes para selecionar itens */}
+      <div className={styles.listaCheckbox}>
+        <h4>Selecione os insumos utilizados:</h4>
+        <div className={styles.checkboxGrid}>
           {todosInsumos.map((item) => (
-            <option key={item.valor} value={item.valor}>
-              {item.item}
-            </option>
+            <div key={item.valor} className={styles.checkboxItem}>
+              <label>
+                <input
+                  type="checkbox"
+                  checked={itensMarcados.includes(item.valor)}
+                  onChange={() => handleToggleInsumo(item)}
+                />
+                {item.item}
+              </label>
+            </div>
           ))}
-        </select>
+        </div>
       </div>
 
       {/* Lista de itens selecionados e seus campos de quantidade */}
       <div className={styles.listaInsumos}>
         {insumosSelecionados.length > 0 ? (
-          <table className={styles.tabelaInsumos}>
-            <thead>
-              <tr>
-                <th>Item</th>
-                <th>Quantidade</th>
-                <th>Ação</th>
-              </tr>
-            </thead>
-            <tbody>
-              {insumosSelecionados.map((insumo, index) => (
-                <tr key={index}>
-                  <td>{insumo.item}</td>
-                  <td>
-                    <input
-                      type="number"
-                      value={insumo.quantidade}
-                      onChange={(e) =>
-                        handleQuantidadeChange(index, e.target.value)
-                      }
-                    />
-                  </td>
-                  <td>
-                    <button
-                      onClick={() => handleRemoverInsumo(index)}
-                      className={styles.botaoRemover}
-                    >
-                      <FaTrash /> &nbsp; Remover
-                    </button>
-                  </td>
+          <>
+            <h4>Insumos Selecionados:</h4>
+            <table className={styles.tabelaInsumos}>
+              <thead>
+                <tr>
+                  <th>Item</th>
+                  <th>Quantidade</th>
+                  <th>Ação</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {insumosSelecionados.map((insumo, index) => (
+                  <tr key={index}>
+                    <td>{insumo.item}</td>
+                    <td>
+                      <input
+                        type="number"
+                        value={insumo.quantidade}
+                        onChange={(e) =>
+                          handleQuantidadeChange(index, e.target.value)
+                        }
+                      />
+                    </td>
+                    <td>
+                      <button
+                        onClick={() => handleRemoverInsumo(index)}
+                        className={styles.botaoRemover}
+                      >
+                        <FaTrash /> &nbsp; Remover
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </>
         ) : (
           <p>Nenhum item selecionado.</p>
         )}

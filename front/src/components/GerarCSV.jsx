@@ -38,27 +38,36 @@ export const GerarCSV = () => {
         "Unidade de Medida": formData.unidadeMedida || "",
         "Venda - Produção": JSON.stringify(formData.salesData || []),
 
-        "Estoque Britado": JSON.stringify(formData.estoqueBritado || []),
-        "Quantidade em Estoque Britado": JSON.stringify(
-          [formData.quantidadeEstoqueBritado, formData.estoqueBritado] || [],
-        ),
-        estoqueBritado: JSON.stringify(formData.estoque || []),
-        confirmaEstoque: formData.confirmaEstoque || "",
-        possuiEstoque: formData.possuiEstoque || "",
-        salesByCategory: JSON.stringify(formData.salesByCategory || []),
-        costData: JSON.stringify(formData.costData || []),
-        insumos: JSON.stringify(formData.insumos || []),
-        matrizEnergetica: formData.matrizEnergetica || "",
-        apuracaoMensal: JSON.stringify(formData.apuracaoMensal || []),
-        confirmaInvest: formData.confirmaInvest || "",
-        aquisi: formData.aquisi || "",
-        valorInvest: formData.valorInvest || "",
-        compradores: JSON.stringify(formData.compradores || []),
-        totalVendido: formData.totalVendido || "",
-        novosCompradores: formData.novosCompradores || "",
+        // Mão de Obra
+        "Mão de Obra": JSON.stringify(formData.salesByCategory || []),
+
+        // Custo de Lavra
+        "Custo de Lavra": JSON.stringify(formData.costData || []),
+
+        // Insumos
+        "Insumos da Lavra": JSON.stringify(formData.insumosSelecionados || []),
+
+        // Matriz Energetica
+        "Matriz Energetica": formData.matrizEnergetica || "",
+        "Fatura de Energia": formData.faturaEnergia || "",
+
+        // Impostos
+        "Apuração Mensal": JSON.stringify(formData.apuracaoMensal || []),
+
+        // Investimentos
+        "Houve Investimento?": formData.confirmaInvest || "",
+        "Aquisições do Ano": formData.aquisi || "",
+        "Valor Investido": formData.valorInvest || "",
+
+        // Lista de Compradores
+        "Nomes dos Compradores": formData.compradores || [],
+        "Total Vendido (R$)": formData.totalVendido || 0,
         "Arquivo Notas Fiscais":
           formData.arquivoNotasFiscaisUrl || "Não enviado",
-        "Pilha Esteril": JSON.stringify(formData.pilhaEsteril || []),
+
+        // Pilha de Estéril
+        "Existe Pilha de Estéril?": formData.existePilhaEsteril || "",
+        "Quantidade de Estéril": formData.quantidadeEsteril || "",
 
         // ... outros campos
       };
