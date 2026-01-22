@@ -88,7 +88,7 @@ const TabelaCompradores = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:3001/upload-notas-fiscais",
+        "https://localhost:3001/upload-notas-fiscais",
         formData,
         {
           headers: {
