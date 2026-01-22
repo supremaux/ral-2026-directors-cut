@@ -22,6 +22,11 @@ import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
 
 export default function AppRoutes() {
+  const ProtectedRoute = ({ children }) => {
+    const isAuthenticated = localStorage.getItem("auth");
+    return isAuthenticated ? children : <Navigate to="/login" replace />;
+  };
+
   return (
     <>
       {/* Páginas */}
@@ -50,7 +55,14 @@ export default function AppRoutes() {
           </Route>
           <Route path="/thanku" element={<ThankU />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/paineladmin" element={<Paineladmin />} />
+          <Route
+            path="/paineladmin"
+            element={
+              <ProtectedRoute>
+                <Paineladmin />
+              </ProtectedRoute>
+            }
+          />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

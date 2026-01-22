@@ -13,7 +13,7 @@ export default function Login() {
     e.preventDefault();
     try {
       const response = await axios.post(
-        "https://ral-2026-full.vercel.app/login",
+        "/api/login", // Use rota relativa
         {
           username: usernameValue,
           password: passwordValue,
@@ -21,13 +21,14 @@ export default function Login() {
       );
       console.log(response.data);
       if (response.data.success) {
+        localStorage.setItem("auth", "true"); // Salva o estado de autenticação
         window.location.href = "/paineladmin";
       } else {
         alert("Usuário ou senha incorretos!");
       }
     } catch (error) {
       console.error("Erro ao fazer login:", error);
-      alert("Erro ao fazer login. Verifique se o servidor está rodando.");
+      alert("Erro ao fazer login. Tente novamente mais tarde.");
     }
   };
 

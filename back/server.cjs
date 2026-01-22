@@ -266,7 +266,7 @@ app.delete("/delete/:filename", async (req, res) => {
 });
 
 // Rota para fazer login
-app.post("/login", (req, res) => {
+app.post("/api/login", (req, res) => {
   const { username, password } = req.body;
   const user = users.find(
     (u) => u.username === username && u.password === password,
@@ -279,16 +279,6 @@ app.post("/login", (req, res) => {
       .status(401)
       .json({ success: false, message: "Usuário ou senha incorretos!" });
   }
-});
-
-// Rota para impedir que usuários não logados vejam a página do engenheiro
-app.get("/paineladmin", (req, res) => {
-  const token = req.headers.authorization; // Exemplo de obtenção do token de autenticação
-
-  if (!token) {
-    return res.status(401).json({ success: false, message: "Acesso negado!" });
-  }
-  res.status(200).json({ success: true, message: "Acesso permitido!" });
 });
 
 // Rota para fazer logout
