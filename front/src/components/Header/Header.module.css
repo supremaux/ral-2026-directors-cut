@@ -1,12 +1,24 @@
 .topBar {
   background-color: #394048;
   padding: 15px 50px;
-  text-align: left;
   color: white;
 }
 
 .topBar h1 {
   font-size: 25px;
+}
+
+.login {
+  color: #394048;
+  cursor: pointer;
+  text-decoration: none;
+  margin-left: 20px;
+  font-size: 25px;
+}
+
+.login:hover {
+  transition: all 0.5s ease-in-out;
+  color: #ffffff; /* Cor de destaque ao passar o mouse */
 }
 
 .headerParte2 {

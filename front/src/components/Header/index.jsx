@@ -2,6 +2,7 @@ import { Col, Container, Row } from "react-bootstrap";
 import styles from "./Header.module.css";
 import logo from "../../assets/logo.png";
 import { Link } from "react-router-dom";
+import { RiLockPasswordFill } from "react-icons/ri";
 import Inicio from "../../pages/Inicio";
 
 export default function Header() {
@@ -9,10 +10,15 @@ export default function Header() {
     <>
       {/* Topbar*/}
       <section className={styles.topBar}>
-        <Container>
+        <Container className="w-100 flex-row justify-content-between align-content-center">
           <Row>
-            <Col ms className={styles.title}>
+            <Col xs={8} sm={8} className={styles.title}>
               <h1>Relatório Anual de Lavra</h1>
+            </Col>
+            <Col xs={4} sm={4}>
+              <Link to="/login" href="/login" className={styles.login}>
+                <RiLockPasswordFill /> Login
+              </Link>
             </Col>
           </Row>
         </Container>
