@@ -101,6 +101,7 @@ app.post("/upload-fatura", upload.single("file"), async (req, res) => {
 app.post("/upload-notas-fiscais", upload.single("file"), async (req, res) => {
   try {
     if (!req.file) {
+      console.log("Nenhum arquivo recebido no backend.");
       return res.status(400).send("Nenhum arquivo enviado.");
     }
 
@@ -127,9 +128,6 @@ app.post("/upload-notas-fiscais", upload.single("file"), async (req, res) => {
     console.error("Erro no servidor:", error);
     res.status(500).json({ error: "Erro no servidor." });
   }
-  console.log("Arquivo recebido:", req.file);
-
-  res.status(200).json({ message: "Arquivo recebido com sucesso." });
 });
 
 // Rota para finalizar relatório e gerar CSV (usando Supabase Storage)
