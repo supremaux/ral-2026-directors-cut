@@ -6,6 +6,12 @@ const { createClient } = require("@supabase/supabase-js");
 // Inicialize o app do Express
 const app = express();
 
+// Checagem de saída
+app.get("/api/health", (req, res) => {
+  console.log("Backend está rodando!");
+  res.status(200).json({ status: "ok" });
+});
+
 // Configuração do CORS
 app.use(
   cors({
