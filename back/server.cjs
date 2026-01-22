@@ -101,7 +101,6 @@ app.post("/upload-fatura", upload.single("file"), async (req, res) => {
 app.post("/upload-notas-fiscais", upload.single("file"), async (req, res) => {
   try {
     if (!req.file) {
-      console.log("Nenhum arquivo recebido no backend.");
       return res.status(400).send("Nenhum arquivo enviado.");
     }
 
@@ -125,11 +124,11 @@ app.post("/upload-notas-fiscais", upload.single("file"), async (req, res) => {
       return res.status(500).json({ error: "Erro ao fazer upload." });
     }
 
-    const { data: urlData } = supabase.storage
+    const { publicURL } = supabase.storage
       .from("upload")
       .getPublicUrl(filePath);
 
-    res.status(200).json({ fileUrl: urlData.publicUrl });
+    res.status(200).json({ fileUrl: publicURL });
   } catch (error) {
     console.error("Erro no servidor:", error);
     res.status(500).json({ error: "Erro no servidor." });
