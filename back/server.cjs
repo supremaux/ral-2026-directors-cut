@@ -98,42 +98,10 @@ app.post("/upload-fatura", upload.single("file"), async (req, res) => {
 });
 
 // Rota para upload de notas fiscais (usando Supabase Storage)
-app.post("/upload-notas-fiscais", upload.any(), async (req, res) => {
-  console.log("Arquivos recebidos:", req.files);
-  try {
-    console.log("Headers recebidos:", req.headers);
-    console.log("Arquivo recebido:", req.file);
-    console.log("Body recebido:", req.body);
-
-    if (!req.file) {
-      console.log("Nenhum arquivo recebido no backend.");
-      return res.status(400).send("Nenhum arquivo enviado.");
-    }
-
-    const file = req.file;
-    const fileExt = file.originalname.split(".").pop();
-    const fileName = `${Date.now()}-nota-fiscal.${fileExt}`;
-    const filePath = `upload/${fileName}`;
-
-    const { data, error } = await supabase.storage
-      .from("upload")
-      .upload(filePath, file.buffer, { contentType: file.mimetype });
-
-    if (error) {
-      console.error("Erro ao fazer upload no Supabase:", error);
-      return res.status(500).json({ error: "Erro ao fazer upload." });
-    }
-
-    const { data: urlData } = supabase.storage
-      .from("upload")
-      .getPublicUrl(filePath);
-
-    console.log("URL pública gerada:", urlData.publicUrl);
-    res.status(200).json({ fileUrl: urlData.publicUrl });
-  } catch (error) {
-    console.error("Erro no servidor:", error);
-    res.status(500).json({ error: "Erro no servidor." });
-  }
+app.post("/upload-notas-fiscais", async (req, res) => {
+  const base64 = req.body.file;
+  const buffer = Buffer.from(base64, "base64");
+  // Faça o upload para o Supabase com `buffer`
 });
 
 // Rota para finalizar relatório e gerar CSV (usando Supabase Storage)
