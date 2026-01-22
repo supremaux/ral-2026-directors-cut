@@ -77,17 +77,38 @@ const TabelaCompradores = () => {
     setFile(e.target.files[0]);
   };
 
+  // Função para fazer upload das notas
   const handleUpload = async () => {
-    const reader = new FileReader();
-    reader.onload = async (e) => {
-      const base64 = e.target.result.split(",")[1];
+    if (!file) {
+      alert("Selecione um arquivo primeiro.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
       const response = await axios.post(
-        "http://localhost:3001/upload-notas-fiscais",
-        { file: base64 },
+        "/api/upload-notas-fiscais", // Rota relativa
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        },
       );
-      console.log("Resposta:", response.data);
-    };
-    reader.readAsDataURL(file);
+
+      console.log("Resposta do backend:", response.data);
+      setFormData({
+        ...formData,
+        arquivoNotasFiscaisUrl: response.data.fileUrl,
+      });
+
+      alert("Arquivo enviado com sucesso!");
+    } catch (error) {
+      console.error("Erro detalhado:", error.response?.data || error.message);
+      alert("Erro ao enviar arquivo.");
+    }
   };
 
   // Atualiza o total vendido sempre que os compradores mudarem

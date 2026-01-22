@@ -10,10 +10,10 @@
   "keywords": [],
   "author": "Suprema",
   "license": "ISC",
-  "type": "module",
+  "type": "commonjs",
   "dependencies": {
     "@supabase/supabase-js": "^2.91.0",
-    "cors": "^2.8.5",
+    "cors": "^2.8.6",
     "express": "^5.2.1",
     "fs": "^0.0.1-security",
     "multer": "^2.0.2",

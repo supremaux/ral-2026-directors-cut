@@ -1,19 +1,22 @@
-// server.cjs
 const express = require("express");
 const multer = require("multer");
-const papaparse = require("papaparse");
 const cors = require("cors");
-const bodyParser = require("body-parser");
 const { createClient } = require("@supabase/supabase-js");
 
-// Carregando usuários do arquivo JSON
-const users = require("./users.json");
+// Inicialize o app do Express
+const app = express();
 
-// Verifique se users é um array
-if (!Array.isArray(users)) {
-  console.error("Erro: users.json não é um array.");
-  process.exit(1);
-}
+// Configuração do CORS
+app.use(
+  cors({
+    origin: ["http://localhost:5173", "https://ral-2026-full.vercel.app"],
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  }),
+);
+
+// Configuração do Multer
+const upload = multer({ storage: multer.memoryStorage() });
 
 // Configuração do Supabase
 const supabaseUrl = "https://emfmvsbrfawmsuuwavae.supabase.co";
@@ -21,12 +24,6 @@ const supabaseKey =
   process.env.SUPABASE_SECRET_KEY ||
   "sb_secret_bIvVbrrcclCl41CcSIbVYA_AhVm-ssU";
 const supabase = createClient(supabaseUrl, supabaseKey);
-
-const app = express();
-app.use(bodyParser.json());
-app.use(cors());
-
-const upload = multer({ storage: multer.memoryStorage() }); // Armazena o arquivo na memória
 
 // Rota para upload de termos (usando Supabase Storage)
 app.post("/upload-termo", async (req, res) => {
@@ -97,12 +94,43 @@ app.post("/upload-fatura", upload.single("file"), async (req, res) => {
   }
 });
 
-// Rota para upload de notas fiscais (usando Supabase Storage)
-app.post("/upload-notas-fiscais", async (req, res) => {
-  const base64 = req.body.file;
-  const buffer = Buffer.from(base64, "base64");
-  // Faça o upload para o Supabase com `buffer`
-});
+// Rota para upload de notas fiscais
+app.post(
+  "/api/upload-notas-fiscais",
+  upload.single("file"),
+  async (req, res) => {
+    try {
+      if (!req.file) {
+        console.log("Nenhum arquivo recebido no backend.");
+        return res.status(400).send("Nenhum arquivo enviado.");
+      }
+
+      const file = req.file;
+      const fileExt = file.originalname.split(".").pop();
+      const fileName = `${Date.now()}-nota-fiscal.${fileExt}`;
+      const filePath = `upload/${fileName}`;
+
+      const { data, error } = await supabase.storage
+        .from("upload")
+        .upload(filePath, file.buffer, { contentType: file.mimetype });
+
+      if (error) {
+        console.error("Erro ao fazer upload:", error);
+        return res.status(500).json({ error: "Erro ao fazer upload." });
+      }
+
+      const { data: urlData } = supabase.storage
+        .from("upload")
+        .getPublicUrl(filePath);
+
+      console.log("URL pública gerada:", urlData.publicUrl);
+      res.status(200).json({ fileUrl: urlData.publicUrl });
+    } catch (error) {
+      console.error("Erro no servidor:", error);
+      res.status(500).json({ error: "Erro no servidor." });
+    }
+  },
+);
 
 // Rota para finalizar relatório e gerar CSV (usando Supabase Storage)
 app.post("/api/finalizar-relatorio", async (req, res) => {
