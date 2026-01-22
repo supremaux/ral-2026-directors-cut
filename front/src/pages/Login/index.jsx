@@ -12,10 +12,13 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:3001/login", {
-        username: usernameValue,
-        password: passwordValue,
-      });
+      const response = await axios.post(
+        "https://ral-2026-full.vercel.app/login",
+        {
+          username: usernameValue,
+          password: passwordValue,
+        },
+      );
       console.log(response.data);
       if (response.data.success) {
         window.location.href = "/paineladmin";

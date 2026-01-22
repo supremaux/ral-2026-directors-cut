@@ -49,8 +49,8 @@ export default function AppRoutes() {
             <Route path="/finalizar" element={<Finalizar />} />
           </Route>
           <Route path="/thanku" element={<ThankU />} />
-          <Route path="/paineladmin" element={<Paineladmin />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/paineladmin" element={<Paineladmin />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
