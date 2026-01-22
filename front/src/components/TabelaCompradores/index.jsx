@@ -84,7 +84,7 @@ const TabelaCompradores = () => {
     }
 
     const data = new FormData();
-    data.append("file", file);
+    data.append("file", file); // O nome "file" deve ser igual ao usado no backend
 
     try {
       const response = await axios.post(
@@ -100,7 +100,7 @@ const TabelaCompradores = () => {
       // Atualiza o contexto com o link do arquivo
       setFormData({
         ...formData,
-        arquivoNotasFiscaisUrl: `http://localhost:3001${response.data.fileUrl}`,
+        arquivoNotasFiscaisUrl: response.data.fileUrl, // Use a URL pública retornada pelo backend
       });
 
       alert("Arquivo enviado com sucesso!");
