@@ -110,6 +110,12 @@ app.post("/upload-notas-fiscais", upload.single("file"), async (req, res) => {
     const fileName = `${Date.now()}-nota-fiscal.${fileExt}`;
     const filePath = `upload/${fileName}`;
 
+    const supabase = createClient(
+      "https://emfmvsbrfawmsuuwavae.supabase.co",
+      process.env.SUPABASE_SECRET_KEY ||
+        "sb_secret_bIvVbrrcclCl41CcSIbVYA_AhVm-ssU",
+    );
+
     const { data, error } = await supabase.storage
       .from("upload")
       .upload(filePath, file.buffer, { contentType: file.mimetype });
