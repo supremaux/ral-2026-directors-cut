@@ -5,7 +5,7 @@ import { Container, Row } from "react-bootstrap";
 import styles from "./Paineladmin.module.css";
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
-import ListarArquivos from "../../components/ListarArquivos";
+import ListarArquivos from "../../components/ListarArquivos/ListarArquivos";
 import { FaPowerOff } from "react-icons/fa";
 
 export default function Paineladmin() {
