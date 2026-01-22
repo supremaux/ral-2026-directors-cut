@@ -15,10 +15,10 @@ export default function Estoque() {
     });
   };
 
-  const handleUnidadeEstoqueChange = (e) => {
+  const handleunidadeMedEstoqueChange = (e) => {
     setFormData({
       ...formData,
-      unidadeEstoque: e.target.value,
+      unidadeMedEstoque: e.target.value,
     });
   };
 
@@ -29,16 +29,16 @@ export default function Estoque() {
     });
   };
 
-  const handleEstoqueBritadoChange = (e) => {
+  const handleestoqueFinalChange = (e) => {
     setFormData({
       ...formData,
-      estoqueBritado: Number(e.target.value) || 0,
+      estoqueFinal: Number(e.target.value) || 0,
     });
   };
 
   // Verifica se a substância mineral é Basalto, Granito ou Calcário
-  const substanciasComEstoqueBritado = ["basalto", "granito", "calcario"];
-  const deveExibirEstoqueBritado = substanciasComEstoqueBritado.includes(
+  const substanciasComestoqueFinal = ["basalto", "granito", "calcario"];
+  const deveExibirestoqueFinal = substanciasComestoqueFinal.includes(
     formData.substanciaMineral,
   );
 
@@ -74,8 +74,8 @@ export default function Estoque() {
                   <h4>Unidade de Medida</h4>
                   <select
                     className={styles.select}
-                    onChange={handleUnidadeEstoqueChange}
-                    value={formData.unidadeEstoque || ""}
+                    onChange={handleunidadeMedEstoqueChange}
+                    value={formData.unidadeMedEstoque || ""}
                   >
                     <option value="" disabled>
                       Selecione uma unidade
@@ -88,7 +88,8 @@ export default function Estoque() {
                   <h4>Estoque Anual</h4>
                   <div style={{ marginBottom: "15px" }}>
                     <label>
-                      Estoque na Lavra ({formData.unidadeEstoque || "unidade"}):
+                      Estoque na Lavra (
+                      {formData.unidadeMedEstoque || "unidade"}):
                     </label>
                     <input
                       type="number"
@@ -97,16 +98,17 @@ export default function Estoque() {
                       style={{ width: "100%", padding: "8px" }}
                     />
                   </div>
-                  {deveExibirEstoqueBritado && (
+                  {deveExibirestoqueFinal && (
                     <div style={{ marginBottom: "15px" }}>
                       <label>
-                        Estoque Britado ({formData.unidadeEstoque || "unidade"}
+                        Estoque Britado (
+                        {formData.unidadeMedEstoque || "unidade"}
                         ):
                       </label>
                       <input
                         type="number"
-                        value={formData.estoqueBritado}
-                        onChange={handleEstoqueBritadoChange}
+                        value={formData.estoqueFinal}
+                        onChange={handleestoqueFinalChange}
                         style={{ width: "100%", padding: "8px" }}
                       />
                     </div>

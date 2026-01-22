@@ -26,7 +26,7 @@ export const GerarCSV = () => {
 
         // Estoque
         "Possui Estoque": formData.temEstoque || "",
-        "Unidade de Estoque": formData.unidadeEstoque || "",
+        "Unidade de Estoque": formData.unidadeMedEstoque || "",
         "Estoque Lavrado": JSON.stringify(formData.estoqueLavra || []),
 
         // Produção Detonado Britado

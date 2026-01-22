@@ -136,9 +136,9 @@ export const FormProvider = ({ children }) => {
 
     // Estoque
     temEstoque: "",
-    unidadeEstoque: "", // Nova propriedade para armazenar a unidade de estoque
+    unidadeMedEstoque: "", // Nova propriedade para armazenar a unidade de estoque
     estoqueLavra: 0,
-    estoqueBritado: 0,
+    estoqueFinal: 0,
 
     // Módulo de Beneficiamento
     unidadeMedida: "",
