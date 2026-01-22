@@ -84,7 +84,10 @@ const TabelaCompradores = () => {
     }
 
     const formData = new FormData();
-    formData.append("file", file); // O nome "file" deve ser igual ao usado no backend
+    formData.append("file", file);
+
+    // Log para verificar o arquivo
+    console.log("Arquivo selecionado:", file);
 
     try {
       const response = await axios.post(
@@ -97,7 +100,7 @@ const TabelaCompradores = () => {
         },
       );
 
-      // Atualiza o contexto com o link do arquivo
+      console.log("Resposta do backend:", response.data);
       setFormData({
         ...formData,
         arquivoNotasFiscaisUrl: response.data.fileUrl,
@@ -105,7 +108,7 @@ const TabelaCompradores = () => {
 
       alert("Arquivo enviado com sucesso!");
     } catch (error) {
-      console.error("Erro ao enviar arquivo:", error);
+      console.error("Erro detalhado:", error.response?.data || error.message);
       alert("Erro ao enviar arquivo.");
     }
   };

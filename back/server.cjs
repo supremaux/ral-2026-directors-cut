@@ -100,7 +100,12 @@ app.post("/upload-fatura", upload.single("file"), async (req, res) => {
 // Rota para upload de notas fiscais (usando Supabase Storage)
 app.post("/upload-notas-fiscais", upload.single("file"), async (req, res) => {
   try {
+    console.log("Headers recebidos:", req.headers);
+    console.log("Arquivo recebido:", req.file);
+    console.log("Body recebido:", req.body);
+
     if (!req.file) {
+      console.log("Nenhum arquivo recebido no backend.");
       return res.status(400).send("Nenhum arquivo enviado.");
     }
 
@@ -109,26 +114,21 @@ app.post("/upload-notas-fiscais", upload.single("file"), async (req, res) => {
     const fileName = `${Date.now()}-nota-fiscal.${fileExt}`;
     const filePath = `upload/${fileName}`;
 
-    const supabase = createClient(
-      "https://emfmvsbrfawmsuuwavae.supabase.co",
-      process.env.SUPABASE_SECRET_KEY ||
-        "sb_secret_bIvVbrrcclCl41CcSIbVYA_AhVm-ssU",
-    );
-
     const { data, error } = await supabase.storage
       .from("upload")
       .upload(filePath, file.buffer, { contentType: file.mimetype });
 
     if (error) {
-      console.error("Erro ao fazer upload:", error);
+      console.error("Erro ao fazer upload no Supabase:", error);
       return res.status(500).json({ error: "Erro ao fazer upload." });
     }
 
-    const { publicURL } = supabase.storage
+    const { data: urlData } = supabase.storage
       .from("upload")
       .getPublicUrl(filePath);
 
-    res.status(200).json({ fileUrl: publicURL });
+    console.log("URL pública gerada:", urlData.publicUrl);
+    res.status(200).json({ fileUrl: urlData.publicUrl });
   } catch (error) {
     console.error("Erro no servidor:", error);
     res.status(500).json({ error: "Erro no servidor." });
