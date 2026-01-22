@@ -98,7 +98,8 @@ app.post("/upload-fatura", upload.single("file"), async (req, res) => {
 });
 
 // Rota para upload de notas fiscais (usando Supabase Storage)
-app.post("/upload-notas-fiscais", upload.single("file"), async (req, res) => {
+app.post("/upload-notas-fiscais", upload.any(), async (req, res) => {
+  console.log("Arquivos recebidos:", req.files);
   try {
     console.log("Headers recebidos:", req.headers);
     console.log("Arquivo recebido:", req.file);
