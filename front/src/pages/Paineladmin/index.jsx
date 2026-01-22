@@ -1,6 +1,12 @@
 // Paineladmin.jsx
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { Container, Row } from "react-bootstrap";
+import styles from "./Paineladmin.module.css";
+import Header from "../../components/Header";
+import Footer from "../../components/Footer";
+import ListarArquivos from "../../components/ListarArquivos";
+import { FaPowerOff } from "react-icons/fa";
 
 export default function Paineladmin() {
   const navigate = useNavigate();
