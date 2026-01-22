@@ -11,7 +11,7 @@ export default function Estoque() {
   const confirmaEstoque = (e) => {
     setFormData({
       ...formData,
-      possuiEstoque: e.target.value,
+      temEstoque: e.target.value,
     });
   };
 
@@ -57,7 +57,7 @@ export default function Estoque() {
               <select
                 className={styles.select}
                 onChange={confirmaEstoque}
-                value={formData.possuiEstoque || ""}
+                value={formData.temEstoque || ""}
               >
                 <option value="" disabled>
                   Selecione uma opção
@@ -67,7 +67,7 @@ export default function Estoque() {
               </select>
             </Col>
           </Row>
-          {formData.possuiEstoque === "sim" && (
+          {formData.temEstoque === "sim" && (
             <Row>
               <Col>
                 <div style={{ marginTop: "20px" }}>

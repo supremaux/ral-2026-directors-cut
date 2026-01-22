@@ -25,7 +25,7 @@ export const GerarCSV = () => {
         "Substância Mineral": formData.substanciaMineral || "",
 
         // Estoque
-        "Possui Estoque": formData.possuiEstoque || "",
+        "Possui Estoque": formData.temEstoque || "",
         "Unidade de Estoque": formData.unidadeEstoque || "",
         "Estoque Lavrado": JSON.stringify(formData.estoqueLavra || []),
 
