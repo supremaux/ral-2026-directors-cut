@@ -14,13 +14,13 @@ export default function Paineladmin() {
   useEffect(() => {
     const auth = localStorage.getItem("auth");
     if (!auth) {
-      navigate("/"); // Redireciona para a página de login
+      navigate("/paineladmin");
     }
   }, [navigate]);
 
   const handleLogout = () => {
     localStorage.removeItem("auth");
-    navigate("/");
+    navigate("/login");
   };
 
   return (
