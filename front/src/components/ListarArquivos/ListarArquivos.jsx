@@ -15,11 +15,6 @@ export const ListarArquivos = () => {
   const filesPerPage = 20;
   const navigate = useNavigate();
 
-  const handleLogout = () => {
-    localStorage.removeItem("auth");
-    navigate("/login");
-  };
-
   useEffect(() => {
     const auth = localStorage.getItem("auth");
     if (!auth) {
@@ -31,12 +26,14 @@ export const ListarArquivos = () => {
     const fetchFiles = async () => {
       try {
         const response = await axios.get("/api/download");
-        setFiles(
-          response.data.map((file) => ({
-            name: file,
-            date: new Date().toLocaleString(),
-          })),
-        );
+        if (Array.isArray(response.data)) {
+          setFiles(
+            response.data.map((file) => ({
+              name: typeof file === "object" ? file.name : file,
+              date: new Date().toLocaleString(),
+            })),
+          );
+        }
       } catch (error) {
         console.error("Erro ao listar arquivos:", error);
       }
@@ -56,8 +53,9 @@ export const ListarArquivos = () => {
     }
   };
 
-  const filteredFiles = files.filter((file) =>
-    file.name.toLowerCase().includes(searchTerm.toLowerCase()),
+  const filteredFiles = files.filter(
+    (file) =>
+      file.name && file.name.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
   const indexOfLastFile = currentPage * filesPerPage;
@@ -67,7 +65,7 @@ export const ListarArquivos = () => {
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   if (!isAuthenticated) {
-    return null; // Ou um componente de carregamento
+    return null;
   }
 
   return (
@@ -76,11 +74,6 @@ export const ListarArquivos = () => {
         <Row>
           <Col>
             <h2>Arquivos Disponíveis para Download</h2>
-          </Col>
-          <Col>
-            <button onClick={handleLogout} className="btn btn-danger">
-              Sair
-            </button>
           </Col>
           <Col>
             <div className={styles.searchContainer}>

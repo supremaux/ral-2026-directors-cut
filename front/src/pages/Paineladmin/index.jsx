@@ -1,4 +1,3 @@
-// Paineladmin.jsx
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Container, Row } from "react-bootstrap";
@@ -14,7 +13,7 @@ export default function Paineladmin() {
   useEffect(() => {
     const auth = localStorage.getItem("auth");
     if (!auth) {
-      navigate("/login"); // Redireciona para a página de login se não estiver autenticado
+      navigate("/login");
     }
   }, [navigate]);
 

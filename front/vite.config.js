@@ -7,7 +7,12 @@ export default defineConfig({
   build: {
     outDir: "dist",
     emptyOutDir: true,
-    assetsDir: "assets", // Garante que os assets sejam gerados na pasta `dist/assets`
+    assetsDir: "assets",
+    rollupOptions: {
+      output: {
+        manualChunks: undefined,
+      },
+    },
   },
-  base: "./", // Importante para garantir que os caminhos sejam relativos
+  base: "./",
 });
