@@ -14,7 +14,7 @@ export default function Paineladmin() {
   useEffect(() => {
     const auth = localStorage.getItem("auth");
     if (!auth) {
-      navigate("/paineladmin");
+      navigate("/login"); // Redireciona para a página de login se não estiver autenticado
     }
   }, [navigate]);
 
