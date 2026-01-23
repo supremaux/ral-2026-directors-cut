@@ -1,10 +1,13 @@
 const express = require("express");
 const multer = require("multer");
 const cors = require("cors");
+const bodyParser = require("body-parser");
 const { createClient } = require("@supabase/supabase-js");
 
 // Inicialize o app do Express
 const app = express();
+app.use(cors());
+app.use(bodyParser.json());
 
 // Checagem de saída
 app.get("/api/health", (req, res) => {
@@ -271,16 +274,20 @@ app.delete("/delete/:filename", async (req, res) => {
   }
 });
 
-// Rota para fazer login
+// Rota de login
 app.post("/api/login", (req, res) => {
   const { username, password } = req.body;
+  console.log("Tentativa de login:", username, password); // Log para debug
+
   const user = users.find(
     (u) => u.username === username && u.password === password,
   );
 
   if (user) {
+    console.log("Login bem-sucedido para:", username); // Log para debug
     res.status(200).json({ success: true, message: "Login bem-sucedido!" });
   } else {
+    console.log("Usuário ou senha incorretos para:", username); // Log para debug
     res
       .status(401)
       .json({ success: false, message: "Usuário ou senha incorretos!" });

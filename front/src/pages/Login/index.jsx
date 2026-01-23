@@ -12,6 +12,7 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      console.log("Enviando credenciais:", usernameValue, passwordValue); // Log para debug
       const response = await axios.post(
         "/api/login", // Use rota relativa
         {
@@ -19,7 +20,7 @@ export default function Login() {
           password: passwordValue,
         },
       );
-      console.log(response.data);
+      console.log("Resposta do backend:", response.data); // Log para debug
       if (response.data.success) {
         localStorage.setItem("auth", "true"); // Salva o estado de autenticação
         window.location.href = "/paineladmin";
@@ -27,7 +28,10 @@ export default function Login() {
         alert("Usuário ou senha incorretos!");
       }
     } catch (error) {
-      console.error("Erro ao fazer login:", error);
+      console.error(
+        "Erro detalhado ao fazer login:",
+        error.response?.data || error.message,
+      ); // Log para debug
       alert("Erro ao fazer login. Tente novamente mais tarde.");
     }
   };
