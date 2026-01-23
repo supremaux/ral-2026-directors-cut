@@ -1,10 +1,23 @@
+/* ListarArquivos.module.css */
+.container {
+  padding: 20px;
+}
+
+.searchContainer {
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: flex-end;
+}
+
 .searchContainer input {
   padding: 8px;
   width: 300px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
 }
 
 .tableContainer {
-  overflow-x: auto;
+  margin-top: 20px;
 }
 
 .table {
@@ -20,58 +33,48 @@
 }
 
 .table th {
-  background-color: #f2f2f2;
-}
-
-.table tr:hover {
-  background-color: #f5f5f5;
+  background-color: #f8f9fa;
 }
 
 .downloadButton,
 .viewButton,
 .deleteButton {
   margin-right: 10px;
-  padding: 5px 10px;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 4px;
   cursor: pointer;
 }
 
 .downloadButton {
-  background-color: #4caf50;
+  background-color: #28a745;
   color: white;
-  text-decoration: none;
-  border: none;
-  border-radius: 4px;
 }
 
 .viewButton {
-  background-color: #2196f3;
+  background-color: #007bff;
   color: white;
-  border: none;
-  border-radius: 4px;
 }
 
 .deleteButton {
-  background-color: #f44336;
+  background-color: #dc3545;
   color: white;
-  border: none;
-  border-radius: 4px;
 }
 
 .paginationContainer {
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
   margin-top: 20px;
 }
 
 .paginationButton {
   margin: 0 5px;
   padding: 8px 12px;
+  border: 1px solid #ddd;
+  background-color: #f8f9fa;
   cursor: pointer;
-  background-color: #f2f2f2;
-  border: none;
-  border-radius: 4px;
 }
 
 .paginationButton:hover {
-  background-color: #ddd;
+  background-color: #e9ecef;
 }

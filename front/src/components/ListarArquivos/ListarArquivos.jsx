@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { Container, Row, Col } from "react-bootstrap";
+import { Container, Row, Col, Button } from "react-bootstrap";
 import styles from "./ListarArquivos.module.css";
 import { useNavigate } from "react-router-dom";
 import { IoMdCloudDownload } from "react-icons/io";
@@ -12,6 +12,7 @@ export const ListarArquivos = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [loading, setLoading] = useState(true);
   const filesPerPage = 20;
   const navigate = useNavigate();
 
@@ -22,6 +23,11 @@ export const ListarArquivos = () => {
       return;
     }
     setIsAuthenticated(true);
+    setLoading(false);
+  }, [navigate]);
+
+  useEffect(() => {
+    if (!isAuthenticated || loading) return;
 
     const fetchFiles = async () => {
       try {
@@ -36,11 +42,12 @@ export const ListarArquivos = () => {
         }
       } catch (error) {
         console.error("Erro ao listar arquivos:", error);
+        alert("Erro ao listar arquivos. Tente novamente mais tarde.");
       }
     };
 
     fetchFiles();
-  }, [navigate]);
+  }, [isAuthenticated, loading]);
 
   const handleDelete = async (fileName) => {
     try {
@@ -49,7 +56,7 @@ export const ListarArquivos = () => {
       alert("Arquivo deletado com sucesso!");
     } catch (error) {
       console.error("Erro ao deletar arquivo:", error);
-      alert("Erro ao deletar arquivo.");
+      alert("Erro ao deletar arquivo. Tente novamente mais tarde.");
     }
   };
 
@@ -64,8 +71,8 @@ export const ListarArquivos = () => {
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
-  if (!isAuthenticated) {
-    return null;
+  if (!isAuthenticated || loading) {
+    return <div>Carregando...</div>;
   }
 
   return (
@@ -74,6 +81,17 @@ export const ListarArquivos = () => {
         <Row>
           <Col>
             <h2>Arquivos Disponíveis para Download</h2>
+          </Col>
+          <Col>
+            <Button
+              onClick={() => {
+                localStorage.removeItem("auth");
+                navigate("/login");
+              }}
+              variant="danger"
+            >
+              Sair
+            </Button>
           </Col>
           <Col>
             <div className={styles.searchContainer}>
@@ -101,52 +119,60 @@ export const ListarArquivos = () => {
               </tr>
             </thead>
             <tbody>
-              {currentFiles.map((file, index) => (
-                <tr key={index}>
-                  <td>{file.name}</td>
-                  <td>{file.date}</td>
-                  <td>
-                    <a
-                      href={`/api/download/${file.name}`}
-                      download
-                      className={styles.downloadButton}
-                    >
-                      <IoMdCloudDownload /> Download
-                    </a>
-                    <button
-                      onClick={() =>
-                        window.open(`/api/download/${file.name}`, "_blank")
-                      }
-                      className={styles.viewButton}
-                    >
-                      <FaEye /> Visualizar
-                    </button>
-                    <button
-                      onClick={() => handleDelete(file.name)}
-                      className={styles.deleteButton}
-                    >
-                      <MdDeleteForever /> Deletar
-                    </button>
-                  </td>
+              {currentFiles.length > 0 ? (
+                currentFiles.map((file, index) => (
+                  <tr key={index}>
+                    <td>{file.name}</td>
+                    <td>{file.date}</td>
+                    <td>
+                      <a
+                        href={`/api/download/${file.name}`}
+                        download
+                        className={styles.downloadButton}
+                      >
+                        <IoMdCloudDownload /> Download
+                      </a>
+                      <button
+                        onClick={() =>
+                          window.open(`/api/download/${file.name}`, "_blank")
+                        }
+                        className={styles.viewButton}
+                      >
+                        <FaEye /> Visualizar
+                      </button>
+                      <button
+                        onClick={() => handleDelete(file.name)}
+                        className={styles.deleteButton}
+                      >
+                        <MdDeleteForever /> Deletar
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="3">Nenhum arquivo encontrado.</td>
                 </tr>
-              ))}
+              )}
             </tbody>
           </table>
         </div>
-        <div className={styles.paginationContainer}>
-          {Array.from(
-            { length: Math.ceil(filteredFiles.length / filesPerPage) },
-            (_, i) => (
-              <button
-                key={i}
-                onClick={() => paginate(i + 1)}
-                className={styles.paginationButton}
-              >
-                {i + 1}
-              </button>
-            ),
-          )}
-        </div>
+        {filteredFiles.length > filesPerPage && (
+          <div className={styles.paginationContainer}>
+            {Array.from(
+              { length: Math.ceil(filteredFiles.length / filesPerPage) },
+              (_, i) => (
+                <button
+                  key={i}
+                  onClick={() => paginate(i + 1)}
+                  className={styles.paginationButton}
+                >
+                  {i + 1}
+                </button>
+              ),
+            )}
+          </div>
+        )}
       </Container>
     </section>
   );

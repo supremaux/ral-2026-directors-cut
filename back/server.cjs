@@ -146,7 +146,6 @@ app.post(
 );
 
 // Rota para finalizar relatório e gerar CSV (usando Supabase Storage)
-// Rota para finalizar relatório e gerar CSV
 app.post("/api/finalizar-relatorio", async (req, res) => {
   try {
     const dados = req.body;
@@ -169,12 +168,10 @@ app.post("/api/finalizar-relatorio", async (req, res) => {
 
     if (error) {
       console.error("Erro ao fazer upload do CSV:", error);
-      return res
-        .status(500)
-        .json({
-          error: "Erro ao fazer upload do CSV.",
-          details: error.message,
-        });
+      return res.status(500).json({
+        error: "Erro ao fazer upload do CSV.",
+        details: error.message,
+      });
     }
 
     // Obtém a URL pública do arquivo
@@ -219,25 +216,7 @@ app.get("/files", async (req, res) => {
   }
 });
 
-// Rota para listar arquivos de download (usando Supabase Storage)
-app.get("/download", async (req, res) => {
-  try {
-    const { data, error } = await supabase.storage.from("download").list();
-
-    if (error) {
-      return res
-        .status(500)
-        .json({ error: "Não foi possível listar os arquivos." });
-    }
-
-    res.json(data);
-  } catch (error) {
-    console.error("Erro ao listar arquivos de download:", error);
-    res.status(500).json({ error: "Erro ao listar arquivos de download." });
-  }
-});
-
-// Rota para baixar arquivo (usando Supabase Storage)
+// Rota para listar arquivos
 app.get("/api/download", async (req, res) => {
   try {
     const { data, error } = await supabase.storage.from("download").list();
@@ -249,7 +228,25 @@ app.get("/api/download", async (req, res) => {
   }
 });
 
-// Rota para deletar arquivo (usando Supabase Storage)
+// Rota para baixar um arquivo
+app.get("/api/download/:filename", async (req, res) => {
+  try {
+    const { filename } = req.params;
+    const { data, error } = await supabase.storage
+      .from("download")
+      .download(filename);
+    if (error) throw error;
+
+    res.setHeader("Content-Type", "text/csv");
+    res.setHeader("Content-Disposition", `attachment; filename=${filename}`);
+    res.send(data);
+  } catch (error) {
+    console.error("Erro ao baixar arquivo:", error);
+    res.status(500).json({ error: "Erro ao baixar arquivo." });
+  }
+});
+
+// Rota para deletar um arquivo
 app.delete("/api/delete/:filename", async (req, res) => {
   try {
     const { filename } = req.params;
