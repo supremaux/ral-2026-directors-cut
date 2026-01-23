@@ -146,6 +146,7 @@ app.post(
 );
 
 // Rota para finalizar relatório e gerar CSV (usando Supabase Storage)
+// Rota para finalizar relatório e gerar CSV
 app.post("/api/finalizar-relatorio", async (req, res) => {
   try {
     const dados = req.body;
@@ -156,21 +157,30 @@ app.post("/api/finalizar-relatorio", async (req, res) => {
     // Certifique-se de que os dados estão em um formato que o PapaParse consiga processar
     const csv = Papa.unparse([dados]);
 
-    // Diretório para salvar o CSV
-    const csvPath = path.join(__dirname, "download");
-    if (!fs.existsSync(csvPath)) {
-      fs.mkdirSync(csvPath);
-    }
-
     // Nome do arquivo CSV
     const csvFileName = `${dados["Razão Social"].replace(/[^a-zA-Z0-9]/g, "_")}_${dados.CNPJ}.csv`;
 
-    // Salvar o arquivo CSV
-    fs.writeFileSync(path.join(csvPath, csvFileName), csv);
+    // Faz upload do CSV para o Supabase Storage
+    const { data, error } = await supabase.storage
+      .from("relatorios") // Nome do bucket no Supabase
+      .upload(csvFileName, csv, {
+        contentType: "text/csv",
+      });
 
-    res
-      .status(200)
-      .json({ message: "Relatório finalizado e CSV gerado com sucesso!" });
+    if (error) {
+      console.error("Erro ao fazer upload do CSV:", error);
+      return res.status(500).json({ error: "Erro ao fazer upload do CSV." });
+    }
+
+    // Obtém a URL pública do arquivo
+    const { data: urlData } = supabase.storage
+      .from("relatorios")
+      .getPublicUrl(csvFileName);
+
+    res.status(200).json({
+      message: "Relatório finalizado e CSV gerado com sucesso!",
+      csvUrl: urlData.publicUrl,
+    });
   } catch (error) {
     console.error("Erro ao finalizar relatório:", error);
     res
