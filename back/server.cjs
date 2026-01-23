@@ -162,14 +162,19 @@ app.post("/api/finalizar-relatorio", async (req, res) => {
 
     // Faz upload do CSV para o Supabase Storage
     const { data, error } = await supabase.storage
-      .from("relatorios") // Nome do bucket no Supabase
+      .from("relatorios")
       .upload(csvFileName, csv, {
         contentType: "text/csv",
       });
 
     if (error) {
       console.error("Erro ao fazer upload do CSV:", error);
-      return res.status(500).json({ error: "Erro ao fazer upload do CSV." });
+      return res
+        .status(500)
+        .json({
+          error: "Erro ao fazer upload do CSV.",
+          details: error.message,
+        });
     }
 
     // Obtém a URL pública do arquivo
