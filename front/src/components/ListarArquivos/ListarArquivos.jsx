@@ -11,7 +11,7 @@ export const ListarArquivos = () => {
   const [files, setFiles] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
-  const [isAuthenticated, setIsauthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const filesPerPage = 20;
   const navigate = useNavigate();
 
@@ -21,14 +21,21 @@ export const ListarArquivos = () => {
   };
 
   useEffect(() => {
+    const auth = localStorage.getItem("auth");
+    if (!auth) {
+      navigate("/login");
+      return;
+    }
+    setIsAuthenticated(true);
+
     const fetchFiles = async () => {
       try {
-        const response = await axios.get("http://localhost:3001/download");
+        const response = await axios.get("/api/download");
         setFiles(
           response.data.map((file) => ({
             name: file,
             date: new Date().toLocaleString(),
-          }))
+          })),
         );
       } catch (error) {
         console.error("Erro ao listar arquivos:", error);
@@ -36,11 +43,11 @@ export const ListarArquivos = () => {
     };
 
     fetchFiles();
-  }, []);
+  }, [navigate]);
 
   const handleDelete = async (fileName) => {
     try {
-      await axios.delete(`http://localhost:3001/delete/${fileName}`);
+      await axios.delete(`/api/delete/${fileName}`);
       setFiles(files.filter((file) => file.name !== fileName));
       alert("Arquivo deletado com sucesso!");
     } catch (error) {
@@ -50,7 +57,7 @@ export const ListarArquivos = () => {
   };
 
   const filteredFiles = files.filter((file) =>
-    file.name.toLowerCase().includes(searchTerm.toLowerCase())
+    file.name.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
   const indexOfLastFile = currentPage * filesPerPage;
@@ -59,12 +66,21 @@ export const ListarArquivos = () => {
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
+  if (!isAuthenticated) {
+    return null; // Ou um componente de carregamento
+  }
+
   return (
     <section>
       <Container className="mb-5">
         <Row>
           <Col>
             <h2>Arquivos Disponíveis para Download</h2>
+          </Col>
+          <Col>
+            <button onClick={handleLogout} className="btn btn-danger">
+              Sair
+            </button>
           </Col>
           <Col>
             <div className={styles.searchContainer}>
@@ -98,7 +114,7 @@ export const ListarArquivos = () => {
                   <td>{file.date}</td>
                   <td>
                     <a
-                      href={`http://localhost:3001/download/${file.name}`}
+                      href={`/api/download/${file.name}`}
                       download
                       className={styles.downloadButton}
                     >
@@ -106,10 +122,7 @@ export const ListarArquivos = () => {
                     </a>
                     <button
                       onClick={() =>
-                        window.open(
-                          `http://localhost:3001/download/${file.name}`,
-                          "_blank"
-                        )
+                        window.open(`/api/download/${file.name}`, "_blank")
                       }
                       className={styles.viewButton}
                     >
@@ -138,7 +151,7 @@ export const ListarArquivos = () => {
               >
                 {i + 1}
               </button>
-            )
+            ),
           )}
         </div>
       </Container>

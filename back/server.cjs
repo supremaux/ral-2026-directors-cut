@@ -232,43 +232,26 @@ app.get("/download", async (req, res) => {
 });
 
 // Rota para baixar arquivo (usando Supabase Storage)
-app.get("/download/:filename", async (req, res) => {
+app.get("/api/download", async (req, res) => {
   try {
-    const { filename } = req.params;
-    const { data, error } = await supabase.storage
-      .from("download")
-      .download(filename);
-
-    if (error) {
-      return res
-        .status(500)
-        .json({ error: "Não foi possível baixar o arquivo." });
-    }
-
-    res.setHeader("Content-Type", "text/csv");
-    res.setHeader("Content-Disposition", `attachment; filename=${filename}`);
-    res.send(data);
+    const { data, error } = await supabase.storage.from("download").list();
+    if (error) throw error;
+    res.status(200).json(data);
   } catch (error) {
-    console.error("Erro ao baixar arquivo:", error);
-    res.status(500).json({ error: "Erro ao baixar arquivo." });
+    console.error("Erro ao listar arquivos:", error);
+    res.status(500).json({ error: "Erro ao listar arquivos." });
   }
 });
 
 // Rota para deletar arquivo (usando Supabase Storage)
-app.delete("/delete/:filename", async (req, res) => {
+app.delete("/api/delete/:filename", async (req, res) => {
   try {
     const { filename } = req.params;
     const { error } = await supabase.storage
       .from("download")
       .remove([filename]);
-
-    if (error) {
-      return res
-        .status(500)
-        .json({ error: "Não foi possível deletar o arquivo." });
-    }
-
-    res.send("Arquivo deletado com sucesso!");
+    if (error) throw error;
+    res.status(200).json({ message: "Arquivo deletado com sucesso!" });
   } catch (error) {
     console.error("Erro ao deletar arquivo:", error);
     res.status(500).json({ error: "Erro ao deletar arquivo." });
