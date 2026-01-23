@@ -5,6 +5,7 @@ const bodyParser = require("body-parser");
 const PapaParse = require("papaparse");
 const Papa = require("papaparse");
 const path = require("path");
+const fs = require("fs");
 const { createClient } = require("@supabase/supabase-js");
 
 // Inicialize o app do Express
