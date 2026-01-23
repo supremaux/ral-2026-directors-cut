@@ -72,14 +72,22 @@ export const GerarCSV = () => {
         // ... outros campos
       };
 
+      console.log("Dados enviados:", simplifiedData); // Log para debug
+
       const response = await axios.post(
-        "http://localhost:3001/api/finalizar-relatorio",
+        "/api/finalizar-relatorio", // Use a rota relativa
         simplifiedData,
       );
+
       alert("Relatório finalizado e CSV gerado com sucesso!");
     } catch (error) {
-      console.error("Erro ao finalizar relatório:", error);
-      alert("Erro ao finalizar relatório.");
+      console.error(
+        "Erro ao finalizar relatório:",
+        error.response?.data || error.message,
+      );
+      alert(
+        `Erro ao finalizar relatório: ${error.response?.data?.details || error.message}`,
+      );
     } finally {
       window.location.replace("/thanku");
     }

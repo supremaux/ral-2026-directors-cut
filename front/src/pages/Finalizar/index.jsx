@@ -1,6 +1,5 @@
 import { Container, Row, Col, FormCheck } from "react-bootstrap";
 import styles from "./Finalizar.module.css";
-import { Link } from "react-router-dom";
 import { GerarCSV } from "../../components/GerarCSV";
 
 export default function Finalizar() {
@@ -39,13 +38,7 @@ export default function Finalizar() {
         </Row>
         <Row>
           <Col>
-            <GerarCSV
-              as={Link}
-              to="/thanku" // Add the closing quotation mark here
-              href="/thanku"
-              rel="noopener noreferrer"
-              type="submit"
-            />
+            <GerarCSV />
           </Col>
         </Row>
       </Container>

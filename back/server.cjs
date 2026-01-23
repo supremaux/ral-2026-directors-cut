@@ -145,46 +145,34 @@ app.post(
 // Rota para finalizar relatório e gerar CSV (usando Supabase Storage)
 app.post("/api/finalizar-relatorio", async (req, res) => {
   try {
-    if (!req.body) {
-      throw new Error("Nenhum dado recebido.");
-    }
-
     const dados = req.body;
-    const simplifiedData = {};
-    for (const key in dados) {
-      simplifiedData[key] =
-        typeof dados[key] === "object"
-          ? JSON.stringify(dados[key])
-          : dados[key];
+
+    // Verifique se os dados estão sendo recebidos corretamente
+    console.log("Dados recebidos:", dados);
+
+    // Certifique-se de que os dados estão em um formato que o PapaParse consiga processar
+    const csv = Papa.unparse([dados]);
+
+    // Diretório para salvar o CSV
+    const csvPath = path.join(__dirname, "download");
+    if (!fs.existsSync(csvPath)) {
+      fs.mkdirSync(csvPath);
     }
 
-    const csv = papaparse.unparse([simplifiedData]);
-    const csvFileName = `${simplifiedData["Razão Social"].replace(
-      /[^a-zA-Z0-9]/g,
-      "_",
-    )}_${simplifiedData.CNPJ}.csv`;
-    const filePath = `download/${csvFileName}`;
+    // Nome do arquivo CSV
+    const csvFileName = `${dados["Razão Social"].replace(/[^a-zA-Z0-9]/g, "_")}_${dados.CNPJ}.csv`;
 
-    const { data, error } = await supabase.storage
-      .from("download")
-      .upload(filePath, csv, { contentType: "text/csv" });
+    // Salvar o arquivo CSV
+    fs.writeFileSync(path.join(csvPath, csvFileName), csv);
 
-    if (error) {
-      console.error("Erro ao fazer upload do CSV:", error);
-      return res.status(500).json({ error: "Erro ao finalizar relatório." });
-    }
-
-    const { publicURL } = supabase.storage
-      .from("download")
-      .getPublicUrl(filePath);
-
-    res.status(200).json({
-      message: "Relatório finalizado e CSV gerado com sucesso!",
-      fileUrl: publicURL,
-    });
+    res
+      .status(200)
+      .json({ message: "Relatório finalizado e CSV gerado com sucesso!" });
   } catch (error) {
     console.error("Erro ao finalizar relatório:", error);
-    res.status(500).json({ error: "Erro ao finalizar relatório." });
+    res
+      .status(500)
+      .json({ error: "Erro ao finalizar relatório.", details: error.message });
   }
 });
 
