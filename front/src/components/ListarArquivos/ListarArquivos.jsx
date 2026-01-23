@@ -31,11 +31,11 @@ export const ListarArquivos = () => {
 
     const fetchFiles = async () => {
       try {
-        const response = await axios.get("download");
+        const response = await axios.get("/api/list-files");
         if (Array.isArray(response.data)) {
           setFiles(
             response.data.map((file) => ({
-              name: typeof file === "object" ? file.name : file,
+              name: file.name,
               date: new Date().toLocaleString(),
             })),
           );
@@ -51,7 +51,7 @@ export const ListarArquivos = () => {
 
   const handleDelete = async (fileName) => {
     try {
-      await axios.delete(`/api/delete/${fileName}`);
+      await axios.delete(`/api/delete-file/${fileName}`);
       setFiles(files.filter((file) => file.name !== fileName));
       alert("Arquivo deletado com sucesso!");
     } catch (error) {
@@ -126,7 +126,7 @@ export const ListarArquivos = () => {
                     <td>{file.date}</td>
                     <td>
                       <a
-                        href={`/api/download/${file.name}`}
+                        href={`/api/download-file/${file.name}`}
                         download
                         className={styles.downloadButton}
                       >
@@ -134,7 +134,10 @@ export const ListarArquivos = () => {
                       </a>
                       <button
                         onClick={() =>
-                          window.open(`/api/download/${file.name}`, "_blank")
+                          window.open(
+                            `/api/download-file/${file.name}`,
+                            "_blank",
+                          )
                         }
                         className={styles.viewButton}
                       >

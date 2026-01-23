@@ -1,21 +1,4 @@
 /* ListarArquivos.module.css */
-.container {
-  padding: 20px;
-}
-
-.searchContainer {
-  margin-bottom: 20px;
-  display: flex;
-  justify-content: flex-end;
-}
-
-.searchContainer input {
-  padding: 8px;
-  width: 300px;
-  border-radius: 4px;
-  border: 1px solid #ccc;
-}
-
 .tableContainer {
   margin-top: 20px;
 }
@@ -34,6 +17,19 @@
 
 .table th {
   background-color: #f8f9fa;
+}
+
+.searchContainer {
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.searchContainer input {
+  padding: 8px;
+  width: 300px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
 }
 
 .downloadButton,

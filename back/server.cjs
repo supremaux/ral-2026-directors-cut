@@ -216,11 +216,18 @@ app.get("/files", async (req, res) => {
   }
 });
 
-// Rota para listar arquivos
-app.get("/api/download", async (req, res) => {
+// Rota para listar arquivos no bucket relatorios/pasta download
+app.get("/api/list-files", async (req, res) => {
   try {
-    const { data, error } = await supabase.storage.from("download").list();
-    if (error) throw error;
+    const { data, error } = await supabase.storage
+      .from("relatorios")
+      .list("download/", { limit: 100 });
+
+    if (error) {
+      console.error("Erro ao listar arquivos:", error);
+      return res.status(500).json({ error: "Erro ao listar arquivos." });
+    }
+
     res.status(200).json(data);
   } catch (error) {
     console.error("Erro ao listar arquivos:", error);
@@ -228,14 +235,18 @@ app.get("/api/download", async (req, res) => {
   }
 });
 
-// Rota para baixar um arquivo
-app.get("/api/download/:filename", async (req, res) => {
+// Rota para baixar um arquivo específico
+app.get("/api/download-file/:filename", async (req, res) => {
   try {
     const { filename } = req.params;
     const { data, error } = await supabase.storage
-      .from("download")
-      .download(filename);
-    if (error) throw error;
+      .from("relatorios")
+      .download(`download/${filename}`);
+
+    if (error) {
+      console.error("Erro ao baixar arquivo:", error);
+      return res.status(500).json({ error: "Erro ao baixar arquivo." });
+    }
 
     res.setHeader("Content-Type", "text/csv");
     res.setHeader("Content-Disposition", `attachment; filename=${filename}`);
@@ -246,14 +257,19 @@ app.get("/api/download/:filename", async (req, res) => {
   }
 });
 
-// Rota para deletar um arquivo
-app.delete("/api/delete/:filename", async (req, res) => {
+// Rota para deletar um arquivo específico
+app.delete("/api/delete-file/:filename", async (req, res) => {
   try {
     const { filename } = req.params;
     const { error } = await supabase.storage
-      .from("download")
-      .remove([filename]);
-    if (error) throw error;
+      .from("relatorios")
+      .remove([`download/${filename}`]);
+
+    if (error) {
+      console.error("Erro ao deletar arquivo:", error);
+      return res.status(500).json({ error: "Erro ao deletar arquivo." });
+    }
+
     res.status(200).json({ message: "Arquivo deletado com sucesso!" });
   } catch (error) {
     console.error("Erro ao deletar arquivo:", error);
