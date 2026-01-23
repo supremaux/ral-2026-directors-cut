@@ -15,7 +15,7 @@
     { "src": "/api/(.*)", "dest": "back/server.cjs" },
     {
       "src": "/(.*)",
-      "dest": "front/index.html || front/$1",
+      "dest": "front/index.html && front/$1",
       "headers": { "Content-Type": "text/html" }
     }
   ]
