@@ -31,7 +31,7 @@ export const ListarArquivos = () => {
 
     const fetchFiles = async () => {
       try {
-        const response = await axios.get("/api/download");
+        const response = await axios.get("download");
         if (Array.isArray(response.data)) {
           setFiles(
             response.data.map((file) => ({
