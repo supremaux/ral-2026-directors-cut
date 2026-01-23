@@ -13,9 +13,10 @@
   ],
   "routes": [
     { "src": "/api/(.*)", "dest": "back/server.cjs" },
+    { "src": "/assets/(.*)", "dest": "front/assets/$1" },
     {
       "src": "/(.*)",
-      "dest": "front",
+      "dest": "front/$1",
       "headers": { "Content-Type": "text/html" }
     }
   ]
