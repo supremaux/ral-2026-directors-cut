@@ -3,7 +3,7 @@
   "builds": [
     {
       "src": "front/package.json",
-      "use": "@vercel/static-build",
+      "use": "@verral/vercel/static-build",
       "config": { "distDir": "dist" }
     },
     {
@@ -14,10 +14,6 @@
   "routes": [
     { "src": "/api/(.*)", "dest": "back/server.cjs" },
     { "src": "/assets/(.*)", "dest": "front/assets/$1" },
-    {
-      "src": "/(.*)",
-      "dest": "front/$1",
-      "headers": { "Content-Type": "text/html" }
-    }
+    { "src": "/(.*)", "dest": "front/index.html" }
   ]
 }
