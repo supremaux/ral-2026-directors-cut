@@ -3,7 +3,7 @@
   "builds": [
     {
       "src": "front/package.json",
-      "use": "@verral/vercel/static-build",
+      "use": "@vercel/static-build",
       "config": { "distDir": "dist" }
     },
     {
