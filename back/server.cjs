@@ -2,6 +2,7 @@ const express = require("express");
 const multer = require("multer");
 const cors = require("cors");
 const bodyParser = require("body-parser");
+const path = require("path");
 const { createClient } = require("@supabase/supabase-js");
 
 // Inicialize o app do Express
@@ -274,23 +275,34 @@ app.delete("/delete/:filename", async (req, res) => {
   }
 });
 
+// Carregue o users.json com caminho absoluto
+const users = require(path.join(__dirname, "users.json"));
+console.log("Usuários carregados:", users); // Log para debug
+
 // Rota de login
 app.post("/api/login", (req, res) => {
-  const { username, password } = req.body;
-  console.log("Tentativa de login:", username, password); // Log para debug
+  try {
+    const { username, password } = req.body;
+    console.log("Tentativa de login:", username, password); // Log para debug
 
-  const user = users.find(
-    (u) => u.username === username && u.password === password,
-  );
+    const user = users.find(
+      (u) => u.username === username && u.password === password,
+    );
 
-  if (user) {
-    console.log("Login bem-sucedido para:", username); // Log para debug
-    res.status(200).json({ success: true, message: "Login bem-sucedido!" });
-  } else {
-    console.log("Usuário ou senha incorretos para:", username); // Log para debug
+    if (user) {
+      console.log("Login bem-sucedido para:", username); // Log para debug
+      res.status(200).json({ success: true, message: "Login bem-sucedido!" });
+    } else {
+      console.log("Usuário ou senha incorretos para:", username); // Log para debug
+      res
+        .status(401)
+        .json({ success: false, message: "Usuário ou senha incorretos!" });
+    }
+  } catch (error) {
+    console.error("Erro no servidor:", error); // Log para debug
     res
-      .status(401)
-      .json({ success: false, message: "Usuário ou senha incorretos!" });
+      .status(500)
+      .json({ success: false, message: "Erro interno no servidor." });
   }
 });
 

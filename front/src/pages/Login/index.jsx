@@ -12,26 +12,20 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      console.log("Enviando credenciais:", usernameValue, passwordValue); // Log para debug
-      const response = await axios.post(
-        "/api/login", // Use rota relativa
-        {
-          username: usernameValue,
-          password: passwordValue,
-        },
-      );
-      console.log("Resposta do backend:", response.data); // Log para debug
+      console.log("Enviando credenciais:", usernameValue, passwordValue);
+      const response = await axios.post("/api/login", {
+        username: usernameValue,
+        password: passwordValue,
+      });
+      console.log("Resposta do backend:", response.data);
       if (response.data.success) {
-        localStorage.setItem("auth", "true"); // Salva o estado de autenticação
+        localStorage.setItem("auth", "true");
         window.location.href = "/paineladmin";
       } else {
         alert("Usuário ou senha incorretos!");
       }
     } catch (error) {
-      console.error(
-        "Erro detalhado ao fazer login:",
-        error.response?.data || error.message,
-      ); // Log para debug
+      console.error("Erro detalhado:", error.response?.data || error.message);
       alert("Erro ao fazer login. Tente novamente mais tarde.");
     }
   };
