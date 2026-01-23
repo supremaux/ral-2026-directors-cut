@@ -8,11 +8,6 @@ export default defineConfig({
     outDir: "dist",
     emptyOutDir: true,
     assetsDir: "assets",
-    rollupOptions: {
-      output: {
-        manualChunks: undefined,
-      },
-    },
   },
   base: "./",
 });

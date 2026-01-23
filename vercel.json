@@ -15,6 +15,5 @@
     { "src": "/api/(.*)", "dest": "back/server.cjs" },
     { "src": "/assets/(.*)", "dest": "front/assets/$1" },
     { "src": "/(.*)", "dest": "front/index.html" }
-  ],
-  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
+  ]
 }
