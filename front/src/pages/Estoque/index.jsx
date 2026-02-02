@@ -9,33 +9,6 @@ import Paginacao from "../../components/Paginacao";
 export default function Estoque() {
   const { formData, setFormData } = useContext(FormContext);
 
-  // Função para mudar o formato do valor dos inputs para numérico com duas casas decimais
-  const decimalFormat = (value) => (
-    <NumericFormat
-      value={{
-        ...formData,
-        estoqueLavra: Number(value.estoqueLavra) || 0.0,
-        estoqueFinal: Number(value.estoqueFinal) || 0.0,
-      }}
-      valueIsNumericString={true}
-      decimalScale={2}
-      fixedDecimalScale={true}
-      allowNegative={false}
-      allowLeadingZeros={false}
-      allowTrailingZeros={false}
-      thousandSeparator="."
-      decimalSeparator=","
-      displayType="input"
-      onValueChange={(values) => {
-        const { numberValue } = values;
-        setFormData({
-          ...formData,
-          estoqueLavra: numberValue,
-        });
-      }}
-    />
-  );
-
   const confirmaEstoque = (e) => {
     setFormData({
       ...formData,
@@ -50,17 +23,20 @@ export default function Estoque() {
     });
   };
 
-  const handleEstoqueLavraChange = (e) => {
+  // Handlers para o NumericFormat
+  const handleEstoqueLavraChange = (values) => {
+    const { floatValue } = values;
     setFormData({
       ...formData,
-      estoqueLavra: Number(e.target.value) || 0.0,
+      estoqueLavra: floatValue || 0.0,
     });
   };
 
-  const handleestoqueFinalChange = (e) => {
+  const handleestoqueFinalChange = (values) => {
+    const { floatValue } = values;
     setFormData({
       ...formData,
-      estoqueFinal: Number(e.target.value) || 0.0,
+      estoqueFinal: floatValue || 0.0,
     });
   };
 
@@ -116,28 +92,51 @@ export default function Estoque() {
                   <h4>Estoque Anual</h4>
                   <div style={{ marginBottom: "15px" }}>
                     <label>
-                      Estoque na Lavra
-                      {formData.unidadeMedEstoque || "unidade"}
+                      Estoque na Lavra (
+                      {formData.unidadeMedEstoque || "unidade"})
                     </label>
-                    <input
-                      type="number"
+                    <NumericFormat
                       value={formData.estoqueLavra}
-                      onChange={handleEstoqueLavraChange}
-                      style={{ width: "100%", padding: "8px" }}
+                      onValueChange={handleEstoqueLavraChange}
+                      thousandSeparator="."
+                      decimalSeparator=","
+                      decimalScale={2}
+                      fixedDecimalScale={true}
+                      allowNegative={false}
+                      allowLeadingZeros={false}
+                      allowTrailingZeros={false}
+                      customInput={({ onChange, ...props }) => (
+                        <input
+                          {...props}
+                          onChange={onChange}
+                          style={{ width: "100%", padding: "8px" }}
+                        />
+                      )}
                     />
                   </div>
                   {deveExibirestoqueFinal && (
                     <div style={{ marginBottom: "15px" }}>
                       <label>
                         Estoque Britado (
-                        {formData.unidadeMedEstoque || "unidade"}
-                        ):
+                        {formData.unidadeMedEstoque || "unidade"})
                       </label>
-                      <input
-                        type="number"
+                      <NumericFormat
                         value={formData.estoqueFinal}
-                        onChange={handleestoqueFinalChange}
-                        style={{ width: "100%", padding: "8px" }}
+                        onValueChange={handleestoqueFinalChange}
+                        thousandSeparator="."
+                        decimalSeparator=","
+                        decimalScale={2}
+                        fixedDecimalScale={true}
+                        allowNegative={false}
+                        allowLeadingZeros={false}
+                        allowTrailingZeros={false}
+                        customInput={({ onChange, ...props }) => (
+                          <input
+                            {...props}
+                            onChange={onChange}
+                            style={{ width: "100%", padding: "8px" }}
+                          />
+                        )}
                       />
                     </div>
                   )}
