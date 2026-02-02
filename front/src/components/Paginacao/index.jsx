@@ -26,7 +26,7 @@ export default function Paginacao({ next, back }) {
   return (
     <>
       {/* Paginação */}
-      <Container class="my-3">
+      <Container className="my-3">
         <h3 className="text-center small">
           Clique no botão <strong>Próxima</strong> para ir para a próxima etapa!
         </h3>

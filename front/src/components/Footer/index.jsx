@@ -16,7 +16,7 @@ export default function Footer() {
     <footer className={styles.bottomBar}>
       <Container>
         <Row>
-          <Col ms>
+          <Col>
             <p>
               © {year} Minaset - Engenharia de minas e segurança do trabalho |
               UI/UX Design by Suprema

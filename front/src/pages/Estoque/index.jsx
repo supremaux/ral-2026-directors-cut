@@ -3,10 +3,38 @@ import { Container, Row, Col } from "react-bootstrap";
 import styles from "./Estoque.module.css";
 import { useContext } from "react";
 import { FormContext } from "../../FormContext";
+import { NumericFormat } from "react-number-format";
 import Paginacao from "../../components/Paginacao";
 
 export default function Estoque() {
   const { formData, setFormData } = useContext(FormContext);
+
+  // Função para mudar o formato do valor dos inputs para numérico com duas casas decimais
+  const decimalFormat = (value) => (
+    <NumericFormat
+      value={{
+        ...formData,
+        estoqueLavra: Number(value.estoqueLavra) || 0.0,
+        estoqueFinal: Number(value.estoqueFinal) || 0.0,
+      }}
+      valueIsNumericString={true}
+      decimalScale={2}
+      fixedDecimalScale={true}
+      allowNegative={false}
+      allowLeadingZeros={false}
+      allowTrailingZeros={false}
+      thousandSeparator="."
+      decimalSeparator=","
+      displayType="input"
+      onValueChange={(values) => {
+        const { numberValue } = values;
+        setFormData({
+          ...formData,
+          estoqueLavra: numberValue,
+        });
+      }}
+    />
+  );
 
   const confirmaEstoque = (e) => {
     setFormData({
@@ -25,14 +53,14 @@ export default function Estoque() {
   const handleEstoqueLavraChange = (e) => {
     setFormData({
       ...formData,
-      estoqueLavra: Number(e.target.value) || 0,
+      estoqueLavra: Number(e.target.value) || 0.0,
     });
   };
 
   const handleestoqueFinalChange = (e) => {
     setFormData({
       ...formData,
-      estoqueFinal: Number(e.target.value) || 0,
+      estoqueFinal: Number(e.target.value) || 0.0,
     });
   };
 
@@ -88,8 +116,8 @@ export default function Estoque() {
                   <h4>Estoque Anual</h4>
                   <div style={{ marginBottom: "15px" }}>
                     <label>
-                      Estoque na Lavra (
-                      {formData.unidadeMedEstoque || "unidade"}):
+                      Estoque na Lavra
+                      {formData.unidadeMedEstoque || "unidade"}
                     </label>
                     <input
                       type="number"
