@@ -1,13 +1,14 @@
-// Estoque.jsx
 import { Container, Row, Col } from "react-bootstrap";
 import styles from "./Estoque.module.css";
-import { useContext } from "react";
+import { useContext, useRef } from "react";
 import { FormContext } from "../../FormContext";
 import { NumericFormat } from "react-number-format";
 import Paginacao from "../../components/Paginacao";
 
 export default function Estoque() {
   const { formData, setFormData } = useContext(FormContext);
+  const estoqueLavraRef = useRef(null);
+  const estoqueFinalRef = useRef(null);
 
   const confirmaEstoque = (e) => {
     setFormData({
@@ -23,7 +24,6 @@ export default function Estoque() {
     });
   };
 
-  // Handlers para o NumericFormat
   const handleEstoqueLavraChange = (values) => {
     const { floatValue } = values;
     setFormData({
@@ -40,7 +40,11 @@ export default function Estoque() {
     });
   };
 
-  // Verifica se a substância mineral é Basalto, Granito ou Calcário
+  const isAllowed = (values) => {
+    const { floatValue } = values;
+    return floatValue >= 0; // Permite apenas valores positivos
+  };
+
   const substanciasComestoqueFinal = ["basalto", "granito", "calcario"];
   const deveExibirestoqueFinal = substanciasComestoqueFinal.includes(
     formData.substanciaMineral,
@@ -96,6 +100,7 @@ export default function Estoque() {
                       {formData.unidadeMedEstoque || "unidade"})
                     </label>
                     <NumericFormat
+                      getInputRef={estoqueLavraRef}
                       value={formData.estoqueLavra}
                       onValueChange={handleEstoqueLavraChange}
                       thousandSeparator="."
@@ -103,8 +108,8 @@ export default function Estoque() {
                       decimalScale={2}
                       fixedDecimalScale={true}
                       allowNegative={false}
-                      allowLeadingZeros={false}
-                      allowTrailingZeros={false}
+                      isAllowed={isAllowed}
+                      onFocus={(e) => e.target.select()}
                       customInput={({ onChange, ...props }) => (
                         <input
                           {...props}
@@ -121,6 +126,7 @@ export default function Estoque() {
                         {formData.unidadeMedEstoque || "unidade"})
                       </label>
                       <NumericFormat
+                        getInputRef={estoqueFinalRef}
                         value={formData.estoqueFinal}
                         onValueChange={handleestoqueFinalChange}
                         thousandSeparator="."
@@ -128,8 +134,8 @@ export default function Estoque() {
                         decimalScale={2}
                         fixedDecimalScale={true}
                         allowNegative={false}
-                        allowLeadingZeros={false}
-                        allowTrailingZeros={false}
+                        isAllowed={isAllowed}
+                        onFocus={(e) => e.target.select()}
                         customInput={({ onChange, ...props }) => (
                           <input
                             {...props}
