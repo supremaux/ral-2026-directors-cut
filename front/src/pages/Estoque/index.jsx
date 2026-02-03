@@ -1,14 +1,12 @@
+// Estoque.jsx
 import { Container, Row, Col } from "react-bootstrap";
 import styles from "./Estoque.module.css";
-import { useContext, useRef } from "react";
+import { useContext } from "react";
 import { FormContext } from "../../FormContext";
-import { NumericFormat } from "react-number-format";
 import Paginacao from "../../components/Paginacao";
 
 export default function Estoque() {
   const { formData, setFormData } = useContext(FormContext);
-  const estoqueLavraRef = useRef(null);
-  const estoqueFinalRef = useRef(null);
 
   const confirmaEstoque = (e) => {
     setFormData({
@@ -24,27 +22,21 @@ export default function Estoque() {
     });
   };
 
-  const handleEstoqueLavraChange = (values) => {
-    const { floatValue } = values;
+  const handleEstoqueLavraChange = (e) => {
     setFormData({
       ...formData,
-      estoqueLavra: floatValue || 0.0,
+      estoqueLavra: Number(e.target.value) || 0,
     });
   };
 
-  const handleestoqueFinalChange = (values) => {
-    const { floatValue } = values;
+  const handleestoqueFinalChange = (e) => {
     setFormData({
       ...formData,
-      estoqueFinal: floatValue || 0.0,
+      estoqueFinal: Number(e.target.value) || 0,
     });
   };
 
-  const isAllowed = (values) => {
-    const { floatValue } = values;
-    return floatValue >= 0; // Permite apenas valores positivos
-  };
-
+  // Verifica se a substância mineral é Basalto, Granito ou Calcário
   const substanciasComestoqueFinal = ["basalto", "granito", "calcario"];
   const deveExibirestoqueFinal = substanciasComestoqueFinal.includes(
     formData.substanciaMineral,
@@ -97,52 +89,27 @@ export default function Estoque() {
                   <div style={{ marginBottom: "15px" }}>
                     <label>
                       Estoque na Lavra (
-                      {formData.unidadeMedEstoque || "unidade"})
+                      {formData.unidadeMedEstoque || "unidade"}):
                     </label>
-                    <NumericFormat
-                      getInputRef={estoqueLavraRef}
+                    <input
+                      type="number"
                       value={formData.estoqueLavra}
-                      onValueChange={handleEstoqueLavraChange}
-                      thousandSeparator="."
-                      decimalSeparator=","
-                      decimalScale={2}
-                      fixedDecimalScale={true}
-                      allowNegative={false}
-                      isAllowed={isAllowed}
-                      onFocus={(e) => e.target.select()}
-                      customInput={({ onChange, ...props }) => (
-                        <input
-                          {...props}
-                          onChange={onChange}
-                          style={{ width: "100%", padding: "8px" }}
-                        />
-                      )}
+                      onChange={handleEstoqueLavraChange}
+                      style={{ width: "100%", padding: "8px" }}
                     />
                   </div>
                   {deveExibirestoqueFinal && (
                     <div style={{ marginBottom: "15px" }}>
                       <label>
                         Estoque Britado (
-                        {formData.unidadeMedEstoque || "unidade"})
+                        {formData.unidadeMedEstoque || "unidade"}
+                        ):
                       </label>
-                      <NumericFormat
-                        getInputRef={estoqueFinalRef}
+                      <input
+                        type="number"
                         value={formData.estoqueFinal}
-                        onValueChange={handleestoqueFinalChange}
-                        thousandSeparator="."
-                        decimalSeparator=","
-                        decimalScale={2}
-                        fixedDecimalScale={true}
-                        allowNegative={false}
-                        isAllowed={isAllowed}
-                        onFocus={(e) => e.target.select()}
-                        customInput={({ onChange, ...props }) => (
-                          <input
-                            {...props}
-                            onChange={onChange}
-                            style={{ width: "100%", padding: "8px" }}
-                          />
-                        )}
+                        onChange={handleestoqueFinalChange}
+                        style={{ width: "100%", padding: "8px" }}
                       />
                     </div>
                   )}
