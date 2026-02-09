@@ -4,6 +4,7 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 const PapaParse = require("papaparse");
 const Papa = require("papaparse");
+const ExcelJS = require("exceljs");
 const path = require("path");
 const fs = require("fs");
 const { createClient } = require("@supabase/supabase-js");
@@ -145,31 +146,95 @@ app.post(
   },
 );
 
-// Rota para finalizar relatório e gerar CSV (usando Supabase Storage)
+// Rota para finalizar relatório e gerar XLSX (usando Supabase Storage)
 app.post("/api/finalizar-relatorio", async (req, res) => {
   try {
     const dados = req.body;
 
-    // Verifique se os dados estão sendo recebidos corretamente
-    console.log("Dados recebidos:", dados);
+    // Crie um novo workbook
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet("Relatório Anual de Lavra");
 
-    // Certifique-se de que os dados estão em um formato que o PapaParse consiga processar
-    const csv = Papa.unparse([dados]);
+    // Adicione um cabeçalho estilizado
+    worksheet.mergeCells("A1:E1");
+    worksheet.getCell("A1").value = "Relatório Anual de Lavra";
+    worksheet.getCell("A1").font = { size: 16, bold: true };
+    worksheet.getCell("A1").alignment = { horizontal: "center" };
 
-    // Nome do arquivo CSV
-    const csvFileName = `${dados["Razão Social"].replace(/[^a-zA-Z0-9]/g, "_")}_${dados.CNPJ}.csv`;
+    // Adicione os dados cadastrais
+    worksheet.addRow([]);
+    worksheet.addRow(["Razão Social:", dados["Razão Social"]]);
+    worksheet.addRow(["CNPJ:", dados.CNPJ]);
+    worksheet.addRow(["Substância Mineral:", dados["Substância Mineral"]]);
+    worksheet.addRow([]);
 
-    // Faz upload do CSV para o Supabase Storage
-    const { data, error } = await supabase.storage
+    // Adicione a tabela de produção detonada/britada
+    worksheet.addRow(["Produção Detonada e Britada"]);
+    worksheet.addRow([
+      "Mês",
+      "Quantidade Detonada",
+      "Britado",
+      "Lavrado",
+      "Vendido",
+    ]);
+
+    // Parseie os dados de produção
+    const producao = JSON.parse(dados["Produção - Detonado"]);
+    producao.forEach((item) => {
+      worksheet.addRow([
+        item.mes,
+        item.quantidadeDetonado,
+        item.britado,
+        item.lavrado,
+        item.vendido,
+      ]);
+    });
+
+    // Adicione a tabela de custos de lavra
+    worksheet.addRow([]);
+    worksheet.addRow(["Custos de Lavra"]);
+    worksheet.addRow(["Descrição", "Valor (R$/ano)"]);
+
+    // Parseie os dados de custos
+    const custos = JSON.parse(dados["Custo de Lavra"]);
+    custos.forEach((item) => {
+      worksheet.addRow([item.description, item.value]);
+    });
+
+    // Adicione a tabela de impostos
+    worksheet.addRow([]);
+    worksheet.addRow(["Impostos/Tributos"]);
+    worksheet.addRow(["Mês", "ICMS", "PIS", "COFINS", "CFEM"]);
+
+    // Parseie os dados de impostos
+    const impostos = JSON.parse(dados["Apuração Mensal"]);
+    impostos.forEach((item) => {
+      worksheet.addRow([item.mes, item.icms, item.pis, item.cofins, item.cfem]);
+    });
+
+    // Formate as colunas para melhor visualização
+    worksheet.columns.forEach((column) => {
+      column.width = 20;
+    });
+
+    // Salve o arquivo XLSX em um buffer
+    const buffer = await workbook.xlsx.writeBuffer();
+
+    // Nome do arquivo XLSX
+    const xlsxFileName = `${dados["Razão Social"].replace(/[^a-zA-Z0-9]/g, "_")}_${dados.CNPJ}.xlsx`;
+
+    // Faz upload do XLSX para o Supabase Storage
+    const { data: uploadData, error } = await supabase.storage
       .from("relatorios")
-      .upload(csvFileName, csv, {
-        contentType: "text/csv",
+      .upload(xlsxFileName, buffer, {
+        contentType:
+          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
       });
 
     if (error) {
-      console.error("Erro ao fazer upload do CSV:", error);
+      console.error("Erro ao fazer upload do XLSX:", error);
       return res.status(500).json({
-        error: "Erro ao fazer upload do CSV.",
+        error: "Erro ao fazer upload do XLSX.",
         details: error.message,
       });
     }
@@ -177,17 +242,18 @@ app.post("/api/finalizar-relatorio", async (req, res) => {
     // Obtém a URL pública do arquivo
     const { data: urlData } = supabase.storage
       .from("relatorios")
-      .getPublicUrl(csvFileName);
+      .getPublicUrl(xlsxFileName);
 
     res.status(200).json({
-      message: "Relatório finalizado e CSV gerado com sucesso!",
-      csvUrl: urlData.publicUrl,
+      message: "Relatório finalizado e XLSX gerado com sucesso!",
+      xlsxUrl: urlData.publicUrl,
     });
   } catch (error) {
     console.error("Erro ao finalizar relatório:", error);
-    res
-      .status(500)
-      .json({ error: "Erro ao finalizar relatório.", details: error.message });
+    res.status(500).json({
+      error: "Erro ao finalizar relatório.",
+      details: error.message,
+    });
   }
 });
 
