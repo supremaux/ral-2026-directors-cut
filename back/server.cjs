@@ -150,10 +150,10 @@ app.post(
 app.post("/api/finalizar-relatorio", async (req, res) => {
   try {
     const dados = req.body;
+    console.log("Dados recebidos para geração do relatório:", dados);
 
-    // Crie um novo workbook
     const workbook = new ExcelJS.Workbook();
-    const worksheet = workbook.addWorksheet("Relatório Anual de Lavra");
+    const worksheet = workbook.addWorksheet("Relatório");
 
     // Adicione um cabeçalho estilizado
     worksheet.mergeCells("A1:E1");
@@ -168,63 +168,40 @@ app.post("/api/finalizar-relatorio", async (req, res) => {
     worksheet.addRow(["Substância Mineral:", dados["Substância Mineral"]]);
     worksheet.addRow([]);
 
-    // Adicione a tabela de produção detonada/britada
-    worksheet.addRow(["Produção Detonada e Britada"]);
+    // Termo de Responsabilidade
+    worksheet.addRow(["Termo de Responsabilidade:"]);
+    worksheet.addRow([dados["Termo de Responsabilidade"] || "Não enviado"]);
+    worksheet.addRow([]);
+
+    // Substância Mineral
+    worksheet.addRow(["Substância Mineral:"]);
+    worksheet.addRow([dados["Substância Mineral"] || "Não enviado"]);
+    worksheet.addRow([]);
+
+    // Estoque
+    worksheet.addRow(["Estoque:"]);
     worksheet.addRow([
-      "Mês",
-      "Quantidade Detonada",
-      "Britado",
-      "Lavrado",
-      "Vendido",
+      ["Possui Estoque", dados.temEstoque || ""],
+      ["Unidade de Estoque", dados.unidadeMedEstoque || ""],
+      ["Estoque Lavrado", JSON.stringify(dados.estoqueLavra || [])],
     ]);
-
-    // Parseie os dados de produção
-    const producao = JSON.parse(dados["Produção - Detonado"]);
-    producao.forEach((item) => {
-      worksheet.addRow([
-        item.mes,
-        item.quantidadeDetonado,
-        item.britado,
-        item.lavrado,
-        item.vendido,
-      ]);
-    });
-
-    // Adicione a tabela de custos de lavra
     worksheet.addRow([]);
-    worksheet.addRow(["Custos de Lavra"]);
-    worksheet.addRow(["Descrição", "Valor (R$/ano)"]);
 
-    // Parseie os dados de custos
-    const custos = JSON.parse(dados["Custo de Lavra"]);
-    custos.forEach((item) => {
-      worksheet.addRow([item.description, item.value]);
-    });
-
-    // Adicione a tabela de impostos
-    worksheet.addRow([]);
-    worksheet.addRow(["Impostos/Tributos"]);
-    worksheet.addRow(["Mês", "ICMS", "PIS", "COFINS", "CFEM"]);
-
-    // Parseie os dados de impostos
-    const impostos = JSON.parse(dados["Apuração Mensal"]);
-    impostos.forEach((item) => {
-      worksheet.addRow([item.mes, item.icms, item.pis, item.cofins, item.cfem]);
-    });
+    // Inserir os campo restantes abaixo...
 
     // Formate as colunas para melhor visualização
     worksheet.columns.forEach((column) => {
       column.width = 20;
     });
 
-    // Salve o arquivo XLSX em um buffer
+    // Gere o buffer do arquivo XLSX
     const buffer = await workbook.xlsx.writeBuffer();
-    console.log("Buffer gerado:", buffer.length); // Deve exibir o tamanho do buffer
+    console.log("Buffer gerado com sucesso. Tamanho:", buffer.length); // Log do tamanho do buffer
 
     // Nome do arquivo XLSX
     const xlsxFileName = `${dados["Razão Social"].replace(/[^a-zA-Z0-9]/g, "_")}_${dados.CNPJ}.xlsx`;
 
-    // Faz upload do XLSX para o Supabase Storage
+    // Faça upload do arquivo para o Supabase
     const { data: uploadData, error } = await supabase.storage
       .from("relatorios")
       .upload(`download/${xlsxFileName}`, buffer, {
@@ -233,17 +210,16 @@ app.post("/api/finalizar-relatorio", async (req, res) => {
       });
 
     if (error) {
-      console.error("Erro ao fazer upload do XLSX:", error);
-      return res.status(500).json({
-        error: "Erro ao fazer upload do XLSX.",
-        details: error.message,
-      });
+      console.error("Erro ao fazer upload:", error);
+      return res.status(500).json({ error: "Erro ao fazer upload." });
     }
 
-    // Obtém a URL pública do arquivo
+    // Obtenha a URL pública do arquivo
     const { data: urlData } = supabase.storage
       .from("relatorios")
       .getPublicUrl(`download/${xlsxFileName}`);
+
+    console.log("URL pública do arquivo:", urlData.publicUrl); // Log da URL pública
 
     res.status(200).json({
       message: "Relatório finalizado e XLSX gerado com sucesso!",
@@ -251,10 +227,7 @@ app.post("/api/finalizar-relatorio", async (req, res) => {
     });
   } catch (error) {
     console.error("Erro ao finalizar relatório:", error);
-    res.status(500).json({
-      error: "Erro ao finalizar relatório.",
-      details: error.message,
-    });
+    res.status(500).json({ error: "Erro ao finalizar relatório." });
   }
 });
 
