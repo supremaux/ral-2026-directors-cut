@@ -242,7 +242,7 @@ app.post("/api/finalizar-relatorio", async (req, res) => {
     // Obtém a URL pública do arquivo
     const { data: urlData } = supabase.storage
       .from("relatorios")
-      .getPublicUrl(xlsxFileName);
+      .getPublicUrl(`download/${xlsxFileName}`);
 
     res.status(200).json({
       message: "Relatório finalizado e XLSX gerado com sucesso!",
@@ -314,7 +314,11 @@ app.get("/api/download-file/:filename", async (req, res) => {
       return res.status(500).json({ error: "Erro ao baixar arquivo." });
     }
 
-    res.setHeader("Content-Type", "text/csv");
+    // Envie o buffer do arquivo como resposta
+    res.setHeader(
+      "Content-Type",
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    );
     res.setHeader("Content-Disposition", `attachment; filename=${filename}`);
     res.send(data);
   } catch (error) {
