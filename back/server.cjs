@@ -219,6 +219,7 @@ app.post("/api/finalizar-relatorio", async (req, res) => {
 
     // Salve o arquivo XLSX em um buffer
     const buffer = await workbook.xlsx.writeBuffer();
+    console.log("Buffer gerado:", buffer.length); // Deve exibir o tamanho do buffer
 
     // Nome do arquivo XLSX
     const xlsxFileName = `${dados["Razão Social"].replace(/[^a-zA-Z0-9]/g, "_")}_${dados.CNPJ}.xlsx`;
@@ -226,7 +227,7 @@ app.post("/api/finalizar-relatorio", async (req, res) => {
     // Faz upload do XLSX para o Supabase Storage
     const { data: uploadData, error } = await supabase.storage
       .from("relatorios")
-      .upload(xlsxFileName, buffer, {
+      .upload(`download/${xlsxFileName}`, buffer, {
         contentType:
           "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
       });

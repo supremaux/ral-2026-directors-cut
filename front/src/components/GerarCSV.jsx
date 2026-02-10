@@ -81,9 +81,7 @@ export const GerarCSV = () => {
       );
 
       if (response.data.xlsxUrl) {
-        alert(
-          `Relatório finalizado e XLSX gerado com sucesso! URL: ${response.data.xlsxUrl}`,
-        );
+        console.log("URL de download:", response.data.xlsxUrl);
         window.open(response.data.xlsxUrl, "_blank");
       } else {
         alert("Relatório finalizado com sucesso!");
@@ -97,6 +95,7 @@ export const GerarCSV = () => {
         `Erro ao finalizar relatório: ${error.response?.data?.details || error.message}`,
       );
     } finally {
+      // code to be executed regardless of whether an error occurred or not
       window.location.replace("/thanku");
     }
   };
