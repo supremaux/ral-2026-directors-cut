@@ -1,3 +1,4 @@
+// ListarArquivos.jsx
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { Container, Row, Col, Button } from "react-bootstrap";
@@ -36,7 +37,9 @@ export const ListarArquivos = () => {
           setFiles(
             response.data.map((file) => ({
               name: file.name,
-              date: new Date().toLocaleString(),
+              date: new Date(
+                file.metadata?.created_at || Date.now(),
+              ).toLocaleString(),
             })),
           );
         }
@@ -48,6 +51,26 @@ export const ListarArquivos = () => {
 
     fetchFiles();
   }, [isAuthenticated, loading]);
+
+  const handleDownload = async (fileName) => {
+    try {
+      const response = await axios.get(`/api/download-file/${fileName}`, {
+        responseType: "blob", // Importante para baixar arquivos binários
+      });
+
+      // Criar um link temporário para download
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", fileName);
+      document.body.appendChild(link);
+      link.click();
+      link.parentNode.removeChild(link);
+    } catch (error) {
+      console.error("Erro ao baixar arquivo:", error);
+      alert("Erro ao baixar arquivo. Tente novamente mais tarde.");
+    }
+  };
 
   const handleDelete = async (fileName) => {
     try {
@@ -82,7 +105,17 @@ export const ListarArquivos = () => {
           <Col>
             <h2>Arquivos Disponíveis para Download</h2>
           </Col>
-          <Col>{/* Aqui não deve haver um botão de login  */}</Col>
+          <Col>
+            <Button
+              onClick={() => {
+                localStorage.removeItem("auth");
+                navigate("/login");
+              }}
+              variant="danger"
+            >
+              Sair
+            </Button>
+          </Col>
           <Col>
             <div className={styles.searchContainer}>
               <input
@@ -115,13 +148,12 @@ export const ListarArquivos = () => {
                     <td>{file.name}</td>
                     <td>{file.date}</td>
                     <td>
-                      <a
-                        href={`/api/download-file/${file.name}`}
-                        download
+                      <button
+                        onClick={() => handleDownload(file.name)}
                         className={styles.downloadButton}
                       >
                         <IoMdCloudDownload /> Download
-                      </a>
+                      </button>
                       <button
                         onClick={() =>
                           window.open(

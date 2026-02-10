@@ -306,6 +306,9 @@ app.get("/api/list-files", async (req, res) => {
 app.get("/api/download-file/:filename", async (req, res) => {
   try {
     const { filename } = req.params;
+    console.log("Tentando baixar o arquivo:", filename);
+
+    // Baixar o arquivo do Supabase
     const { data, error } = await supabase.storage
       .from("relatorios")
       .download(`download/${filename}`);
@@ -315,7 +318,13 @@ app.get("/api/download-file/:filename", async (req, res) => {
       return res.status(500).json({ error: "Erro ao baixar arquivo." });
     }
 
-    // Envie o buffer do arquivo como resposta
+    // Verificar se o arquivo foi baixado corretamente
+    if (!data) {
+      console.error("Arquivo não encontrado ou vazio.");
+      return res.status(404).json({ error: "Arquivo não encontrado." });
+    }
+
+    // Enviar o arquivo como resposta
     res.setHeader(
       "Content-Type",
       "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
