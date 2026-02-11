@@ -23,7 +23,10 @@ app.get("/api/health", (req, res) => {
 // Configuração do CORS
 app.use(
   cors({
-    origin: ["http://localhost:5173", "https://ral-2026-full.vercel.app"],
+    origin: [
+      "http://localhost:5173",
+      "https://ral-2026-directors-cut.vercel.app/",
+    ],
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
   }),
