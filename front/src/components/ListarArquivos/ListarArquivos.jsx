@@ -54,11 +54,15 @@ export const ListarArquivos = () => {
 
   const handleDownload = async (fileName) => {
     try {
+      console.log("Iniciando download do arquivo:", fileName); // Log do nome do arquivo
+
       const response = await axios.get(`/api/download-file/${fileName}`, {
         responseType: "blob", // Importante para baixar arquivos binários
       });
 
-      // Criar um link temporário para download
+      console.log("Resposta recebida. Tamanho:", response.data.size); // Log do tamanho da resposta
+
+      // Crie um link temporário para download
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement("a");
       link.href = url;
