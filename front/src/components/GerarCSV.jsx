@@ -57,7 +57,7 @@ export const GerarCSV = () => {
 
         // Investimentos
         "Houve Investimento?": formData.confirmaInvest || "",
-        "Aquisições do Ano": formData.aquisi || "",
+        "Setor de Aquisições": formData.aquisi || "",
         "Valor Investido": formData.valorInvest || "",
 
         // Lista de Compradores

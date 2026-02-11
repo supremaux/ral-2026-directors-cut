@@ -187,7 +187,70 @@ app.post("/api/finalizar-relatorio", async (req, res) => {
     ]);
     worksheet.addRow([]);
 
-    // Inserir os campo restantes abaixo...
+    // Produção Detonado Britado
+    worksheet.addRow(["Produção Detonado Britado:"]);
+    worksheet.addRow([
+      ["Substância Produzida", dados.substanciaProduzida || ""],
+      ["Unidade de Produção", dados.unidadeDetonadoBritado || ""],
+      ["Produção - Detonado", JSON.stringify(dados.detonadoBritado || [])],
+    ]);
+    worksheet.addRow([]);
+
+    // Módulo de Beneficiamento
+    worksheet.addRow(["Módulo de Beneficiamento:"]);
+    worksheet.addRow([
+      ["Unidade de Medida", dados.unidadeMedida || ""],
+      ["Venda - Produção", JSON.stringify(dados.salesData || [])],
+    ]);
+    worksheet.addRow([]);
+
+    // Mão de Obra
+    worksheet.addRow(["Mão de Obra:"]);
+    worksheet.addRow([JSON.stringify(dados.salesByCategory || [])]);
+    worksheet.addRow([]);
+
+    // Custo de Lavra
+    worksheet.addRow(["Custo de Lavra:"]);
+    worksheet.addRow([JSON.stringify(dados.costData || [])]);
+    worksheet.addRow([]);
+
+    // Insumos
+    worksheet.addRow(["Insumos:"]);
+    worksheet.addRow([JSON.stringify(dados.insumosSelecionados || [])]);
+    worksheet.addRow([]);
+
+    // Matriz Energetica
+    worksheet.addRow(["Matriz Energetica:"]);
+    worksheet.addRow([dados.matrizEnergetica || "Não enviado"]);
+    worksheet.addRow([dados.faturaEnergia || "Não enviado"]);
+    worksheet.addRow([]);
+
+    // Impostos
+    worksheet.addRow(["Impostos:"]);
+    worksheet.addRow([JSON.stringify(dados.apuracaoMensal || [])]);
+    worksheet.addRow([]);
+
+    // Investimentos
+    worksheet.addRow(["Investimentos:"]);
+    worksheet.addRow([JSON.stringify(dados.confirmaInvest || [])]);
+    worksheet.addRow([JSON.stringify(dados.aquisi || [])]);
+    worksheet.addRow([JSON.stringify(dados.valorInvest || [])]);
+    worksheet.addRow([]);
+
+    // Lista de Compradores
+    worksheet.addRow(["Lista de Compradores:"]);
+    worksheet.addRow([JSON.stringify(dados.compradores || [])]);
+    worksheet.addRow([JSON.stringify(dados.totalVendido || [])]);
+    worksheet.addRow([dados.arquivoNotasFiscaisUrl || "Não enviado"]);
+    worksheet.addRow([]);
+
+    // Pilha de Estéril
+    worksheet.addRow(["Pilha de Estéril:"]);
+    worksheet.addRow([JSON.stringify(dados.existePilhaEsteril || [])]);
+    worksheet.addRow([JSON.stringify(dados.quantidadeEsteril || [])]);
+    worksheet.addRow([]);
+
+    // Insera novos campos abaixo...
 
     // Formate as colunas para melhor visualização
     worksheet.columns.forEach((column) => {
