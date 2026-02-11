@@ -287,6 +287,8 @@ app.post("/api/finalizar-relatorio", async (req, res) => {
     worksheet.addRow(["Quantidade de Estéril:", dados.quantidadeEsteril || ""]);
     worksheet.addRow([]);
 
+    // Adicione mais dados conforme necessário
+
     // Formate as colunas para melhor visualização
     worksheet.columns.forEach((column) => {
       column.width = 20;
