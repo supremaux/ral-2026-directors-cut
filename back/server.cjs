@@ -153,7 +153,7 @@ app.post("/api/finalizar-relatorio", async (req, res) => {
     console.log("Dados recebidos para geração do relatório:", dados);
 
     const workbook = new ExcelJS.Workbook();
-    const worksheet = workbook.addWorksheet("Relatório");
+    const worksheet = workbook.addWorksheet("Relatório Anual de Lavra");
 
     // Adicione um cabeçalho estilizado
     worksheet.mergeCells("A1:E1");
@@ -173,84 +173,119 @@ app.post("/api/finalizar-relatorio", async (req, res) => {
     worksheet.addRow([dados["Termo de Responsabilidade"] || "Não enviado"]);
     worksheet.addRow([]);
 
-    // Substância Mineral
-    worksheet.addRow(["Substância Mineral:"]);
-    worksheet.addRow([dados["Substância Mineral"] || "Não enviado"]);
-    worksheet.addRow([]);
-
     // Estoque
     worksheet.addRow(["Estoque:"]);
-    worksheet.addRow([
-      ["Possui Estoque", dados.temEstoque || ""],
-      ["Unidade de Estoque", dados.unidadeMedEstoque || ""],
-      ["Estoque Lavrado", JSON.stringify(dados.estoqueLavra || [])],
-    ]);
+    worksheet.addRow(["Possui Estoque:", dados.temEstoque || ""]);
+    worksheet.addRow(["Unidade de Estoque:", dados.unidadeMedEstoque || ""]);
+    worksheet.addRow(["Estoque Lavrado:", dados.estoqueLavra || ""]);
     worksheet.addRow([]);
 
     // Produção Detonado Britado
     worksheet.addRow(["Produção Detonado Britado:"]);
-    worksheet.addRow([
-      ["Substância Produzida", dados.substanciaProduzida || ""],
-      ["Unidade de Produção", dados.unidadeDetonadoBritado || ""],
-      ["Produção - Detonado", JSON.stringify(dados.detonadoBritado || [])],
-    ]);
     worksheet.addRow([]);
 
-    // Módulo de Beneficiamento
-    worksheet.addRow(["Módulo de Beneficiamento:"]);
+    // Cabeçalho da tabela de produção
     worksheet.addRow([
-      ["Unidade de Medida", dados.unidadeMedida || ""],
-      ["Venda - Produção", JSON.stringify(dados.salesData || [])],
+      "Mês",
+      "Quantidade Detonada",
+      "Britado",
+      "Lavrado",
+      "Vendido",
     ]);
+
+    // Dados de produção
+    const producao = JSON.parse(dados["Produção - Detonado"] || "[]");
+    producao.forEach((item) => {
+      worksheet.addRow([
+        item.mes,
+        item.quantidadeDetonado,
+        item.britado,
+        item.lavrado,
+        item.vendido,
+      ]);
+    });
+    worksheet.addRow([]);
+
+    // Custo de Lavra
+    worksheet.addRow(["Custos de Lavra:"]);
+    worksheet.addRow([]);
+
+    // Cabeçalho da tabela de custos
+    worksheet.addRow(["Descrição", "Valor (R$/ano)"]);
+
+    // Dados de custos
+    const custos = JSON.parse(dados["Custo de Lavra"] || "[]");
+    custos.forEach((item) => {
+      worksheet.addRow([item.description, item.value]);
+    });
+    worksheet.addRow([]);
+
+    // Impostos
+    worksheet.addRow(["Impostos/Tributos:"]);
+    worksheet.addRow([]);
+
+    // Cabeçalho da tabela de impostos
+    worksheet.addRow(["Mês", "ICMS", "PIS", "COFINS", "CFEM"]);
+
+    // Dados de impostos
+    const impostos = JSON.parse(dados["Apuração Mensal"] || "[]");
+    impostos.forEach((item) => {
+      worksheet.addRow([item.mes, item.icms, item.pis, item.cofins, item.cfem]);
+    });
     worksheet.addRow([]);
 
     // Mão de Obra
     worksheet.addRow(["Mão de Obra:"]);
-    worksheet.addRow([JSON.stringify(dados.salesByCategory || [])]);
     worksheet.addRow([]);
 
-    // Custo de Lavra
-    worksheet.addRow(["Custo de Lavra:"]);
-    worksheet.addRow([JSON.stringify(dados.costData || [])]);
+    // Dados de mão de obra
+    const maoDeObra = JSON.parse(dados["Mão de Obra"] || "[]");
+    Object.entries(maoDeObra).forEach(([cargo, quantidade]) => {
+      worksheet.addRow([cargo, quantidade]);
+    });
     worksheet.addRow([]);
 
     // Insumos
     worksheet.addRow(["Insumos:"]);
-    worksheet.addRow([JSON.stringify(dados.insumosSelecionados || [])]);
     worksheet.addRow([]);
 
-    // Matriz Energetica
-    worksheet.addRow(["Matriz Energetica:"]);
-    worksheet.addRow([dados.matrizEnergetica || "Não enviado"]);
-    worksheet.addRow([dados.faturaEnergia || "Não enviado"]);
-    worksheet.addRow([]);
+    // Cabeçalho da tabela de insumos
+    worksheet.addRow(["Descrição", "Quantidade"]);
 
-    // Impostos
-    worksheet.addRow(["Impostos:"]);
-    worksheet.addRow([JSON.stringify(dados.apuracaoMensal || [])]);
+    // Dados de insumos
+    const insumos = JSON.parse(dados["Insumos da Lavra"] || "[]");
+    insumos.forEach((item) => {
+      worksheet.addRow([item.description, item.quantity]);
+    });
     worksheet.addRow([]);
 
     // Investimentos
     worksheet.addRow(["Investimentos:"]);
-    worksheet.addRow([JSON.stringify(dados.confirmaInvest || [])]);
-    worksheet.addRow([JSON.stringify(dados.aquisi || [])]);
-    worksheet.addRow([JSON.stringify(dados.valorInvest || [])]);
+    worksheet.addRow(["Houve Investimento?", dados.confirmaInvest || ""]);
+    worksheet.addRow(["Aquisições do Ano:", dados.aquisi || ""]);
+    worksheet.addRow(["Valor Investido:", dados.valorInvest || ""]);
     worksheet.addRow([]);
 
     // Lista de Compradores
     worksheet.addRow(["Lista de Compradores:"]);
-    worksheet.addRow([JSON.stringify(dados.compradores || [])]);
-    worksheet.addRow([JSON.stringify(dados.totalVendido || [])]);
-    worksheet.addRow([dados.arquivoNotasFiscaisUrl || "Não enviado"]);
+    worksheet.addRow([]);
+
+    // Dados de compradores
+    const compradores = JSON.parse(dados["Nomes dos Compradores"] || "[]");
+    compradores.forEach((comprador) => {
+      worksheet.addRow([comprador]);
+    });
+    worksheet.addRow(["Total Vendido (R$):", dados.totalVendido || ""]);
     worksheet.addRow([]);
 
     // Pilha de Estéril
     worksheet.addRow(["Pilha de Estéril:"]);
-    worksheet.addRow([JSON.stringify(dados.existePilhaEsteril || [])]);
-    worksheet.addRow([JSON.stringify(dados.quantidadeEsteril || [])]);
+    worksheet.addRow([
+      "Existe Pilha de Estéril?",
+      dados.existePilhaEsteril || "",
+    ]);
+    worksheet.addRow(["Quantidade de Estéril:", dados.quantidadeEsteril || ""]);
     worksheet.addRow([]);
-
-    // Insera novos campos abaixo...
 
     // Formate as colunas para melhor visualização
     worksheet.columns.forEach((column) => {
@@ -259,7 +294,7 @@ app.post("/api/finalizar-relatorio", async (req, res) => {
 
     // Gere o buffer do arquivo XLSX
     const buffer = await workbook.xlsx.writeBuffer();
-    console.log("Buffer gerado com sucesso. Tamanho:", buffer.length); // Log do tamanho do buffer
+    console.log("Buffer gerado com sucesso. Tamanho:", buffer.length);
 
     // Nome do arquivo XLSX
     const xlsxFileName = `${dados["Razão Social"].replace(/[^a-zA-Z0-9]/g, "_")}_${dados.CNPJ}.xlsx`;
@@ -282,7 +317,7 @@ app.post("/api/finalizar-relatorio", async (req, res) => {
       .from("relatorios")
       .getPublicUrl(`download/${xlsxFileName}`);
 
-    console.log("URL pública do arquivo:", urlData.publicUrl); // Log da URL pública
+    console.log("URL pública do arquivo:", urlData.publicUrl);
 
     res.status(200).json({
       message: "Relatório finalizado e XLSX gerado com sucesso!",
