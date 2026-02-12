@@ -21,17 +21,17 @@ app.get("/api/health", (req, res) => {
 });
 
 // Configuração do CORS
-app.use(
-  cors({
-    origin: [
-      "http://localhost:5173",
-      "https://ral-2026-directors-cut.vercel.app",
-    ],
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-    credentials: true,
-  }),
-);
+const corsOptions = {
+  origin: [
+    "https://ral-2026-directors-cut.vercel.app",
+    "http://localhost:5173",
+  ],
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
 
 // Configuração do Multer
 const upload = multer({ storage: multer.memoryStorage() });

@@ -83,8 +83,8 @@ export const GerarCSV = () => {
         {
           headers: {
             "Content-Type": "application/json",
-            "Cache-Control": "no-cache",
           },
+          withCredentials: false, // Defina como false se não precisar de credenciais
         },
       );
 
