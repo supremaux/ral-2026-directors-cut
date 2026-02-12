@@ -154,7 +154,7 @@ app.post(
 app.post("/api/finalizar-relatorio", async (req, res) => {
   try {
     const dados = req.body;
-    console.log("Dados recebidos:", dados);
+    console.log("Dados recebidos:", JSON.stringify(dados, null, 2));
 
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet("Relatório Anual de Lavra");
@@ -187,11 +187,44 @@ app.post("/api/finalizar-relatorio", async (req, res) => {
     worksheet.addRow(["Estoque Lavrado:", dados.estoqueLavra || ""]);
     worksheet.addRow([]);
 
-    // Produção Detonado Britado
-    worksheet.addRow(["Produção Detonado Britado:"]);
-    worksheet.addRow([]);
+    // // Produção Detonado Britado
+    // worksheet.addRow(["Produção Detonado Britado:"]);
+    // worksheet.addRow([]);
 
-    // Cabeçalho da tabela de produção
+    // // Cabeçalho da tabela de produção
+    // worksheet.addRow([
+    //   "Mês",
+    //   "Quantidade Detonada",
+    //   "Britado",
+    //   "Lavrado",
+    //   "Vendido",
+    // ]);
+
+    // // Dados de produção
+    // const producao = JSON.parse(dados["Produção - Detonado"] || "[]");
+    // producao.forEach((item) => {
+    //   worksheet.addRow([
+    //     item.mes,
+    //     item.quantidadeDetonado,
+    //     item.britado,
+    //     item.lavrado,
+    //     item.vendido,
+    //   ]);
+    // });
+    // worksheet.addRow([]);
+
+    // Processar dados de produção
+    let producao = [];
+    try {
+      producao =
+        typeof dados["Produção - Detonado"] === "string"
+          ? JSON.parse(dados["Produção - Detonado"])
+          : [];
+    } catch (error) {
+      console.error("Erro ao processar Produção - Detonado:", error);
+    }
+
+    // Adicione cabeçalho da tabela de produção
     worksheet.addRow([
       "Mês",
       "Quantidade Detonada",
@@ -199,9 +232,6 @@ app.post("/api/finalizar-relatorio", async (req, res) => {
       "Lavrado",
       "Vendido",
     ]);
-
-    // Dados de produção
-    const producao = JSON.parse(dados["Produção - Detonado"] || "[]");
     producao.forEach((item) => {
       worksheet.addRow([
         item.mes,
@@ -212,6 +242,8 @@ app.post("/api/finalizar-relatorio", async (req, res) => {
       ]);
     });
     worksheet.addRow([]);
+
+    // Fim da produção
 
     // Custo de Lavra
     worksheet.addRow(["Custos de Lavra:"]);

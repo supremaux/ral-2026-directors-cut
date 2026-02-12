@@ -76,7 +76,10 @@ export const GerarCSV = () => {
         // ... outros campos
       };
 
-      console.log("Dados enviados:", simplifiedData);
+      console.log(
+        "Dados a serem enviados:",
+        JSON.stringify(simplifiedData, null, 2),
+      );
 
       const response = await axios.post(
         `${API_URL}/api/finalizar-relatorio`,
