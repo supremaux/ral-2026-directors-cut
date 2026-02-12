@@ -10,7 +10,6 @@ export const GerarCSV = () => {
 
   const gerarRelatorio = async () => {
     try {
-      // Simplificando os dados para um formato que o papaparse consiga processar
       const simplifiedData = {
         // Dados Cadastrais
         "Razão Social": formData.razaoSocial || "",
@@ -75,8 +74,9 @@ export const GerarCSV = () => {
 
       console.log("Dados enviados:", simplifiedData);
 
+      // Use a URL correta do backend
       const response = await axios.post(
-        "/api/finalizar-relatorio",
+        "http://localhost:3001/api/finalizar-relatorio",
         simplifiedData,
       );
 
@@ -95,7 +95,6 @@ export const GerarCSV = () => {
         `Erro ao finalizar relatório: ${error.response?.data?.details || error.message}`,
       );
     } finally {
-      // code to be executed regardless of whether an error occurred or not
       window.location.replace("/thanku");
     }
   };

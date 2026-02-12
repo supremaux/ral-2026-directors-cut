@@ -25,7 +25,7 @@ app.use(
   cors({
     origin: [
       "http://localhost:5173",
-      "https://ral-2026-directors-cut.vercel.app/",
+      "https://ral-2026-directors-cut.vercel.app",
     ],
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
@@ -151,6 +151,7 @@ app.post(
 
 // Rota para finalizar relatório e gerar XLSX (usando Supabase Storage)
 app.post("/api/finalizar-relatorio", async (req, res) => {
+  console.log("Rota /api/finalizar-relatorio acessada!"); // Log para verificar se a rota está sendo chamada
   try {
     const dados = req.body;
     console.log("Dados recebidos para geração do relatório:", dados);
