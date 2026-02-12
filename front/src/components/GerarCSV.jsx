@@ -4,7 +4,8 @@ import { useContext } from "react";
 import { FormContext } from "../FormContext";
 import { BsCheckCircleFill } from "react-icons/bs";
 import axios from "axios";
-axios.defaults.withCredentials = true;
+
+axios.defaults.headers.post["Content-Type"] = "application/json";
 
 export const GerarCSV = () => {
   const { formData } = useContext(FormContext);
@@ -84,7 +85,6 @@ export const GerarCSV = () => {
           headers: {
             "Content-Type": "application/json",
           },
-          withCredentials: false, // Defina como false se não precisar de credenciais
         },
       );
 
