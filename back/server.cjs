@@ -153,7 +153,7 @@ app.post(
 app.post("/api/finalizar-relatorio", async (req, res) => {
   try {
     const dados = req.body;
-    console.log("Dados recebidos para geração do relatório:", dados); // Log dos dados recebidos
+    console.log("Dados recebidos:", JSON.stringify(dados, null, 2)); // Log detalhado dos dados recebidos
 
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet("Relatório Anual de Lavra");
@@ -167,6 +167,9 @@ app.post("/api/finalizar-relatorio", async (req, res) => {
     // Adicione os dados cadastrais
     worksheet.addRow([]);
     worksheet.addRow(["Razão Social:", dados["Razão Social"]]);
+    if (!dados["Razão Social"]) {
+      return res.status(400).json({ error: "Razão Social é obrigatória." });
+    }
     worksheet.addRow(["CNPJ:", dados.CNPJ]);
     worksheet.addRow(["Substância Mineral:", dados["Substância Mineral"]]);
     worksheet.addRow([]);
@@ -292,34 +295,31 @@ app.post("/api/finalizar-relatorio", async (req, res) => {
 
     // Adicione mais dados conforme necessário
 
-    // Formate as colunas para melhor visualização
-    worksheet.columns.forEach((column) => {
-      column.width = 20;
-    });
-
     // Gere o buffer do arquivo XLSX
     const buffer = await workbook.xlsx.writeBuffer();
-    console.log("Buffer gerado com sucesso. Tamanho:", buffer.length);
-    if (buffer.length === 0) {
-      console.error("Buffer vazio!");
+    if (!buffer || buffer.length === 0) {
+      console.error("Buffer vazio ou inválido!");
+      return res
+        .status(500)
+        .json({ error: "Buffer vazio ou inválido ao gerar o arquivo XLSX." });
     }
 
     // Nome do arquivo XLSX
-    const xlsxFileName = `${dados["Razão Social"].replace(/[^a-zA-Z0-9]/g, "_")}_${dados.CNPJ}.xlsx`;
+    const xlsxFileName = `${dados["Razão Social"].replace(/[^a-zA-Z0-9]/g, "_")}_${dados.CNPJ || "sem_cnpj"}.xlsx`;
 
     // Faça upload do arquivo para o Supabase
-    const { data: uploadData, error } = await supabase.storage
+    const { data: uploadData, error: uploadError } = await supabase.storage
       .from("relatorios")
       .upload(`download/${xlsxFileName}`, buffer, {
         contentType:
           "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
       });
 
-    if (error) {
-      console.error("Erro ao fazer upload:", error);
+    if (uploadError) {
+      console.error("Erro ao fazer upload:", uploadError);
       return res
         .status(500)
-        .json({ error: "Erro ao fazer upload.", details: error.message });
+        .json({ error: "Erro ao fazer upload.", details: uploadError.message });
     }
 
     // Obtenha a URL pública do arquivo
@@ -327,17 +327,16 @@ app.post("/api/finalizar-relatorio", async (req, res) => {
       .from("relatorios")
       .getPublicUrl(`download/${xlsxFileName}`);
 
-    console.log("URL pública do arquivo:", urlData.publicUrl);
+    if (!urlData.publicUrl) {
+      console.error("URL pública não gerada!");
+      return res.status(500).json({ error: "URL pública não gerada." });
+    }
 
-    res.status(200).json({
-      message: "Relatório finalizado e XLSX gerado com sucesso!",
-      xlsxUrl: urlData.publicUrl,
-    });
+    // Retorne a URL pública do arquivo
+    res.json({ url: urlData.publicUrl });
   } catch (error) {
-    console.error("Erro ao finalizar relatório:", error); // Log do erro geral
-    res
-      .status(500)
-      .json({ error: "Erro ao finalizar relatório.", details: error.message });
+    console.error("Erro no servidor:", error);
+    res.status(500).json({ error: "Erro no servidor." });
   }
 });
 
