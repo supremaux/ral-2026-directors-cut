@@ -4,6 +4,7 @@ import { useContext } from "react";
 import { FormContext } from "../FormContext";
 import { BsCheckCircleFill } from "react-icons/bs";
 import axios from "axios";
+axios.defaults.withCredentials = true;
 
 export const GerarCSV = () => {
   const { formData } = useContext(FormContext);
@@ -79,6 +80,12 @@ export const GerarCSV = () => {
       const response = await axios.post(
         `${API_URL}/api/finalizar-relatorio`,
         simplifiedData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "Cache-Control": "no-cache",
+          },
+        },
       );
 
       if (response.data.xlsxUrl) {
