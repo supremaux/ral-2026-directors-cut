@@ -8,7 +8,7 @@ import axios from "axios";
 export const GerarCSV = () => {
   const { formData } = useContext(FormContext);
 
-  const API_URL = import.meta.env.VITE_API_URL;
+  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3001";
 
   const gerarRelatorio = async () => {
     try {
