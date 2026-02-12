@@ -153,7 +153,7 @@ app.post(
 app.post("/api/finalizar-relatorio", async (req, res) => {
   try {
     const dados = req.body;
-    console.log("Dados recebidos:", JSON.stringify(dados, null, 2)); // Log detalhado dos dados recebidos
+    console.log("Dados recebidos:", JSON.stringify(dados, null, 2));
 
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet("Relatório Anual de Lavra");
@@ -296,6 +296,7 @@ app.post("/api/finalizar-relatorio", async (req, res) => {
     // Adicione mais dados conforme necessário
 
     // Gere o buffer do arquivo XLSX
+    console.log("Gerando buffer do arquivo XLSX...");
     const buffer = await workbook.xlsx.writeBuffer();
     console.log("Buffer gerado com sucesso. Tamanho:", buffer.length);
 
@@ -308,6 +309,7 @@ app.post("/api/finalizar-relatorio", async (req, res) => {
 
     // Nome do arquivo XLSX
     const xlsxFileName = `${dados["Razão Social"].replace(/[^a-zA-Z0-9]/g, "_")}_${dados.CNPJ || "sem_cnpj"}.xlsx`;
+    console.log("Nome do arquivo XLSX:", xlsxFileName);
 
     // Faça upload do arquivo para o Supabase
     console.log("Fazendo upload do arquivo para o Supabase...");
