@@ -8,6 +8,8 @@ import axios from "axios";
 export const GerarCSV = () => {
   const { formData } = useContext(FormContext);
 
+  const API_URL = import.meta.env.VITE_API_URL;
+
   const gerarRelatorio = async () => {
     try {
       const simplifiedData = {
@@ -74,9 +76,8 @@ export const GerarCSV = () => {
 
       console.log("Dados enviados:", simplifiedData);
 
-      // Use a URL correta do backend
       const response = await axios.post(
-        "http://localhost:3001/api/finalizar-relatorio",
+        `${API_URL}/api/finalizar-relatorio`,
         simplifiedData,
       );
 
@@ -94,8 +95,6 @@ export const GerarCSV = () => {
       alert(
         `Erro ao finalizar relatório: ${error.response?.data?.details || error.message}`,
       );
-    } finally {
-      window.location.replace("/thanku");
     }
   };
 

@@ -297,6 +297,8 @@ app.post("/api/finalizar-relatorio", async (req, res) => {
 
     // Gere o buffer do arquivo XLSX
     const buffer = await workbook.xlsx.writeBuffer();
+    console.log("Buffer gerado com sucesso. Tamanho:", buffer.length);
+
     if (!buffer || buffer.length === 0) {
       console.error("Buffer vazio ou inválido!");
       return res
@@ -308,6 +310,7 @@ app.post("/api/finalizar-relatorio", async (req, res) => {
     const xlsxFileName = `${dados["Razão Social"].replace(/[^a-zA-Z0-9]/g, "_")}_${dados.CNPJ || "sem_cnpj"}.xlsx`;
 
     // Faça upload do arquivo para o Supabase
+    console.log("Fazendo upload do arquivo para o Supabase...");
     const { data: uploadData, error: uploadError } = await supabase.storage
       .from("relatorios")
       .upload(`download/${xlsxFileName}`, buffer, {
@@ -322,6 +325,8 @@ app.post("/api/finalizar-relatorio", async (req, res) => {
         .json({ error: "Erro ao fazer upload.", details: uploadError.message });
     }
 
+    console.log("Upload concluído com sucesso:", uploadData);
+
     // Obtenha a URL pública do arquivo
     const { data: urlData } = supabase.storage
       .from("relatorios")
@@ -332,11 +337,17 @@ app.post("/api/finalizar-relatorio", async (req, res) => {
       return res.status(500).json({ error: "URL pública não gerada." });
     }
 
-    // Retorne a URL pública do arquivo
-    res.json({ url: urlData.publicUrl });
+    console.log("URL pública do arquivo:", urlData.publicUrl);
+
+    res.status(200).json({
+      message: "Relatório finalizado e XLSX gerado com sucesso!",
+      xlsxUrl: urlData.publicUrl,
+    });
   } catch (error) {
-    console.error("Erro no servidor:", error);
-    res.status(500).json({ error: "Erro no servidor." });
+    console.error("Erro completo ao finalizar relatório:", error);
+    res
+      .status(500)
+      .json({ error: "Erro ao finalizar relatório.", details: error.message });
   }
 });
 
