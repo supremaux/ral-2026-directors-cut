@@ -151,10 +151,9 @@ app.post(
 
 // Rota para finalizar relatório e gerar XLSX (usando Supabase Storage)
 app.post("/api/finalizar-relatorio", async (req, res) => {
-  console.log("Rota /api/finalizar-relatorio acessada!"); // Log para verificar se a rota está sendo chamada
   try {
     const dados = req.body;
-    console.log("Dados recebidos para geração do relatório:", dados);
+    console.log("Dados recebidos para geração do relatório:", dados); // Log dos dados recebidos
 
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet("Relatório Anual de Lavra");
@@ -301,6 +300,9 @@ app.post("/api/finalizar-relatorio", async (req, res) => {
     // Gere o buffer do arquivo XLSX
     const buffer = await workbook.xlsx.writeBuffer();
     console.log("Buffer gerado com sucesso. Tamanho:", buffer.length);
+    if (buffer.length === 0) {
+      console.error("Buffer vazio!");
+    }
 
     // Nome do arquivo XLSX
     const xlsxFileName = `${dados["Razão Social"].replace(/[^a-zA-Z0-9]/g, "_")}_${dados.CNPJ}.xlsx`;
@@ -315,7 +317,9 @@ app.post("/api/finalizar-relatorio", async (req, res) => {
 
     if (error) {
       console.error("Erro ao fazer upload:", error);
-      return res.status(500).json({ error: "Erro ao fazer upload." });
+      return res
+        .status(500)
+        .json({ error: "Erro ao fazer upload.", details: error.message });
     }
 
     // Obtenha a URL pública do arquivo
@@ -330,8 +334,10 @@ app.post("/api/finalizar-relatorio", async (req, res) => {
       xlsxUrl: urlData.publicUrl,
     });
   } catch (error) {
-    console.error("Erro ao finalizar relatório:", error);
-    res.status(500).json({ error: "Erro ao finalizar relatório." });
+    console.error("Erro ao finalizar relatório:", error); // Log do erro geral
+    res
+      .status(500)
+      .json({ error: "Erro ao finalizar relatório.", details: error.message });
   }
 });
 
