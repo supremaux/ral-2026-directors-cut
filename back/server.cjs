@@ -334,8 +334,8 @@ app.post("/api/finalizar-relatorio", async (req, res) => {
 
     insumos.forEach((item) => {
       worksheet.addRow([
-        item.description || "Não informado",
-        item.quantity || 0,
+        item.item || item.description || "Não informado",
+        item.quantidade || 0,
       ]);
     });
     worksheet.addRow([]);
@@ -347,7 +347,7 @@ app.post("/api/finalizar-relatorio", async (req, res) => {
       dados["Houve Investimento?"] || "Não informado",
     ]);
     worksheet.addRow([
-      "Aquisições do Ano:",
+      "Setor de Aquisições:",
       dados["Setor de Aquisições"] || "Não informado",
     ]);
     worksheet.addRow([
@@ -359,6 +359,9 @@ app.post("/api/finalizar-relatorio", async (req, res) => {
     // Lista de Compradores
     worksheet.addRow(["Lista de Compradores:"]).font = { bold: true };
     worksheet.addRow([]);
+
+    // Cabeçalho da tabela de compradores
+    worksheet.addRow(["CPF/CNPJ", "Nome", "Quantidade", "Valor Total"]);
 
     // Dados de compradores
     let compradores = [];
