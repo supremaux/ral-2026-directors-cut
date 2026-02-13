@@ -223,10 +223,8 @@ app.post("/api/finalizar-relatorio", async (req, res) => {
     // Dados de produção
     let producao = [];
     try {
-      producao =
-        typeof dados["Produção - Detonado"] === "string"
-          ? JSON.parse(dados["Produção - Detonado"])
-          : [];
+      const producaoString = dados["Produção - Detonado"] || "[]";
+      producao = JSON.parse(producaoString);
     } catch (error) {
       console.error("Erro ao processar Produção - Detonado:", error);
     }
@@ -234,10 +232,10 @@ app.post("/api/finalizar-relatorio", async (req, res) => {
     producao.forEach((item) => {
       worksheet.addRow([
         item.mes || "Não informado",
-        item.quantidadeDetonado || 0,
-        item.britado || 0,
-        item.lavrado || 0,
-        item.vendido || 0,
+        Number(item.quantidadeDetonado) || 0,
+        Number(item.britado) || 0,
+        Number(item.lavrado) || 0,
+        Number(item.vendido) || 0,
       ]);
     });
     worksheet.addRow([]);
@@ -252,16 +250,17 @@ app.post("/api/finalizar-relatorio", async (req, res) => {
     // Dados de custos
     let custos = [];
     try {
-      custos =
-        typeof dados["Custo de Lavra"] === "string"
-          ? JSON.parse(dados["Custo de Lavra"])
-          : [];
+      const custosString = dados["Custo de Lavra"] || "[]";
+      custos = JSON.parse(custosString);
     } catch (error) {
       console.error("Erro ao processar Custo de Lavra:", error);
     }
 
     custos.forEach((item) => {
-      worksheet.addRow([item.description || "Não informado", item.value || 0]);
+      worksheet.addRow([
+        item.description || "Não informado",
+        Number(item.value) || 0,
+      ]);
     });
     worksheet.addRow([]);
 
@@ -275,10 +274,8 @@ app.post("/api/finalizar-relatorio", async (req, res) => {
     // Dados de impostos
     let impostos = [];
     try {
-      impostos =
-        typeof dados["Apuração Mensal"] === "string"
-          ? JSON.parse(dados["Apuração Mensal"])
-          : [];
+      const impostosString = dados["Apuração Mensal"] || "[]";
+      impostos = JSON.parse(impostosString);
     } catch (error) {
       console.error("Erro ao processar Apuração Mensal:", error);
     }
@@ -286,10 +283,10 @@ app.post("/api/finalizar-relatorio", async (req, res) => {
     impostos.forEach((item) => {
       worksheet.addRow([
         item.mes || "Não informado",
-        item.icms || 0,
-        item.pis || 0,
-        item.cofins || 0,
-        item.cfem || 0,
+        Number(item.icms) || 0,
+        Number(item.pis) || 0,
+        Number(item.cofins) || 0,
+        Number(item.cfem) || 0,
       ]);
     });
     worksheet.addRow([]);
@@ -301,16 +298,14 @@ app.post("/api/finalizar-relatorio", async (req, res) => {
     // Dados de mão de obra
     let maoDeObra = {};
     try {
-      maoDeObra =
-        typeof dados["Mão de Obra"] === "string"
-          ? JSON.parse(dados["Mão de Obra"])
-          : {};
+      const maoDeObraString = dados["Mão de Obra"] || "{}";
+      maoDeObra = JSON.parse(maoDeObraString);
     } catch (error) {
       console.error("Erro ao processar Mão de Obra:", error);
     }
 
     Object.entries(maoDeObra).forEach(([cargo, quantidade]) => {
-      worksheet.addRow([cargo || "Não informado", quantidade || 0]);
+      worksheet.addRow([cargo || "Não informado", Number(quantidade) || 0]);
     });
     worksheet.addRow([]);
 
@@ -324,10 +319,8 @@ app.post("/api/finalizar-relatorio", async (req, res) => {
     // Dados de insumos
     let insumos = [];
     try {
-      insumos =
-        typeof dados["Insumos da Lavra"] === "string"
-          ? JSON.parse(dados["Insumos da Lavra"])
-          : [];
+      const insumosString = dados["Insumos da Lavra"] || "[]";
+      insumos = JSON.parse(insumosString);
     } catch (error) {
       console.error("Erro ao processar Insumos da Lavra:", error);
     }
@@ -335,7 +328,7 @@ app.post("/api/finalizar-relatorio", async (req, res) => {
     insumos.forEach((item) => {
       worksheet.addRow([
         item.item || item.description || "Não informado",
-        item.quantidade || 0,
+        Number(item.quantidade) || 0,
       ]);
     });
     worksheet.addRow([]);
@@ -366,10 +359,8 @@ app.post("/api/finalizar-relatorio", async (req, res) => {
     // Dados de compradores
     let compradores = [];
     try {
-      compradores =
-        typeof dados["Nomes dos Compradores"] === "string"
-          ? JSON.parse(dados["Nomes dos Compradores"])
-          : [];
+      const compradoresString = dados["Nomes dos Compradores"] || "[]";
+      compradores = JSON.parse(compradoresString);
     } catch (error) {
       console.error("Erro ao processar Nomes dos Compradores:", error);
     }
@@ -378,11 +369,14 @@ app.post("/api/finalizar-relatorio", async (req, res) => {
       worksheet.addRow([
         comprador.cpfCnpj || "Não informado",
         comprador.nome || "Não informado",
-        comprador.quantidade || 0,
-        comprador.valorTotal || 0,
+        Number(comprador.quantidade) || 0,
+        Number(comprador.valorTotal) || 0,
       ]);
     });
-    worksheet.addRow(["Total Vendido (R$):", dados["Total Vendido (R$)"] || 0]);
+    worksheet.addRow([
+      "Total Vendido (R$):",
+      Number(dados["Total Vendido (R$)"]) || 0,
+    ]);
     worksheet.addRow([]);
 
     // Pilha de Estéril
