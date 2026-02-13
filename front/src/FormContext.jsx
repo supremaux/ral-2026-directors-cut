@@ -28,8 +28,6 @@ const costItems = [
 ];
 
 export const FormProvider = ({ children }) => {
-  // Definindo o formato numérico em decimal com duas casas decimais
-
   const [formData, setFormData] = useState({
     // Dados Cadastrais
     razaoSocial: "",
@@ -286,6 +284,11 @@ export const FormProvider = ({ children }) => {
     existePilhaEsteril: "",
     quantidadeEsteril: "",
   });
+
+  // Adicione um log para verificar o estado atual do formData
+  useEffect(() => {
+    console.log("Estado atual do formData:", formData);
+  }, [formData]);
 
   return (
     <FormContext.Provider value={{ formData, setFormData }}>

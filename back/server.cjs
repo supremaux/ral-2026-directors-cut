@@ -154,7 +154,7 @@ app.post(
 app.post("/api/finalizar-relatorio", async (req, res) => {
   try {
     const dados = req.body;
-    console.log("Dados recebidos:", JSON.stringify(dados, null, 2));
+    console.log("Dados recebidos no backend:", JSON.stringify(dados, null, 2));
 
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet("Relatório Anual de Lavra");
