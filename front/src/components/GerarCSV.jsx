@@ -13,6 +13,7 @@ export const GerarCSV = () => {
   // Substitua pela URL correta do seu backend
   const API_URL = "http://localhost:3001";
 
+  // GerarCSV.jsx
   const gerarRelatorio = async () => {
     try {
       const simplifiedData = {
@@ -32,9 +33,7 @@ export const GerarCSV = () => {
         // Estoque
         "Possui Estoque": formData.temEstoque || "",
         "Unidade de Estoque": formData.unidadeMedEstoque || "",
-        "Estoque Lavrado": Array.isArray(formData.estoqueLavra)
-          ? JSON.stringify(formData.estoqueLavra)
-          : "[]",
+        "Estoque Lavrado": formData.estoqueLavra || "",
 
         // Produção Detonado Britado
         "Substância Produzida": formData.substanciaProduzida || "",
@@ -43,16 +42,17 @@ export const GerarCSV = () => {
           ? JSON.stringify(formData.detonadoBritado)
           : "[]",
 
-        // Módulo de Beneficiamento
+        // Produção Lavrado
+        "Substância Lavrado": formData.substanciaLavra || "",
         "Unidade de Medida": formData.unidadeMedida || "",
         "Venda - Produção": Array.isArray(formData.salesData)
           ? JSON.stringify(formData.salesData)
           : "[]",
 
         // Mão de Obra
-        "Mão de Obra": Array.isArray(formData.salesByCategory)
+        "Mão de Obra": formData.salesByCategory
           ? JSON.stringify(formData.salesByCategory)
-          : "[]",
+          : "{}",
 
         // Custo de Lavra
         "Custo de Lavra": Array.isArray(formData.costData)
@@ -64,35 +64,31 @@ export const GerarCSV = () => {
           ? JSON.stringify(formData.insumosSelecionados)
           : "[]",
 
-        // Matriz Energetica
+        // Matriz Energética e Fatura de Energia
         "Matriz Energetica": formData.matrizEnergetica || "",
         "Fatura de Energia": formData.faturaEnergia || "",
 
-        // Impostos
+        // Apuração Mensal
         "Apuração Mensal": Array.isArray(formData.apuracaoMensal)
           ? JSON.stringify(formData.apuracaoMensal)
           : "[]",
 
-        // Investimentos
+        // Investimento
         "Houve Investimento?": formData.confirmaInvest || "",
         "Setor de Aquisições": formData.aquisi || "",
         "Valor Investido": formData.valorInvest || "",
 
-        // Lista de Compradores
+        // Vendas
         "Nomes dos Compradores": Array.isArray(formData.compradores)
           ? JSON.stringify(formData.compradores)
           : "[]",
-        "Total Vendido (R$)": Array.isArray(formData.totalVendido)
-          ? JSON.stringify(formData.totalVendido)
-          : "0",
+        "Total Vendido (R$)": formData.totalVendido || 0,
         "Arquivo Notas Fiscais":
           formData.arquivoNotasFiscaisUrl || "Não enviado",
 
         // Pilha de Estéril
         "Existe Pilha de Estéril?": formData.existePilhaEsteril || "",
         "Quantidade de Estéril": formData.quantidadeEsteril || "",
-
-        // ... outros campos
       };
 
       console.log("Dados a serem enviados:", simplifiedData);
