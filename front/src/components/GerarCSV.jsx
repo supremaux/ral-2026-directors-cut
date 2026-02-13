@@ -10,8 +10,6 @@ axios.defaults.headers.post["Content-Type"] = "application/json";
 export const GerarCSV = () => {
   const { formData } = useContext(FormContext);
 
-  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3001";
-
   const gerarRelatorio = async () => {
     try {
       const simplifiedData = {
@@ -31,35 +29,35 @@ export const GerarCSV = () => {
         // Estoque
         "Possui Estoque": formData.temEstoque || "",
         "Unidade de Estoque": formData.unidadeMedEstoque || "",
-        "Estoque Lavrado": formData.estoqueLavra
+        "Estoque Lavrado": Array.isArray(formData.estoqueLavra)
           ? JSON.stringify(formData.estoqueLavra)
           : "[]",
 
         // Produção Detonado Britado
         "Substância Produzida": formData.substanciaProduzida || "",
         "Unidade de Produção": formData.unidadeDetonadoBritado || "",
-        "Produção - Detonado": formData.detonadoBritado
+        "Produção - Detonado": Array.isArray(formData.detonadoBritado)
           ? JSON.stringify(formData.detonadoBritado)
           : "[]",
 
         // Módulo de Beneficiamento
         "Unidade de Medida": formData.unidadeMedida || "",
-        "Venda - Produção": formData.salesData
+        "Venda - Produção": Array.isArray(formData.salesData)
           ? JSON.stringify(formData.salesData)
           : "[]",
 
         // Mão de Obra
-        "Mão de Obra": formData.salesByCategory
+        "Mão de Obra": Array.isArray(formData.salesByCategory)
           ? JSON.stringify(formData.salesByCategory)
           : "[]",
 
         // Custo de Lavra
-        "Custo de Lavra": formData.costData
+        "Custo de Lavra": Array.isArray(formData.costData)
           ? JSON.stringify(formData.costData)
           : "[]",
 
         // Insumos
-        "Insumos da Lavra": formData.insumosSelecionados
+        "Insumos da Lavra": Array.isArray(formData.insumosSelecionados)
           ? JSON.stringify(formData.insumosSelecionados)
           : "[]",
 
@@ -68,7 +66,7 @@ export const GerarCSV = () => {
         "Fatura de Energia": formData.faturaEnergia || "",
 
         // Impostos
-        "Apuração Mensal": formData.apuracaoMensal
+        "Apuração Mensal": Array.isArray(formData.apuracaoMensal)
           ? JSON.stringify(formData.apuracaoMensal)
           : "[]",
 
@@ -78,10 +76,10 @@ export const GerarCSV = () => {
         "Valor Investido": formData.valorInvest || "",
 
         // Lista de Compradores
-        "Nomes dos Compradores": formData.compradores
+        "Nomes dos Compradores": Array.isArray(formData.compradores)
           ? JSON.stringify(formData.compradores)
           : "[]",
-        "Total Vendido (R$)": formData.totalVendido
+        "Total Vendido (R$)": Array.isArray(formData.totalVendido)
           ? JSON.stringify(formData.totalVendido)
           : "0",
         "Arquivo Notas Fiscais":

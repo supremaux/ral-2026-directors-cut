@@ -160,15 +160,18 @@ app.post("/api/finalizar-relatorio", async (req, res) => {
     Object.keys(dados).forEach((key) => {
       if (dados[key] === undefined) {
         console.error(`Campo ${key} está undefined.`);
-        dados[key] =
+        if (
           key.includes("Produção") ||
           key.includes("Custo") ||
           key.includes("Apuração") ||
           key.includes("Mão de Obra") ||
           key.includes("Venda") ||
           key.includes("Compradores")
-            ? "[]"
-            : "";
+        ) {
+          dados[key] = "[]";
+        } else {
+          dados[key] = "";
+        }
       }
     });
 
