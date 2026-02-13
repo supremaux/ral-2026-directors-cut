@@ -183,33 +183,51 @@ app.post("/api/finalizar-relatorio", async (req, res) => {
     worksheet.getCell("A1").value = "Relatório Anual de Lavra";
     worksheet.getCell("A1").font = { size: 16, bold: true };
     worksheet.getCell("A1").alignment = { horizontal: "center" };
+    worksheet.addRow([]);
 
     // Adicione os dados cadastrais
-    worksheet.addRow([]);
+    worksheet.addRow(["Dados Cadastrais:"]).font = { bold: true };
     worksheet.addRow(["Razão Social:", dados["Razão Social"]]);
     if (!dados["Razão Social"]) {
       return res.status(400).json({ error: "Razão Social é obrigatória." });
     }
     worksheet.addRow(["CNPJ:", dados.CNPJ]);
+    if (!dados.CNPJ) {
+      return res.status(400).json({ error: "CNPJ é obrigatório." });
+    }
+    worksheet.addRow(["Endereço:", dados.endereço]);
+    if (!dados.endereço) {
+      return res.status(400).json({ error: "Endereço é obrigatório." });
+    }
+    worksheet.addRow(["Telefone:", dados.telefone]);
+    if (!dados.telefone) {
+      return res.status(400).json({ error: "Telefone é obrigatório." });
+    }
+    worksheet.addRow(["E-mail:", dados["email"]]);
+    if (!dados["email"]) {
+      return res.status(400).json({ error: "E-mail é obrigatório." });
+    }
+    worksheet.addRow([]);
+
+    // Substância Mineral
+    worksheet.addRow(["Substância Mineral:"]).font = { bold: true };
     worksheet.addRow(["Substância Mineral:", dados["Substância Mineral"]]);
     worksheet.addRow([]);
 
     // Termo de Responsabilidade
-    worksheet.addRow(["Termo de Responsabilidade:"]);
+    worksheet.addRow(["Termo de Responsabilidade:"]).font = { bold: true };
     worksheet.addRow([dados["Termo de Responsabilidade"] || "Não enviado"]);
     worksheet.addRow([]);
 
     // Estoque
-    worksheet.addRow(["Estoque:"]);
+    worksheet.addRow(["Estoque:"]).font = { bold: true };
     worksheet.addRow(["Possui Estoque:", dados.temEstoque || ""]);
     worksheet.addRow(["Unidade de Estoque:", dados.unidadeMedEstoque || ""]);
-    worksheet.addRow = JSON.parse(
-      dados[("Estoque Lavrado:", dados.estoqueLavra || "[]")],
-    );
+    worksheet.addRow(["Estoque Lavrado:", dados.estoqueLavra || "[]"]);
     worksheet.addRow([]);
 
     // // Produção Detonado Britado
-    // worksheet.addRow(["Produção Detonado Britado:"]);
+    // worksheet.addRow(["Produção Detonado Britado:"]).font = { bold: true };
     // worksheet.addRow([]);
 
     // // Cabeçalho da tabela de produção
@@ -235,6 +253,9 @@ app.post("/api/finalizar-relatorio", async (req, res) => {
     // worksheet.addRow([]);
 
     // Processar dados de produção
+    worksheet.addRow(["Produção Detonado Britado:"]).font = { bold: true };
+    worksheet.addRow([]);
+
     let producao = [];
     try {
       producao =
@@ -267,7 +288,7 @@ app.post("/api/finalizar-relatorio", async (req, res) => {
     // Fim da produção
 
     // Custo de Lavra
-    worksheet.addRow(["Custos de Lavra:"]);
+    worksheet.addRow(["Custos de Lavra:"]).font = { bold: true };
     worksheet.addRow([]);
 
     // Cabeçalho da tabela de custos
@@ -281,7 +302,7 @@ app.post("/api/finalizar-relatorio", async (req, res) => {
     worksheet.addRow([]);
 
     // Impostos
-    worksheet.addRow(["Impostos/Tributos:"]);
+    worksheet.addRow(["Impostos/Tributos:"]).font = { bold: true };
     worksheet.addRow([]);
 
     // Cabeçalho da tabela de impostos
@@ -295,7 +316,7 @@ app.post("/api/finalizar-relatorio", async (req, res) => {
     worksheet.addRow([]);
 
     // Mão de Obra
-    worksheet.addRow(["Mão de Obra:"]);
+    worksheet.addRow(["Mão de Obra:"]).font = { bold: true };
     worksheet.addRow([]);
 
     // Dados de mão de obra
@@ -306,7 +327,7 @@ app.post("/api/finalizar-relatorio", async (req, res) => {
     worksheet.addRow([]);
 
     // Insumos
-    worksheet.addRow(["Insumos:"]);
+    worksheet.addRow(["Insumos:"]).font = { bold: true };
     worksheet.addRow([]);
 
     // Cabeçalho da tabela de insumos
@@ -320,14 +341,14 @@ app.post("/api/finalizar-relatorio", async (req, res) => {
     worksheet.addRow([]);
 
     // Investimentos
-    worksheet.addRow(["Investimentos:"]);
+    worksheet.addRow(["Investimentos:"]).font = { bold: true };
     worksheet.addRow(["Houve Investimento?", dados.confirmaInvest || ""]);
     worksheet.addRow(["Aquisições do Ano:", dados.aquisi || ""]);
     worksheet.addRow(["Valor Investido:", dados.valorInvest || ""]);
     worksheet.addRow([]);
 
     // Lista de Compradores
-    worksheet.addRow(["Lista de Compradores:"]);
+    worksheet.addRow(["Lista de Compradores:"]).font = { bold: true };
     worksheet.addRow([]);
 
     // Dados de compradores
@@ -341,7 +362,7 @@ app.post("/api/finalizar-relatorio", async (req, res) => {
     worksheet.addRow([]);
 
     // Pilha de Estéril
-    worksheet.addRow(["Pilha de Estéril:"]);
+    worksheet.addRow(["Pilha de Estéril:"]).font = { bold: true };
     worksheet.addRow([
       "Existe Pilha de Estéril?",
       dados.existePilhaEsteril || "",
