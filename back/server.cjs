@@ -156,6 +156,22 @@ app.post("/api/finalizar-relatorio", async (req, res) => {
     const dados = req.body;
     console.log("Dados recebidos:", JSON.stringify(dados, null, 2));
 
+    // Validação dos dados recebidos
+    Object.keys(dados).forEach((key) => {
+      if (dados[key] === undefined) {
+        console.error(`Campo ${key} está undefined.`);
+        dados[key] =
+          key.includes("Produção") ||
+          key.includes("Custo") ||
+          key.includes("Apuração") ||
+          key.includes("Mão de Obra") ||
+          key.includes("Venda") ||
+          key.includes("Compradores")
+            ? "[]"
+            : "";
+      }
+    });
+
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet("Relatório Anual de Lavra");
 
