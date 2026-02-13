@@ -184,7 +184,9 @@ app.post("/api/finalizar-relatorio", async (req, res) => {
     worksheet.addRow(["Estoque:"]);
     worksheet.addRow(["Possui Estoque:", dados.temEstoque || ""]);
     worksheet.addRow(["Unidade de Estoque:", dados.unidadeMedEstoque || ""]);
-    worksheet.addRow(["Estoque Lavrado:", dados.estoqueLavra || ""]);
+    worksheet.addRow = JSON.parse(
+      dados[("Estoque Lavrado:", dados.estoqueLavra || "[]")],
+    );
     worksheet.addRow([]);
 
     // // Produção Detonado Britado
