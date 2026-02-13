@@ -159,6 +159,22 @@ app.post("/api/finalizar-relatorio", async (req, res) => {
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet("Relatório Anual de Lavra");
 
+    // Função para garantir que um valor seja numérico
+    const toNumber = (value) => {
+      if (value === undefined || value === null || value === "") {
+        return 0;
+      }
+      return Number(value);
+    };
+
+    // Função para garantir que um valor seja string
+    const toString = (value) => {
+      if (value === undefined || value === null) {
+        return "Não informado";
+      }
+      return String(value);
+    };
+
     // Adicione um cabeçalho estilizado
     worksheet.mergeCells("A1:E1");
     worksheet.getCell("A1").value = "Relatório Anual de Lavra";
@@ -168,43 +184,34 @@ app.post("/api/finalizar-relatorio", async (req, res) => {
     // Adicione os dados cadastrais
     worksheet.addRow([]);
     worksheet.addRow(["Dados Cadastrais:"]).font = { bold: true };
-    worksheet.addRow([
-      "Razão Social:",
-      dados["Razão Social"] || "Não informado",
-    ]);
-    worksheet.addRow(["CNPJ:", dados.CNPJ || "Não informado"]);
-    worksheet.addRow(["Endereço:", dados.Endereço || "Não informado"]);
-    worksheet.addRow(["Telefone:", dados.Telefone || "Não informado"]);
-    worksheet.addRow(["E-mail:", dados["E-mail"] || "Não informado"]);
+    worksheet.addRow(["Razão Social:", toString(dados["Razão Social"])]);
+    worksheet.addRow(["CNPJ:", toString(dados.CNPJ)]);
+    worksheet.addRow(["Endereço:", toString(dados.Endereço)]);
+    worksheet.addRow(["Telefone:", toString(dados.Telefone)]);
+    worksheet.addRow(["E-mail:", toString(dados["E-mail"])]);
     worksheet.addRow([]);
 
     // Substância Mineral
     worksheet.addRow(["Substância Mineral:"]).font = { bold: true };
     worksheet.addRow([
       "Substância Mineral:",
-      dados["Substância Mineral"] || "Não informado",
+      toString(dados["Substância Mineral"]),
     ]);
     worksheet.addRow([]);
 
     // Termo de Responsabilidade
     worksheet.addRow(["Termo de Responsabilidade:"]).font = { bold: true };
-    worksheet.addRow([dados["Termo Assinado"] || "Não enviado"]);
+    worksheet.addRow([toString(dados["Termo Assinado"] || "Não enviado")]);
     worksheet.addRow([]);
 
     // Estoque
     worksheet.addRow(["Estoque:"]).font = { bold: true };
-    worksheet.addRow([
-      "Possui Estoque:",
-      dados["Possui Estoque"] || "Não informado",
-    ]);
+    worksheet.addRow(["Possui Estoque:", toString(dados["Possui Estoque"])]);
     worksheet.addRow([
       "Unidade de Estoque:",
-      dados["Unidade de Estoque"] || "Não informado",
+      toString(dados["Unidade de Estoque"]),
     ]);
-    worksheet.addRow([
-      "Estoque Lavrado:",
-      dados["Estoque Lavrado"] || "Não informado",
-    ]);
+    worksheet.addRow(["Estoque Lavrado:", toString(dados["Estoque Lavrado"])]);
     worksheet.addRow([]);
 
     // Produção Detonado Britado
@@ -223,19 +230,21 @@ app.post("/api/finalizar-relatorio", async (req, res) => {
     // Dados de produção
     let producao = [];
     try {
-      const producaoString = dados["Produção - Detonado"] || "[]";
-      producao = JSON.parse(producaoString);
+      producao =
+        typeof dados["Produção - Detonado"] === "string"
+          ? JSON.parse(dados["Produção - Detonado"])
+          : [];
     } catch (error) {
       console.error("Erro ao processar Produção - Detonado:", error);
     }
 
     producao.forEach((item) => {
       worksheet.addRow([
-        item.mes || "Não informado",
-        Number(item.quantidadeDetonado) || 0,
-        Number(item.britado) || 0,
-        Number(item.lavrado) || 0,
-        Number(item.vendido) || 0,
+        toString(item.mes),
+        toNumber(item.quantidadeDetonado),
+        toNumber(item.britado),
+        toNumber(item.lavrado),
+        toNumber(item.vendido),
       ]);
     });
     worksheet.addRow([]);
@@ -250,17 +259,16 @@ app.post("/api/finalizar-relatorio", async (req, res) => {
     // Dados de custos
     let custos = [];
     try {
-      const custosString = dados["Custo de Lavra"] || "[]";
-      custos = JSON.parse(custosString);
+      custos =
+        typeof dados["Custo de Lavra"] === "string"
+          ? JSON.parse(dados["Custo de Lavra"])
+          : [];
     } catch (error) {
       console.error("Erro ao processar Custo de Lavra:", error);
     }
 
     custos.forEach((item) => {
-      worksheet.addRow([
-        item.description || "Não informado",
-        Number(item.value) || 0,
-      ]);
+      worksheet.addRow([toString(item.description), toNumber(item.value)]);
     });
     worksheet.addRow([]);
 
@@ -274,19 +282,21 @@ app.post("/api/finalizar-relatorio", async (req, res) => {
     // Dados de impostos
     let impostos = [];
     try {
-      const impostosString = dados["Apuração Mensal"] || "[]";
-      impostos = JSON.parse(impostosString);
+      impostos =
+        typeof dados["Apuração Mensal"] === "string"
+          ? JSON.parse(dados["Apuração Mensal"])
+          : [];
     } catch (error) {
       console.error("Erro ao processar Apuração Mensal:", error);
     }
 
     impostos.forEach((item) => {
       worksheet.addRow([
-        item.mes || "Não informado",
-        Number(item.icms) || 0,
-        Number(item.pis) || 0,
-        Number(item.cofins) || 0,
-        Number(item.cfem) || 0,
+        toString(item.mes),
+        toNumber(item.icms),
+        toNumber(item.pis),
+        toNumber(item.cofins),
+        toNumber(item.cfem),
       ]);
     });
     worksheet.addRow([]);
@@ -298,14 +308,16 @@ app.post("/api/finalizar-relatorio", async (req, res) => {
     // Dados de mão de obra
     let maoDeObra = {};
     try {
-      const maoDeObraString = dados["Mão de Obra"] || "{}";
-      maoDeObra = JSON.parse(maoDeObraString);
+      maoDeObra =
+        typeof dados["Mão de Obra"] === "string"
+          ? JSON.parse(dados["Mão de Obra"])
+          : {};
     } catch (error) {
       console.error("Erro ao processar Mão de Obra:", error);
     }
 
     Object.entries(maoDeObra).forEach(([cargo, quantidade]) => {
-      worksheet.addRow([cargo || "Não informado", Number(quantidade) || 0]);
+      worksheet.addRow([toString(cargo), toNumber(quantidade)]);
     });
     worksheet.addRow([]);
 
@@ -319,16 +331,18 @@ app.post("/api/finalizar-relatorio", async (req, res) => {
     // Dados de insumos
     let insumos = [];
     try {
-      const insumosString = dados["Insumos da Lavra"] || "[]";
-      insumos = JSON.parse(insumosString);
+      insumos =
+        typeof dados["Insumos da Lavra"] === "string"
+          ? JSON.parse(dados["Insumos da Lavra"])
+          : [];
     } catch (error) {
       console.error("Erro ao processar Insumos da Lavra:", error);
     }
 
     insumos.forEach((item) => {
       worksheet.addRow([
-        item.item || item.description || "Não informado",
-        Number(item.quantidade) || 0,
+        toString(item.item || item.description),
+        toNumber(item.quantidade),
       ]);
     });
     worksheet.addRow([]);
@@ -337,16 +351,13 @@ app.post("/api/finalizar-relatorio", async (req, res) => {
     worksheet.addRow(["Investimentos:"]).font = { bold: true };
     worksheet.addRow([
       "Houve Investimento?",
-      dados["Houve Investimento?"] || "Não informado",
+      toString(dados["Houve Investimento?"]),
     ]);
     worksheet.addRow([
       "Setor de Aquisições:",
-      dados["Setor de Aquisições"] || "Não informado",
+      toString(dados["Setor de Aquisições"]),
     ]);
-    worksheet.addRow([
-      "Valor Investido:",
-      dados["Valor Investido"] || "Não informado",
-    ]);
+    worksheet.addRow(["Valor Investido:", toString(dados["Valor Investido"])]);
     worksheet.addRow([]);
 
     // Lista de Compradores
@@ -359,23 +370,25 @@ app.post("/api/finalizar-relatorio", async (req, res) => {
     // Dados de compradores
     let compradores = [];
     try {
-      const compradoresString = dados["Nomes dos Compradores"] || "[]";
-      compradores = JSON.parse(compradoresString);
+      compradores =
+        typeof dados["Nomes dos Compradores"] === "string"
+          ? JSON.parse(dados["Nomes dos Compradores"])
+          : [];
     } catch (error) {
       console.error("Erro ao processar Nomes dos Compradores:", error);
     }
 
     compradores.forEach((comprador) => {
       worksheet.addRow([
-        comprador.cpfCnpj || "Não informado",
-        comprador.nome || "Não informado",
-        Number(comprador.quantidade) || 0,
-        Number(comprador.valorTotal) || 0,
+        toString(comprador.cpfCnpj),
+        toString(comprador.nome),
+        toNumber(comprador.quantidade),
+        toNumber(comprador.valorTotal),
       ]);
     });
     worksheet.addRow([
       "Total Vendido (R$):",
-      Number(dados["Total Vendido (R$)"]) || 0,
+      toNumber(dados["Total Vendido (R$)"]),
     ]);
     worksheet.addRow([]);
 
@@ -383,11 +396,11 @@ app.post("/api/finalizar-relatorio", async (req, res) => {
     worksheet.addRow(["Pilha de Estéril:"]).font = { bold: true };
     worksheet.addRow([
       "Existe Pilha de Estéril?",
-      dados["Existe Pilha de Estéril?"] || "Não informado",
+      toString(dados["Existe Pilha de Estéril?"]),
     ]);
     worksheet.addRow([
       "Quantidade de Estéril:",
-      dados["Quantidade de Estéril"] || "Não informado",
+      toString(dados["Quantidade de Estéril"]),
     ]);
     worksheet.addRow([]);
 
