@@ -64,8 +64,8 @@ export const GerarCSV = () => {
         "Valor Investido": formData.valorInvest || "",
 
         // Lista de Compradores
-        "Nomes dos Compradores": formData.compradores || [],
-        "Total Vendido (R$)": formData.totalVendido || 0,
+        "Nomes dos Compradores": JSON.stringify(formData.compradores || []),
+        "Total Vendido (R$)": JSON.stringify(formData.totalVendido || 0),
         "Arquivo Notas Fiscais":
           formData.arquivoNotasFiscaisUrl || "Não enviado",
 
@@ -76,10 +76,7 @@ export const GerarCSV = () => {
         // ... outros campos
       };
 
-      console.log(
-        "Dados a serem enviados:",
-        JSON.stringify(simplifiedData, null, 2),
-      );
+      console.log("Dados a serem enviados:", simplifiedData);
 
       const response = await axios.post(
         `${API_URL}/api/finalizar-relatorio`,

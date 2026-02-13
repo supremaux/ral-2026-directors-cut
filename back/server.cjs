@@ -314,7 +314,9 @@ app.post("/api/finalizar-relatorio", async (req, res) => {
     compradores.forEach((comprador) => {
       worksheet.addRow([comprador]);
     });
-    worksheet.addRow(["Total Vendido (R$):", dados.totalVendido || ""]);
+    worksheet.addRow = JSON.parse(
+      dados[("Total Vendido (R$):", dados.totalVendido || "")],
+    );
     worksheet.addRow([]);
 
     // Pilha de Estéril
