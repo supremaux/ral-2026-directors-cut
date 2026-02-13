@@ -10,6 +10,9 @@ axios.defaults.headers.post["Content-Type"] = "application/json";
 export const GerarCSV = () => {
   const { formData } = useContext(FormContext);
 
+  // Substitua pela URL correta do seu backend
+  const API_URL = "http://localhost:3001";
+
   const gerarRelatorio = async () => {
     try {
       const simplifiedData = {
