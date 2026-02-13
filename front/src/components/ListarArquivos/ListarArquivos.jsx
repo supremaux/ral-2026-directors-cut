@@ -109,17 +109,7 @@ export const ListarArquivos = () => {
           <Col>
             <h2>Arquivos Disponíveis para Download</h2>
           </Col>
-          <Col>
-            <Button
-              onClick={() => {
-                localStorage.removeItem("auth");
-                navigate("/login");
-              }}
-              variant="danger"
-            >
-              Sair
-            </Button>
-          </Col>
+          <Col>{/* Botão que não devia estar aqui  */}</Col>
           <Col>
             <div className={styles.searchContainer}>
               <input
