@@ -31,32 +31,46 @@ export const GerarCSV = () => {
         // Estoque
         "Possui Estoque": formData.temEstoque || "",
         "Unidade de Estoque": formData.unidadeMedEstoque || "",
-        "Estoque Lavrado": JSON.stringify(formData.estoqueLavra || []),
+        "Estoque Lavrado": formData.estoqueLavra
+          ? JSON.stringify(formData.estoqueLavra)
+          : "[]",
 
         // Produção Detonado Britado
         "Substância Produzida": formData.substanciaProduzida || "",
         "Unidade de Produção": formData.unidadeDetonadoBritado || "",
-        "Produção - Detonado": JSON.stringify(formData.detonadoBritado || []),
+        "Produção - Detonado": formData.detonadoBritado
+          ? JSON.stringify(formData.detonadoBritado)
+          : "[]",
 
         // Módulo de Beneficiamento
         "Unidade de Medida": formData.unidadeMedida || "",
-        "Venda - Produção": JSON.stringify(formData.salesData || []),
+        "Venda - Produção": formData.salesData
+          ? JSON.stringify(formData.salesData)
+          : "[]",
 
         // Mão de Obra
-        "Mão de Obra": JSON.stringify(formData.salesByCategory || []),
+        "Mão de Obra": formData.salesByCategory
+          ? JSON.stringify(formData.salesByCategory)
+          : "[]",
 
         // Custo de Lavra
-        "Custo de Lavra": JSON.stringify(formData.costData || []),
+        "Custo de Lavra": formData.costData
+          ? JSON.stringify(formData.costData)
+          : "[]",
 
         // Insumos
-        "Insumos da Lavra": JSON.stringify(formData.insumosSelecionados || []),
+        "Insumos da Lavra": formData.insumosSelecionados
+          ? JSON.stringify(formData.insumosSelecionados)
+          : "[]",
 
         // Matriz Energetica
         "Matriz Energetica": formData.matrizEnergetica || "",
         "Fatura de Energia": formData.faturaEnergia || "",
 
         // Impostos
-        "Apuração Mensal": JSON.stringify(formData.apuracaoMensal || []),
+        "Apuração Mensal": formData.apuracaoMensal
+          ? JSON.stringify(formData.apuracaoMensal)
+          : "[]",
 
         // Investimentos
         "Houve Investimento?": formData.confirmaInvest || "",
@@ -64,8 +78,12 @@ export const GerarCSV = () => {
         "Valor Investido": formData.valorInvest || "",
 
         // Lista de Compradores
-        "Nomes dos Compradores": JSON.stringify(formData.compradores || []),
-        "Total Vendido (R$)": JSON.stringify(formData.totalVendido || 0),
+        "Nomes dos Compradores": formData.compradores
+          ? JSON.stringify(formData.compradores)
+          : "[]",
+        "Total Vendido (R$)": formData.totalVendido
+          ? JSON.stringify(formData.totalVendido)
+          : "0",
         "Arquivo Notas Fiscais":
           formData.arquivoNotasFiscaisUrl || "Não enviado",
 

@@ -342,7 +342,7 @@ app.post("/api/finalizar-relatorio", async (req, res) => {
     }
 
     // Nome do arquivo XLSX
-    const xlsxFileName = `${dados["Razão Social"].replace(/[^a-zA-Z0-9]/g, "_")}_${dados.CNPJ || "sem_cnpj"}.xlsx`;
+    const xlsxFileName = `${(dados["Razão Social"] || "sem_razao_social").replace(/[^a-zA-Z0-9]/g, "_")}_${dados.CNPJ || "sem_cnpj"}.xlsx`;
 
     // Faça upload do arquivo para o Supabase
     const { data: uploadData, error: uploadError } = await supabase.storage
