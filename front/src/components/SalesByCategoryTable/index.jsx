@@ -27,18 +27,16 @@ const SalesByCategoryTable = () => {
   const handleChange = useCallback(
     (index, field, value) => {
       const category = categories[index];
-      setFormData((prevFormData) => ({
-        ...prevFormData,
-        salesByCategory: {
-          ...prevFormData.salesByCategory,
-          [category]: {
-            ...prevFormData.salesByCategory[category],
-            [field]: Number(value) || 0,
-          },
-        },
-      }));
+      setFormData((prevFormData) => {
+        const updatedSalesByCategory = { ...prevFormData.salesByCategory };
+        updatedSalesByCategory[category] = {
+          ...updatedSalesByCategory[category],
+          [field]: value !== "" ? Number(value) : 0,
+        };
+        return { ...prevFormData, salesByCategory: updatedSalesByCategory };
+      });
     },
-    [setFormData],
+    [setFormData, categories],
   );
 
   const calculateTotal = useCallback(
@@ -50,6 +48,10 @@ const SalesByCategoryTable = () => {
   const totalEmployed = calculateTotal("employed");
   const totalOutsourced = calculateTotal("outsourced");
   const grandTotal = totalEmployed + totalOutsourced;
+
+  useEffect(() => {
+    console.log("SalesByCategory atualizado:", formData.salesByCategory);
+  }, [formData.salesByCategory]);
 
   return (
     <Container className={styles.tableRoll}>

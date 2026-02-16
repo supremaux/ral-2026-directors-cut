@@ -324,6 +324,9 @@ app.post("/api/finalizar-relatorio", async (req, res) => {
     });
     worksheet.addRow([]);
 
+    console.log("Dados recebidos no backend:", dados);
+    console.log("Mão de Obra processada:", maoDeObra);
+
     // Insumos
     worksheet.addRow(["Insumos:"]).font = { bold: true };
     worksheet.addRow([]);
