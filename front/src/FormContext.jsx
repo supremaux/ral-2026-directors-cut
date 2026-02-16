@@ -158,7 +158,13 @@ export const FormProvider = ({ children }) => {
     ],
 
     // Mão de Obra
-    salesByCategory: {},
+    salesByCategory: {
+      "Engenheiro de Minas": { employed: 0, outsourced: 0 },
+      "Outros Técnicos": { employed: 0, outsourced: 0 },
+      "Outro Técnico de Nível Médio": { employed: 0, outsourced: 0 },
+      Administrativo: { employed: 0, outsourced: 0 },
+      Operários: { employed: 0, outsourced: 0 },
+    },
 
     // Custos da Lavra
     costData: costItems.map((item) => ({ ...item, value: "" })),
