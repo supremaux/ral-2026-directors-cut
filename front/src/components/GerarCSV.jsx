@@ -50,7 +50,9 @@ export const GerarCSV = () => {
           : "[]",
 
         // Mão de Obra
-        "Mão de Obra": JSON.stringify(formData.salesByCategory),
+        "Mão de Obra": Array.isArray(formData.salesByCategory)
+          ? JSON.stringify(formData.salesByCategory)
+          : "{}",
 
         // Custo de Lavra
         "Custo de Lavra": Array.isArray(formData.costData)
