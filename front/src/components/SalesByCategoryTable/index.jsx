@@ -26,19 +26,19 @@ const SalesByCategoryTable = () => {
 
   const handleChange = useCallback(
     (index, field, value) => {
-      const category = custoFunc[index].category;
+      const category = categories[index];
       setFormData((prevFormData) => ({
         ...prevFormData,
         salesByCategory: {
           ...prevFormData.salesByCategory,
           [category]: {
             ...prevFormData.salesByCategory[category],
-            [field]: Number(value) || 0, // Garantir que o valor seja numérico
+            [field]: Number(value) || 0,
           },
         },
       }));
     },
-    [setFormData, custoFunc],
+    [setFormData],
   );
 
   const calculateTotal = useCallback(
