@@ -318,14 +318,11 @@ app.post("/api/finalizar-relatorio", async (req, res) => {
     }
 
     Object.entries(maoDeObra).forEach(([categoria, valores]) => {
-      const employed = Number(valores.employed) || 0;
-      const outsourced = Number(valores.outsourced) || 0;
+      const employed = parseFloat(valores.employed) || 0;
+      const outsourced = parseFloat(valores.outsourced) || 0;
       worksheet.addRow([categoria, employed, outsourced]);
     });
     worksheet.addRow([]);
-
-    console.log("Dados recebidos no backend:", dados);
-    console.log("Mão de Obra processada:", maoDeObra);
 
     // Insumos
     worksheet.addRow(["Insumos:"]).font = { bold: true };

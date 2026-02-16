@@ -31,7 +31,7 @@ const SalesByCategoryTable = () => {
         const updatedSalesByCategory = { ...prevFormData.salesByCategory };
         updatedSalesByCategory[category] = {
           ...updatedSalesByCategory[category],
-          [field]: value !== "" ? Number(value) : 0,
+          [field]: value !== "" ? parseFloat(value) : 0,
         };
         return { ...prevFormData, salesByCategory: updatedSalesByCategory };
       });
