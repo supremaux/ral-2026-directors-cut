@@ -1,4 +1,4 @@
-import React, { useContext, useMemo, useCallback } from "react";
+import React, { useContext, useMemo, useCallback, useEffect } from "react";
 import styles from "./SalesByCategoryTable.module.css";
 import { Container } from "react-bootstrap";
 import { FormContext } from "../../FormContext";
