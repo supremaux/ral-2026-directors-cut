@@ -305,19 +305,22 @@ app.post("/api/finalizar-relatorio", async (req, res) => {
     worksheet.addRow(["Mão de Obra:"]).font = { bold: true };
     worksheet.addRow([]);
 
+    // Cabeçalho da tabela de mão de obra
+    worksheet.addRow(["Categoria", "Empregado", "Terceirizado"]);
+
     // Dados de mão de obra
     let maoDeObra = {};
     try {
-      maoDeObra =
-        typeof dados["Mão de Obra"] === "string"
-          ? JSON.parse(dados["Mão de Obra"])
-          : {};
+      const maoDeObraString = dados["Mão de Obra"] || "{}";
+      maoDeObra = JSON.parse(maoDeObraString);
     } catch (error) {
       console.error("Erro ao processar Mão de Obra:", error);
     }
 
-    Object.entries(maoDeObra).forEach(([cargo, quantidade]) => {
-      worksheet.addRow([toString(cargo), toNumber(quantidade)]);
+    Object.entries(maoDeObra).forEach(([categoria, valores]) => {
+      const employed = Number(valores.employed) || 0;
+      const outsourced = Number(valores.outsourced) || 0;
+      worksheet.addRow([categoria, employed, outsourced]);
     });
     worksheet.addRow([]);
 

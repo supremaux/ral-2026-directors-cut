@@ -21,7 +21,7 @@ const SalesByCategoryTable = () => {
         employed: formData.salesByCategory[category]?.employed || "0",
         outsourced: formData.salesByCategory[category]?.outsourced || "0",
       })),
-    [formData.salesByCategory]
+    [formData.salesByCategory],
   );
 
   const handleChange = useCallback(
@@ -33,18 +33,18 @@ const SalesByCategoryTable = () => {
           ...prevFormData.salesByCategory,
           [category]: {
             ...prevFormData.salesByCategory[category],
-            [field]: value,
+            [field]: Number(value) || 0, // Garantir que o valor seja numérico
           },
         },
       }));
     },
-    [setFormData, custoFunc]
+    [setFormData, custoFunc],
   );
 
   const calculateTotal = useCallback(
     (field) =>
       custoFunc.reduce((sum, data) => sum + parseFloat(data[field]) || 0, 0),
-    [custoFunc]
+    [custoFunc],
   );
 
   const totalEmployed = calculateTotal("employed");
