@@ -89,7 +89,7 @@ const TabelaCompradores = () => {
 
     try {
       const response = await axios.post(
-        "/api/upload-notas-fiscais", // Rota relativa
+        "http://localhost:3001/api/upload-notas-fiscais", // Use a URL completa
         formData,
         {
           headers: {
@@ -99,15 +99,17 @@ const TabelaCompradores = () => {
       );
 
       console.log("Resposta do backend:", response.data);
-      setFormData({
-        ...formData,
+      setFormData((prevFormData) => ({
+        ...prevFormData,
         arquivoNotasFiscaisUrl: response.data.fileUrl,
-      });
+      }));
 
       alert("Arquivo enviado com sucesso!");
     } catch (error) {
       console.error("Erro detalhado:", error.response?.data || error.message);
-      alert("Erro ao enviar arquivo.");
+      alert(
+        `Erro ao enviar arquivo: ${error.response?.data?.error || error.message}`,
+      );
     }
   };
 

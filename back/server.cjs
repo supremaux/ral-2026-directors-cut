@@ -35,6 +35,7 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 // Configuração do Multer
+const multer = require("multer");
 const upload = multer({ storage: multer.memoryStorage() });
 
 // Configuração do Supabase
@@ -136,34 +137,48 @@ app.post(
   upload.single("file"),
   async (req, res) => {
     try {
+      console.log("Recebendo requisição de upload de notas fiscais...");
       if (!req.file) {
         console.log("Nenhum arquivo recebido no backend.");
         return res.status(400).send("Nenhum arquivo enviado.");
       }
 
       const file = req.file;
+      console.log("Arquivo recebido:", file.originalname);
+
       const fileExt = file.originalname.split(".").pop();
       const fileName = `${Date.now()}-nota-fiscal.${fileExt}`;
-      const filePath = `upload/${fileName}`;
+      const filePath = `notas_fiscais/${fileName}`;
 
+      console.log("Fazendo upload para o Supabase...");
       const { data, error } = await supabase.storage
-        .from("upload")
+        .from("relatorios")
         .upload(filePath, file.buffer, { contentType: file.mimetype });
 
       if (error) {
         console.error("Erro ao fazer upload:", error);
-        return res.status(500).json({ error: "Erro ao fazer upload." });
+        return res
+          .status(500)
+          .json({ error: "Erro ao fazer upload.", details: error.message });
       }
 
+      console.log("Upload concluído com sucesso.");
       const { data: urlData } = supabase.storage
-        .from("upload")
+        .from("relatorios")
         .getPublicUrl(filePath);
+
+      if (!urlData.publicUrl) {
+        console.error("URL pública não gerada!");
+        return res.status(500).json({ error: "URL pública não gerada." });
+      }
 
       console.log("URL pública gerada:", urlData.publicUrl);
       res.status(200).json({ fileUrl: urlData.publicUrl });
     } catch (error) {
       console.error("Erro no servidor:", error);
-      res.status(500).json({ error: "Erro no servidor." });
+      res
+        .status(500)
+        .json({ error: "Erro no servidor.", details: error.message });
     }
   },
 );
