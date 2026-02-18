@@ -373,14 +373,23 @@ app.post("/api/finalizar-relatorio", async (req, res) => {
       bold: true,
     };
     worksheet.addRow([]);
+
+    // Exibir Matriz Energética
     worksheet.addRow([
       "Matriz Energética:",
-      toString(dados["Matriz Energetica"]),
+      dados["Matriz Energetica"] || "Não informada",
     ]);
-    worksheet.addRow([
-      "Fatura de Energia:",
-      dados["Fatura de Energia"] ? dados["Fatura de Energia"] : "Não enviada",
-    ]);
+
+    // Exibir Fatura de Energia
+    const faturaEnergia = dados["Fatura de Energia"] || "Não enviada";
+    worksheet.addRow(["Fatura de Energia:", faturaEnergia]);
+
+    // Adicionar hiperlink para a fatura de energia, se existir uma URL
+    if (faturaEnergia !== "Não enviada") {
+      const row = worksheet.lastRow;
+      row.getCell(2).value = { text: faturaEnergia, hyperlink: faturaEnergia };
+      row.getCell(2).font = { color: { argb: "FF0000FF" }, underline: true };
+    }
     worksheet.addRow([]);
 
     // Investimentos

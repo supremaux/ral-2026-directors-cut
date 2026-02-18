@@ -40,6 +40,7 @@ export default function UpFaturaEnergia() {
         faturaEnergia: response.data.fileUrl,
       });
 
+      console.log("URL da fatura de energia:", response.data.fileUrl);
       alert("Arquivo enviado com sucesso!");
     } catch (error) {
       console.error(

@@ -89,7 +89,10 @@ export const GerarCSV = () => {
         "Quantidade de Estéril": formData.quantidadeEsteril || "",
       };
 
-      console.log("Dados a serem enviados:", simplifiedData);
+      console.log(
+        "Dados a serem enviados:",
+        JSON.stringify(simplifiedData, null, 2),
+      );
 
       const response = await axios.post(
         `${API_URL}/api/finalizar-relatorio`,
