@@ -8,10 +8,14 @@ const ExcelJS = require("exceljs");
 const path = require("path");
 const fs = require("fs");
 const { createClient } = require("@supabase/supabase-js");
+const dotenv = require("dotenv");
+
+require("dotenv").config();
 
 // Inicialize o app do Express
 const app = express();
 app.use(cors());
+app.use(express.json());
 app.use(bodyParser.json());
 
 // Checagem de saída
@@ -37,11 +41,28 @@ app.use(cors(corsOptions));
 const upload = multer({ storage: multer.memoryStorage() });
 
 // Configuração do Supabase
-const supabaseUrl = "https://emfmvsbrfawmsuuwavae.supabase.co";
-const supabaseKey =
-  process.env.SUPABASE_SECRET_KEY ||
-  "sb_secret_bIvVbrrcclCl41CcSIbVYA_AhVm-ssU";
+const supabaseUrl = process.env.SUPABASE_URL;
+const supabaseKey = process.env.SUPABASE_SECRET_KEY;
 const supabase = createClient(supabaseUrl, supabaseKey);
+
+// Teste a conexão com o Supabase
+async function testSupabaseConnection() {
+  try {
+    const { data, error } = await supabase.storage.listBuckets();
+    if (error) {
+      console.error("Erro ao listar buckets:", error);
+    } else {
+      console.log("Buckets disponíveis:", data);
+    }
+  } catch (error) {
+    console.error("Erro ao conectar ao Supabase:", error);
+  }
+}
+
+testSupabaseConnection();
+
+// Identificando o bucket upload
+const bucketName = "upload"; // Certifique-se de que este nome está correto
 
 // Rota para upload de termos (usando Supabase Storage)
 app.post("/upload-termo", async (req, res) => {
@@ -85,10 +106,10 @@ app.post("/upload-fatura", upload.single("file"), async (req, res) => {
     const file = req.file;
     const fileExt = file.originalname.split(".").pop();
     const fileName = `${Date.now()}-fatura.${fileExt}`;
-    const filePath = `upload/${fileName}`; // Verifique se o caminho está correto
+    const filePath = `upload/${fileName}`;
 
     const { data, error } = await supabase.storage
-      .from("upload") // Substitua 'upload' pelo nome correto do bucket
+      .from("upload")
       .upload(filePath, file.buffer, { contentType: file.mimetype });
 
     if (error) {
@@ -99,7 +120,7 @@ app.post("/upload-fatura", upload.single("file"), async (req, res) => {
     }
 
     const { data: urlData } = supabase.storage
-      .from("upload") // Substitua 'upload' pelo nome correto do bucket
+      .from("upload")
       .getPublicUrl(filePath);
 
     console.log("URL pública gerada:", urlData.publicUrl);
