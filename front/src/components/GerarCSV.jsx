@@ -64,7 +64,7 @@ export const GerarCSV = () => {
 
         // Matriz Energética e Fatura de Energia
         "Matriz Energetica": formData.matrizEnergetica || "",
-        "Fatura de Energia": formData.faturaEnergia || "",
+        "Fatura de Energia": formData.faturaEnergia || "Não enviada",
 
         // Apuração Mensal
         "Apuração Mensal": Array.isArray(formData.apuracaoMensal)

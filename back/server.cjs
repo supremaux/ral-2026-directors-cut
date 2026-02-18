@@ -379,7 +379,7 @@ app.post("/api/finalizar-relatorio", async (req, res) => {
     ]);
     worksheet.addRow([
       "Fatura de Energia:",
-      toString(dados["Fatura de Energia"]),
+      dados["Fatura de Energia"] ? dados["Fatura de Energia"] : "Não enviada",
     ]);
     worksheet.addRow([]);
 
