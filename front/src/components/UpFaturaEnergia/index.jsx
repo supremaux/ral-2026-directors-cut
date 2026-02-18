@@ -15,6 +15,11 @@ export default function UpFaturaEnergia() {
   };
 
   const handleUpload = async () => {
+    if (!file) {
+      alert("Selecione um arquivo antes de enviar.");
+      return;
+    }
+
     const data = new FormData();
     data.append("file", file);
 
@@ -32,13 +37,18 @@ export default function UpFaturaEnergia() {
       // Atualizar o contexto com o link do arquivo
       setFormData({
         ...formData,
-        faturaEnergia: `http://localhost:3001${response.data.fileUrl}`,
+        faturaEnergia: response.data.fileUrl,
       });
 
       alert("Arquivo enviado com sucesso!");
     } catch (error) {
-      console.error("Erro ao enviar arquivo:", error);
-      alert("Erro ao enviar arquivo.");
+      console.error(
+        "Erro ao enviar arquivo:",
+        error.response?.data || error.message,
+      );
+      alert(
+        `Erro ao enviar arquivo: ${error.response?.data?.error || error.message}`,
+      );
     }
   };
 
@@ -46,7 +56,6 @@ export default function UpFaturaEnergia() {
     <Container className="w-100 text-center d-flex flex-lg-row justify-content-center align-items-center">
       <Row>
         <Col>
-          {/* Input Novo */}
           <Form>
             <Form.Group controlId="formFile" className="mb-3">
               <Form.Label className="small">
@@ -63,9 +72,8 @@ export default function UpFaturaEnergia() {
         <Col className="d-flex align-items-center justify-content-left">
           <Button
             onClick={handleUpload}
-            htmlFor="file-upload"
             variant="primary"
-            type="submit"
+            type="button"
             id="uploadButton"
             className="btn btn-primary btn-lg md:btn-md"
           >
