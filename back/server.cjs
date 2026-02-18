@@ -77,22 +77,18 @@ app.post("/upload-termo", async (req, res) => {
 // Rota para upload de faturas (usando Supabase Storage)
 app.post("/upload-fatura", upload.single("file"), async (req, res) => {
   try {
-    console.log("Recebendo requisição de upload de fatura...");
     if (!req.file) {
       console.log("Nenhum arquivo recebido no backend.");
       return res.status(400).send("Nenhum arquivo enviado.");
     }
 
     const file = req.file;
-    console.log("Arquivo recebido:", file.originalname);
-
     const fileExt = file.originalname.split(".").pop();
     const fileName = `${Date.now()}-fatura.${fileExt}`;
-    const filePath = `upload/${fileName}`;
+    const filePath = `upload/${fileName}`; // Verifique se o caminho está correto
 
-    console.log("Fazendo upload para o Supabase...");
     const { data, error } = await supabase.storage
-      .from("upload")
+      .from("upload") // Substitua 'upload' pelo nome correto do bucket
       .upload(filePath, file.buffer, { contentType: file.mimetype });
 
     if (error) {
@@ -102,15 +98,9 @@ app.post("/upload-fatura", upload.single("file"), async (req, res) => {
         .json({ error: "Erro ao fazer upload.", details: error.message });
     }
 
-    console.log("Upload concluído com sucesso.");
     const { data: urlData } = supabase.storage
-      .from("upload")
+      .from("upload") // Substitua 'upload' pelo nome correto do bucket
       .getPublicUrl(filePath);
-
-    if (!urlData.publicUrl) {
-      console.error("URL pública não gerada!");
-      return res.status(500).json({ error: "URL pública não gerada." });
-    }
 
     console.log("URL pública gerada:", urlData.publicUrl);
     res.status(200).json({ fileUrl: urlData.publicUrl });
