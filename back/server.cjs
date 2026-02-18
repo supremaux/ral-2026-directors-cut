@@ -368,6 +368,21 @@ app.post("/api/finalizar-relatorio", async (req, res) => {
     });
     worksheet.addRow([]);
 
+    // Matriz Energética e Fatura de Energia
+    worksheet.addRow(["Matriz Energética e Fatura de Energia:"]).font = {
+      bold: true,
+    };
+    worksheet.addRow([]);
+    worksheet.addRow([
+      "Matriz Energética:",
+      toString(dados["Matriz Energética"]),
+    ]);
+    worksheet.addRow([
+      "Fatura de Energia:",
+      toString(dados["Fatura de Energia"]),
+    ]);
+    worksheet.addRow([]);
+
     // Investimentos
     worksheet.addRow(["Investimentos:"]).font = { bold: true };
     worksheet.addRow([
