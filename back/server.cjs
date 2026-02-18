@@ -8,15 +8,12 @@ const ExcelJS = require("exceljs");
 const path = require("path");
 const fs = require("fs");
 const { createClient } = require("@supabase/supabase-js");
-const dotenv = require("dotenv");
-
 require("dotenv").config();
 
 // Inicialize o app do Express
 const app = express();
 app.use(cors());
 app.use(express.json());
-app.use(bodyParser.json());
 
 // Checagem de saída
 app.get("/api/health", (req, res) => {
@@ -106,10 +103,10 @@ app.post("/upload-fatura", upload.single("file"), async (req, res) => {
     const file = req.file;
     const fileExt = file.originalname.split(".").pop();
     const fileName = `${Date.now()}-fatura.${fileExt}`;
-    const filePath = `upload/${fileName}`;
+    const filePath = `faturas/${fileName}`; // Caminho dentro do bucket 'relatorios'
 
     const { data, error } = await supabase.storage
-      .from("upload")
+      .from("relatorios") // Usando o bucket 'relatorios'
       .upload(filePath, file.buffer, { contentType: file.mimetype });
 
     if (error) {
@@ -120,7 +117,7 @@ app.post("/upload-fatura", upload.single("file"), async (req, res) => {
     }
 
     const { data: urlData } = supabase.storage
-      .from("upload")
+      .from("relatorios") // Usando o bucket 'relatorios'
       .getPublicUrl(filePath);
 
     console.log("URL pública gerada:", urlData.publicUrl);
