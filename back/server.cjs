@@ -375,7 +375,7 @@ app.post("/api/finalizar-relatorio", async (req, res) => {
     worksheet.addRow([]);
     worksheet.addRow([
       "Matriz Energética:",
-      toString(dados["Matriz Energética"]),
+      toString(dados["Matriz Energetica"]),
     ]);
     worksheet.addRow([
       "Fatura de Energia:",
