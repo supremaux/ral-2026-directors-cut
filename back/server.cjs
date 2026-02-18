@@ -382,16 +382,15 @@ app.post("/api/finalizar-relatorio", async (req, res) => {
 
     // Exibir Fatura de Energia
     const faturaEnergia = dados["Fatura de Energia"] || "Não enviada";
-    worksheet.addRow(["Fatura de Energia:"]);
+    const rowFaturaEnergia = worksheet.addRow(["Fatura de Energia:"]);
 
     // Adicionar hiperlink para a fatura de energia, se existir uma URL
     if (faturaEnergia !== "Não enviada") {
-      worksheet.addRow([faturaEnergia]);
-      const row = worksheet.lastRow;
-      row.getCell(1).value = { text: faturaEnergia, hyperlink: faturaEnergia };
-      row.getCell(1).font = { color: { argb: "FF0000FF" }, underline: true };
+      const cell = rowFaturaEnergia.getCell(2);
+      cell.value = { text: faturaEnergia, hyperlink: faturaEnergia };
+      cell.font = { color: { argb: "FF0000FF" }, underline: true };
     } else {
-      worksheet.addRow([faturaEnergia]);
+      rowFaturaEnergia.getCell(2).value = faturaEnergia;
     }
     worksheet.addRow([]);
 
