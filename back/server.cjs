@@ -441,10 +441,24 @@ app.post("/api/finalizar-relatorio", async (req, res) => {
       "Total Vendido (R$):",
       toNumber(dados["Total Vendido (R$)"]),
     ]);
-    worksheet.addRow([
-      "Link do arquivo de notas fiscais:",
-      toString(arquivoNotasFiscaisUrl || "Não enviado"),
-    ]);
+
+    // Exibir Link do Arquivo de Notas Fiscais
+    const arquivoNotasFiscaisUrl =
+      dados["Arquivo Notas Fiscais"] || "Não enviado";
+    worksheet.addRow(["Link do arquivo de notas fiscais:"]);
+    const rowArquivoNotasFiscais = worksheet.addRow([arquivoNotasFiscaisUrl]);
+
+    // Adicionar hiperlink para o arquivo de notas fiscais, se existir uma URL
+    if (arquivoNotasFiscaisUrl !== "Não enviado") {
+      rowArquivoNotasFiscais.getCell(1).value = {
+        text: arquivoNotasFiscaisUrl,
+        hyperlink: arquivoNotasFiscaisUrl,
+      };
+      rowArquivoNotasFiscais.getCell(1).font = {
+        color: { argb: "FF0000FF" },
+        underline: true,
+      };
+    }
     worksheet.addRow([]);
 
     // Pilha de Estéril
