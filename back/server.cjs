@@ -441,6 +441,10 @@ app.post("/api/finalizar-relatorio", async (req, res) => {
       "Total Vendido (R$):",
       toNumber(dados["Total Vendido (R$)"]),
     ]);
+    worksheet.addRow([
+      "Link do arquivo de notas fiscais:",
+      toString(arquivoNotasFiscaisUrl || "Não enviado"),
+    ]);
     worksheet.addRow([]);
 
     // Pilha de Estéril
