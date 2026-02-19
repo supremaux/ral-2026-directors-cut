@@ -48,6 +48,14 @@ const upload = multer({ storage: multer.memoryStorage() });
 // Configuração do Supabase
 const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseKey = process.env.SUPABASE_SECRET_KEY;
+
+if (!supabaseUrl || !supabaseKey) {
+  console.error(
+    "Variáveis de ambiente SUPABASE_URL ou SUPABASE_SECRET_KEY não estão definidas.",
+  );
+  process.exit(1);
+}
+
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 // Teste a conexão com o Supabase
