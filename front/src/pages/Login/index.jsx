@@ -13,7 +13,7 @@ export default function Login() {
     e.preventDefault();
     try {
       console.log("Enviando credenciais:", usernameValue, passwordValue);
-      const response = await axios.post("/api/login", {
+      const response = await axios.post("http://localhost:3001/api/login", {
         username: usernameValue,
         password: passwordValue,
       });

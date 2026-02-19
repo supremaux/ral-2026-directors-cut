@@ -619,31 +619,31 @@ app.delete("/api/delete-file/:filename", async (req, res) => {
   }
 });
 
-// Carregue o users.json com caminho absoluto
-const users = require(path.join(__dirname, "users.json"));
-console.log("Usuários carregados:", users); // Log para debug
+// Carregar usuários do arquivo JSON
+const usersPath = path.join(__dirname, "users.json");
+const users = JSON.parse(fs.readFileSync(usersPath, "utf8"));
 
 // Rota de login
 app.post("/api/login", (req, res) => {
   try {
+    console.log("Recebendo requisição de login:", req.body);
     const { username, password } = req.body;
-    console.log("Tentativa de login:", username, password); // Log para debug
 
     const user = users.find(
       (u) => u.username === username && u.password === password,
     );
 
     if (user) {
-      console.log("Login bem-sucedido para:", username); // Log para debug
+      console.log("Login bem-sucedido para:", username);
       res.status(200).json({ success: true, message: "Login bem-sucedido!" });
     } else {
-      console.log("Usuário ou senha incorretos para:", username); // Log para debug
+      console.log("Usuário ou senha incorretos para:", username);
       res
         .status(401)
         .json({ success: false, message: "Usuário ou senha incorretos!" });
     }
   } catch (error) {
-    console.error("Erro no servidor:", error); // Log para debug
+    console.error("Erro no servidor:", error);
     res
       .status(500)
       .json({ success: false, message: "Erro interno no servidor." });
