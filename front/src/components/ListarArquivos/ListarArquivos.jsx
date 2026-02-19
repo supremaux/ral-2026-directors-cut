@@ -50,6 +50,16 @@ export const ListarArquivos = () => {
     fetchFiles();
   }, [isAuthenticated, loading]);
 
+  useEffect(() => {
+    const auth = localStorage.getItem("auth");
+    if (!auth) {
+      navigate("/login");
+      return;
+    }
+    setIsAuthenticated(true);
+    setLoading(false);
+  }, [navigate]);
+
   const handleDownload = async (fileName) => {
     try {
       console.log("Iniciando download do arquivo:", fileName); // Log do nome do arquivo
