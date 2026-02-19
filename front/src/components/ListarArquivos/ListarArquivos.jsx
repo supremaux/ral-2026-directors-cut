@@ -64,9 +64,12 @@ export const ListarArquivos = () => {
     try {
       console.log("Iniciando download do arquivo:", fileName); // Log do nome do arquivo
 
-      const response = await axios.get(`/api/download-file/${fileName}`, {
-        responseType: "blob", // Importante para baixar arquivos binários
-      });
+      const response = await axios.get(
+        `http://localhost:3001/api/download-file/${fileName}`,
+        {
+          responseType: "blob", // Importante para baixar arquivos binários
+        },
+      );
 
       console.log("Resposta recebida. Tamanho:", response.data.size); // Log do tamanho da resposta
 
@@ -86,7 +89,7 @@ export const ListarArquivos = () => {
 
   const handleDelete = async (fileName) => {
     try {
-      await axios.delete(`/api/delete-file/${fileName}`);
+      await axios.delete(`http://localhost:3001/api/delete-file/${fileName}`);
       setFiles(files.filter((file) => file.name !== fileName));
       alert("Arquivo deletado com sucesso!");
     } catch (error) {
