@@ -26,13 +26,11 @@ export const ListarArquivos = () => {
         const response = await axios.get("/api/list-files");
         console.log("Resposta da API:", response.data);
 
-        if (Array.isArray(response.data)) {
+        if (response.data && Array.isArray(response.data)) {
           setFiles(
             response.data.map((file) => ({
               name: file.name,
-              date: new Date(
-                file.metadata?.created_at || Date.now(),
-              ).toLocaleString(),
+              date: new Date(file.created_at).toLocaleString(),
             })),
           );
         } else {
