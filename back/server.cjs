@@ -521,27 +521,30 @@ app.post("/api/finalizar-relatorio", async (req, res) => {
 });
 
 // Rota para listar arquivos (usando Supabase Storage)
-app.get("/files", async (req, res) => {
+app.get("/api/list-files", async (req, res) => {
   try {
-    const { data, error } = await supabase.storage.from("upload").list();
+    console.log(
+      "Tentando listar arquivos no bucket 'relatorios' na pasta 'download'",
+    );
+
+    const { data, error } = await supabase.storage
+      .from("relatorios")
+      .list("download/", { limit: 100 });
 
     if (error) {
+      console.error("Erro ao listar arquivos:", error);
       return res
         .status(500)
-        .json({ error: "Não foi possível listar os arquivos." });
+        .json({ error: "Erro ao listar arquivos.", details: error.message });
     }
 
-    const fileUrls = data.map((file) => {
-      const { publicURL } = supabase.storage
-        .from("upload")
-        .getPublicUrl(file.name);
-      return publicURL;
-    });
-
-    res.json(fileUrls);
+    console.log("Arquivos listados com sucesso:", data);
+    res.status(200).json(data);
   } catch (error) {
     console.error("Erro ao listar arquivos:", error);
-    res.status(500).json({ error: "Erro ao listar arquivos." });
+    res
+      .status(500)
+      .json({ error: "Erro ao listar arquivos.", details: error.message });
   }
 });
 
