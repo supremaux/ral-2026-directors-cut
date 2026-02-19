@@ -15,6 +15,12 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+app.use(
+  cors({
+    origin: ["http://localhost:5173", "http://127.0.0.1:5173"], // Adicione a origem do seu frontend
+  }),
+);
+
 // Checagem de saída
 app.get("/api/health", (req, res) => {
   console.log("Backend está rodando!");
@@ -35,7 +41,6 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 // Configuração do Multer
-const multer = require("multer");
 const upload = multer({ storage: multer.memoryStorage() });
 
 // Configuração do Supabase
@@ -137,20 +142,16 @@ app.post(
   upload.single("file"),
   async (req, res) => {
     try {
-      console.log("Recebendo requisição de upload de notas fiscais...");
       if (!req.file) {
         console.log("Nenhum arquivo recebido no backend.");
         return res.status(400).send("Nenhum arquivo enviado.");
       }
 
       const file = req.file;
-      console.log("Arquivo recebido:", file.originalname);
-
       const fileExt = file.originalname.split(".").pop();
       const fileName = `${Date.now()}-nota-fiscal.${fileExt}`;
       const filePath = `notas_fiscais/${fileName}`;
 
-      console.log("Fazendo upload para o Supabase...");
       const { data, error } = await supabase.storage
         .from("relatorios")
         .upload(filePath, file.buffer, { contentType: file.mimetype });
@@ -162,15 +163,9 @@ app.post(
           .json({ error: "Erro ao fazer upload.", details: error.message });
       }
 
-      console.log("Upload concluído com sucesso.");
       const { data: urlData } = supabase.storage
         .from("relatorios")
         .getPublicUrl(filePath);
-
-      if (!urlData.publicUrl) {
-        console.error("URL pública não gerada!");
-        return res.status(500).json({ error: "URL pública não gerada." });
-      }
 
       console.log("URL pública gerada:", urlData.publicUrl);
       res.status(200).json({ fileUrl: urlData.publicUrl });
