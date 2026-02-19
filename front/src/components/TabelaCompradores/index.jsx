@@ -119,8 +119,6 @@ const TabelaCompradores = () => {
     setTotalVendido(total);
   }, [compradores]);
 
-  console.log("Dados recebidos no backend:", JSON.stringify(dados, null, 2));
-
   return (
     <Container className={styles.tabelaContainer}>
       <div>
