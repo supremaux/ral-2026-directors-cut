@@ -67,14 +67,17 @@ export const ListarArquivos = () => {
       const response = await axios.get(
         `http://localhost:3001/api/download-file/${fileName}`,
         {
-          responseType: "blob", // Importante para baixar arquivos binários
+          responseType: "arraybuffer", // Usar 'arraybuffer' para arquivos binários
         },
       );
 
-      console.log("Resposta recebida. Tamanho:", response.data.size);
+      console.log("Resposta recebida. Tamanho:", response.data.byteLength);
 
-      // Crie um link temporário para download
-      const url = window.URL.createObjectURL(new Blob([response.data]));
+      // Criar um link temporário para download
+      const blob = new Blob([response.data], {
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      });
+      const url = window.URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
       link.setAttribute("download", fileName);
