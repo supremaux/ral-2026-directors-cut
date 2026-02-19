@@ -17,7 +17,9 @@ app.use(express.json());
 
 app.use(
   cors({
-    origin: ["http://localhost:5173", "http://127.0.0.1:5173"], // Adicione a origem do seu frontend
+    origin: ["http://localhost:5173", "https://seu-dominio-vercel.com"],
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   }),
 );
 
@@ -446,17 +448,14 @@ app.post("/api/finalizar-relatorio", async (req, res) => {
     const arquivoNotasFiscaisUrl =
       dados["Arquivo Notas Fiscais"] || "Não enviado";
     worksheet.addRow(["Link do arquivo de notas fiscais:"]);
-
-    // Adicionar hiperlink para o arquivo de notas fiscais, se existir uma URL
-    if (arquivoNotasFiscaisUrl !== "Não enviado") {
-      const row = worksheet.addRow([arquivoNotasFiscaisUrl]);
-      row.getCell(1).value = arquivoNotasFiscaisUrl;
-      row.getCell(1).font = { color: { argb: "FF0000FF" }, underline: true };
-      row.getCell(1).hyperlink = arquivoNotasFiscaisUrl;
-    } else {
-      worksheet.addRow([arquivoNotasFiscaisUrl]);
-    }
+    worksheet.addRow([arquivoNotasFiscaisUrl]);
     worksheet.addRow([]);
+
+    console.log("Arquivo Notas Fiscais:", dados["Arquivo Notas Fiscais"]);
+    console.log(
+      "Tipo de dados de Arquivo Notas Fiscais:",
+      typeof dados["Arquivo Notas Fiscais"],
+    );
 
     // Pilha de Estéril
     worksheet.addRow(["Pilha de Estéril:"]).font = { bold: true };
