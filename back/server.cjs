@@ -446,18 +446,17 @@ app.post("/api/finalizar-relatorio", async (req, res) => {
     const arquivoNotasFiscaisUrl =
       dados["Arquivo Notas Fiscais"] || "Não enviado";
     worksheet.addRow(["Link do arquivo de notas fiscais:"]);
-    const rowArquivoNotasFiscais = worksheet.addRow([arquivoNotasFiscaisUrl]);
 
     // Adicionar hiperlink para o arquivo de notas fiscais, se existir uma URL
     if (arquivoNotasFiscaisUrl !== "Não enviado") {
-      rowArquivoNotasFiscais.getCell(1).value = {
+      const row = worksheet.addRow([arquivoNotasFiscaisUrl]);
+      row.getCell(1).value = {
         text: arquivoNotasFiscaisUrl,
         hyperlink: arquivoNotasFiscaisUrl,
       };
-      rowArquivoNotasFiscais.getCell(1).font = {
-        color: { argb: "FF0000FF" },
-        underline: true,
-      };
+      row.getCell(1).font = { color: { argb: "FF0000FF" }, underline: true };
+    } else {
+      worksheet.addRow([arquivoNotasFiscaisUrl]);
     }
     worksheet.addRow([]);
 
