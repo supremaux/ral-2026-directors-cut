@@ -64,9 +64,12 @@ export const ListarArquivos = () => {
     try {
       console.log("Iniciando download do arquivo:", fileName);
 
-      const response = await axios.get(`/api/download-file/${fileName}`, {
-        responseType: "blob", // Usar 'blob' para arquivos binários
-      });
+      const response = await axios.get(
+        `http://localhost:3001/api/download-file/${fileName}`,
+        {
+          responseType: "blob", // Usar 'blob' para arquivos binários
+        },
+      );
 
       console.log("Resposta recebida. Tamanho:", response.data.size);
 
