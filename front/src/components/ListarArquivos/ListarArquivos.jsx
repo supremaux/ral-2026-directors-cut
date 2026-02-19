@@ -62,7 +62,7 @@ export const ListarArquivos = () => {
 
   const handleDownload = async (fileName) => {
     try {
-      console.log("Iniciando download do arquivo:", fileName); // Log do nome do arquivo
+      console.log("Iniciando download do arquivo:", fileName);
 
       const response = await axios.get(
         `http://localhost:3001/api/download-file/${fileName}`,
@@ -71,7 +71,7 @@ export const ListarArquivos = () => {
         },
       );
 
-      console.log("Resposta recebida. Tamanho:", response.data.size); // Log do tamanho da resposta
+      console.log("Resposta recebida. Tamanho:", response.data.size);
 
       // Crie um link temporário para download
       const url = window.URL.createObjectURL(new Blob([response.data]));
