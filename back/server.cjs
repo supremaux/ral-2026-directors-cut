@@ -37,13 +37,6 @@ app.use(cors(corsOptions));
 const upload = multer({ storage: multer.memoryStorage() });
 
 // Configuração do Supabase
-console.log("Variáveis de ambiente:", {
-  SUPABASE_URL: process.env.SUPABASE_URL ? "Definida" : "Não definida",
-  SUPABASE_SECRET_KEY: process.env.SUPABASE_SECRET_KEY
-    ? "Definida"
-    : "Não definida",
-});
-
 const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseKey = process.env.SUPABASE_SECRET_KEY;
 
@@ -203,16 +196,6 @@ app.post("/api/finalizar-relatorio", async (req, res) => {
 app.get("/api/list-files", async (req, res) => {
   try {
     console.log("Iniciando listagem de arquivos...");
-    console.log("Variáveis de ambiente:", {
-      SUPABASE_URL: !!process.env.SUPABASE_URL,
-      SUPABASE_SECRET_KEY: !!process.env.SUPABASE_SECRET_KEY,
-    });
-
-    const supabase = createClient(
-      process.env.SUPABASE_URL,
-      process.env.SUPABASE_SECRET_KEY,
-    );
-
     const { data, error } = await supabase.storage
       .from("relatorios")
       .list("download/", { limit: 100 });
@@ -228,10 +211,12 @@ app.get("/api/list-files", async (req, res) => {
     res.status(200).json(data);
   } catch (error) {
     console.error("Erro inesperado ao listar arquivos:", error);
-    res.status(500).json({
-      error: "Erro inesperado ao listar arquivos.",
-      details: error.message,
-    });
+    res
+      .status(500)
+      .json({
+        error: "Erro inesperado ao listar arquivos.",
+        details: error.message,
+      });
   }
 });
 

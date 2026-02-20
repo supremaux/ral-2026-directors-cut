@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { IoMdCloudDownload } from "react-icons/io";
 import { FaEye } from "react-icons/fa";
 import { MdDeleteForever } from "react-icons/md";
+import { fetchFiles } from "../../../services/api";
 
 export const ListarArquivos = () => {
   const [files, setFiles] = useState([]);
@@ -27,35 +28,27 @@ export const ListarArquivos = () => {
   }, [navigate]);
 
   useEffect(() => {
-    if (!isAuthenticated || loading) return;
-
-    const fetchFiles = async () => {
+    const loadFiles = async () => {
       try {
-        console.log("Fazendo requisição para listar arquivos...");
-        const response = await axios.get("/api/list-files");
-        console.log("Resposta da API:", response.data);
-
-        if (Array.isArray(response.data)) {
+        const data = await fetchFiles();
+        if (Array.isArray(data)) {
           setFiles(
-            response.data.map((file) => ({
+            data.map((file) => ({
               name: file.name,
               date: new Date(file.created_at).toLocaleString(),
             })),
           );
         } else {
-          console.error("Resposta não é um array:", response.data);
+          console.error("Resposta não é um array:", data);
         }
       } catch (error) {
-        console.error(
-          "Erro ao listar arquivos:",
-          error.response?.data || error.message,
-        );
+        console.error("Erro ao listar arquivos:", error);
         alert("Erro ao listar arquivos. Tente novamente mais tarde.");
       }
     };
 
-    fetchFiles();
-  }, [isAuthenticated, loading]);
+    loadFiles();
+  }, []);
 
   const handleDelete = async (fileName) => {
     try {
