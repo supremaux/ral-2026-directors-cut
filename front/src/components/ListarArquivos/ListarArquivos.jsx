@@ -23,9 +23,7 @@ export const ListarArquivos = () => {
     const fetchFiles = async () => {
       try {
         console.log("Fazendo requisição para listar arquivos...");
-        const response = await axios.get(
-          "https://ral-2026-directors-cut.vercel.app/api/list-files",
-        ); // Use a URL completa se necessário
+        const response = await axios.get("/api/list-files"); // Use a URL completa se necessário
         console.log("Resposta da API:", response.data);
 
         if (response.data && Array.isArray(response.data)) {
@@ -64,12 +62,9 @@ export const ListarArquivos = () => {
     try {
       console.log("Iniciando download do arquivo:", fileName);
 
-      const response = await axios.get(
-        `https://ral-2026-directors-cut.vercel.app/api/download-file/${fileName}`,
-        {
-          responseType: "blob", // Usar 'blob' para arquivos binários
-        },
-      );
+      const response = await axios.get(`/api/download-file/${fileName}`, {
+        responseType: "blob", // Usar 'blob' para arquivos binários
+      });
 
       console.log("Resposta recebida. Tamanho:", response.data.size);
 
@@ -89,9 +84,7 @@ export const ListarArquivos = () => {
 
   const handleDelete = async (fileName) => {
     try {
-      await axios.delete(
-        `https://ral-2026-directors-cut.vercel.app/api/delete-file/${fileName}`,
-      );
+      await axios.delete(`/api/delete-file/${fileName}`);
       setFiles(files.filter((file) => file.name !== fileName));
       alert("Arquivo deletado com sucesso!");
     } catch (error) {
