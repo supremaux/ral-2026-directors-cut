@@ -196,9 +196,6 @@ app.post("/api/finalizar-relatorio", async (req, res) => {
 app.get("/api/list-files", async (req, res) => {
   try {
     console.log("Iniciando listagem de arquivos...");
-    console.log("SUPABASE_URL:", !!process.env.SUPABASE_URL);
-    console.log("SUPABASE_SECRET_KEY:", !!process.env.SUPABASE_SECRET_KEY);
-
     const { data, error } = await supabase.storage
       .from("relatorios")
       .list("download/", { limit: 100 });
@@ -214,10 +211,12 @@ app.get("/api/list-files", async (req, res) => {
     res.status(200).json(data);
   } catch (error) {
     console.error("Erro inesperado ao listar arquivos:", error);
-    res.status(500).json({
-      error: "Erro inesperado ao listar arquivos.",
-      details: error.message,
-    });
+    res
+      .status(500)
+      .json({
+        error: "Erro inesperado ao listar arquivos.",
+        details: error.message,
+      });
   }
 });
 
