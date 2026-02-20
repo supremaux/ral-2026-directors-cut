@@ -3,8 +3,8 @@ import react from "@vitejs/plugin-react";
 import { fileURLToPath, URL } from "node:url";
 
 export default defineConfig({
+  base: "/", // Base URL para o deploy
   plugins: [react()],
-  base: "/", // Certifique-se de que a base está configurada corretamente
   build: {
     outDir: "dist",
     assetsDir: "assets",

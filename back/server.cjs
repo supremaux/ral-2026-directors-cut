@@ -67,9 +67,9 @@ testSupabaseConnection();
 
 // Configuração de tipo MIME no Express
 app.use(
-  express.static("dist", {
-    setHeaders: (res, path) => {
-      if (path.endsWith(".js")) {
+  express.static(path.join(__dirname, "../front/dist"), {
+    setHeaders: (res, filePath) => {
+      if (filePath.endsWith(".js")) {
         res.setHeader("Content-Type", "application/javascript");
       }
     },
