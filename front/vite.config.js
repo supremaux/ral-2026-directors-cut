@@ -1,22 +1,19 @@
 // vite.config.js
 import { defineConfig } from "vite";
-import { fileURLToPath, URL } from "node:url";
 import react from "@vitejs/plugin-react";
 
 export default defineConfig({
   plugins: [react()],
   build: {
     outDir: "dist",
-    emptyOutDir: true,
     assetsDir: "assets",
-    loader: "jsx",
-  },
-  optimizeDeps: {
-    esbuildOptions: {
-      loader: {
-        ".js": "jsx",
+    emptyOutDir: true,
+    rollupOptions: {
+      output: {
+        assetFileNames: "assets/[name]-[hash][extname]",
+        entryFileNames: "assets/[name]-[hash].js",
       },
     },
   },
-  publicDir: "src/assets", // Diretório de arquivos estáticos
+  publicDir: "public", // Diretório para arquivos estáticos públicos
 });
