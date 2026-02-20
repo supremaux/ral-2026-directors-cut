@@ -31,17 +31,25 @@ export const ListarArquivos = () => {
 
     const fetchFiles = async () => {
       try {
+        console.log("Fazendo requisição para listar arquivos...");
         const response = await axios.get("/api/list-files");
+        console.log("Resposta da API:", response.data);
+
         if (Array.isArray(response.data)) {
           setFiles(
             response.data.map((file) => ({
               name: file.name,
-              date: new Date().toLocaleString(),
+              date: new Date(file.created_at).toLocaleString(),
             })),
           );
+        } else {
+          console.error("Resposta não é um array:", response.data);
         }
       } catch (error) {
-        console.error("Erro ao listar arquivos:", error);
+        console.error(
+          "Erro ao listar arquivos:",
+          error.response?.data || error.message,
+        );
         alert("Erro ao listar arquivos. Tente novamente mais tarde.");
       }
     };
