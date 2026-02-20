@@ -44,7 +44,9 @@ if (!supabaseUrl || !supabaseKey) {
   console.error(
     "Variáveis de ambiente SUPABASE_URL ou SUPABASE_SECRET_KEY não estão definidas.",
   );
-  process.exit(1);
+  return res
+    .status(500)
+    .json({ error: "Variáveis de ambiente não definidas." });
 }
 
 const supabase = createClient(supabaseUrl, supabaseKey);
@@ -212,7 +214,7 @@ app.get("/api/list-files", async (req, res) => {
         .json({ error: "Erro ao listar arquivos.", details: error.message });
     }
 
-    console.log("Arquivos listados:", data);
+    console.log("Arquivos listados com sucesso:", data);
     res.status(200).json(data);
   } catch (error) {
     console.error("Erro inesperado ao listar arquivos:", error);
