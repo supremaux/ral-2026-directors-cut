@@ -37,6 +37,13 @@ app.use(cors(corsOptions));
 const upload = multer({ storage: multer.memoryStorage() });
 
 // Configuração do Supabase
+console.log("Variáveis de ambiente:", {
+  SUPABASE_URL: process.env.SUPABASE_URL ? "Definida" : "Não definida",
+  SUPABASE_SECRET_KEY: process.env.SUPABASE_SECRET_KEY
+    ? "Definida"
+    : "Não definida",
+});
+
 const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseKey = process.env.SUPABASE_SECRET_KEY;
 
@@ -44,9 +51,7 @@ if (!supabaseUrl || !supabaseKey) {
   console.error(
     "Variáveis de ambiente SUPABASE_URL ou SUPABASE_SECRET_KEY não estão definidas.",
   );
-  return res
-    .status(500)
-    .json({ error: "Variáveis de ambiente não definidas." });
+  process.exit(1);
 }
 
 const supabase = createClient(supabaseUrl, supabaseKey);
@@ -223,12 +228,10 @@ app.get("/api/list-files", async (req, res) => {
     res.status(200).json(data);
   } catch (error) {
     console.error("Erro inesperado ao listar arquivos:", error);
-    res
-      .status(500)
-      .json({
-        error: "Erro inesperado ao listar arquivos.",
-        details: error.message,
-      });
+    res.status(500).json({
+      error: "Erro inesperado ao listar arquivos.",
+      details: error.message,
+    });
   }
 });
 
