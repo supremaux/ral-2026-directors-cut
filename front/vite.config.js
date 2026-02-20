@@ -1,5 +1,6 @@
 // vite.config.js
 import { defineConfig } from "vite";
+import { fileURLToPath, URL } from "node:url";
 import react from "@vitejs/plugin-react";
 
 export default defineConfig({
@@ -17,5 +18,6 @@ export default defineConfig({
       },
     },
   },
+  publicDir: "src/assets", // Diretório de arquivos estáticos
   base: "./",
 });
