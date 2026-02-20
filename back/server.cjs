@@ -203,6 +203,11 @@ app.get("/api/list-files", async (req, res) => {
       SUPABASE_SECRET_KEY: !!process.env.SUPABASE_SECRET_KEY,
     });
 
+    const supabase = createClient(
+      process.env.SUPABASE_URL,
+      process.env.SUPABASE_SECRET_KEY,
+    );
+
     const { data, error } = await supabase.storage
       .from("relatorios")
       .list("download/", { limit: 100 });
@@ -218,10 +223,12 @@ app.get("/api/list-files", async (req, res) => {
     res.status(200).json(data);
   } catch (error) {
     console.error("Erro inesperado ao listar arquivos:", error);
-    res.status(500).json({
-      error: "Erro inesperado ao listar arquivos.",
-      details: error.message,
-    });
+    res
+      .status(500)
+      .json({
+        error: "Erro inesperado ao listar arquivos.",
+        details: error.message,
+      });
   }
 });
 
