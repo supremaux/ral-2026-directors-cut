@@ -18,5 +18,5 @@ export default defineConfig({
       },
     },
   },
-  base: "./",
+  publicDir: "src/assets", // Diretório de arquivos estáticos
 });
