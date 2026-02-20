@@ -1,4 +1,3 @@
-// ListarArquivos.jsx
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { Container, Row, Col, Button } from "react-bootstrap";
@@ -18,39 +17,6 @@ export const ListarArquivos = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!isAuthenticated || loading) return;
-
-    const fetchFiles = async () => {
-      try {
-        console.log("Fazendo requisição para listar arquivos...");
-        const response = await axios.get(
-          "https://ral-2026-directors-cut.vercel.app/api/list-files",
-        );
-        console.log("Resposta da API:", response.data);
-
-        if (Array.isArray(response.data)) {
-          setFiles(
-            response.data.map((file) => ({
-              name: file.name,
-              date: new Date(file.created_at).toLocaleString(),
-            })),
-          );
-        } else {
-          console.error("Resposta não é um array:", response.data);
-        }
-      } catch (error) {
-        console.error(
-          "Erro ao listar arquivos:",
-          error.response?.data || error.message,
-        );
-        alert("Erro ao listar arquivos. Tente novamente mais tarde.");
-      }
-    };
-
-    fetchFiles();
-  }, [isAuthenticated, loading]);
-
-  useEffect(() => {
     const auth = localStorage.getItem("auth");
     if (!auth) {
       navigate("/login");
@@ -60,29 +26,28 @@ export const ListarArquivos = () => {
     setLoading(false);
   }, [navigate]);
 
-  const handleDownload = async (fileName) => {
-    try {
-      console.log("Iniciando download do arquivo:", fileName);
+  useEffect(() => {
+    if (!isAuthenticated || loading) return;
 
-      const response = await axios.get(`/api/download-file/${fileName}`, {
-        responseType: "blob", // Usar 'blob' para arquivos binários
-      });
+    const fetchFiles = async () => {
+      try {
+        const response = await axios.get("/api/list-files");
+        if (Array.isArray(response.data)) {
+          setFiles(
+            response.data.map((file) => ({
+              name: file.name,
+              date: new Date().toLocaleString(),
+            })),
+          );
+        }
+      } catch (error) {
+        console.error("Erro ao listar arquivos:", error);
+        alert("Erro ao listar arquivos. Tente novamente mais tarde.");
+      }
+    };
 
-      console.log("Resposta recebida. Tamanho:", response.data.size);
-
-      // Criar um link temporário para download
-      const url = window.URL.createObjectURL(new Blob([response.data]));
-      const link = document.createElement("a");
-      link.href = url;
-      link.setAttribute("download", fileName);
-      document.body.appendChild(link);
-      link.click();
-      link.parentNode.removeChild(link);
-    } catch (error) {
-      console.error("Erro ao baixar arquivo:", error);
-      alert("Erro ao baixar arquivo. Tente novamente mais tarde.");
-    }
-  };
+    fetchFiles();
+  }, [isAuthenticated, loading]);
 
   const handleDelete = async (fileName) => {
     try {
@@ -117,7 +82,7 @@ export const ListarArquivos = () => {
           <Col>
             <h2>Arquivos Disponíveis para Download</h2>
           </Col>
-          <Col>{/* Botão que não devia estar aqui  */}</Col>
+          <Col>{/* Aqui não deve haver um botão de login  */}</Col>
           <Col>
             <div className={styles.searchContainer}>
               <input
@@ -150,12 +115,13 @@ export const ListarArquivos = () => {
                     <td>{file.name}</td>
                     <td>{file.date}</td>
                     <td>
-                      <button
-                        onClick={() => handleDownload(file.name)}
+                      <a
+                        href={`/api/download-file/${file.name}`}
+                        download
                         className={styles.downloadButton}
                       >
                         <IoMdCloudDownload /> Download
-                      </button>
+                      </a>
                       <button
                         onClick={() =>
                           window.open(
