@@ -13,6 +13,7 @@
   ],
   "routes": [
     { "src": "/api/(.*)", "dest": "back/server.cjs" },
-    { "src": "/(.*)", "dest": "front/index.html" }
+    { "handle": "filesystem" },
+    { "src": "/(.*)", "dest": "front/index.html", "status": 200 }
   ]
 }

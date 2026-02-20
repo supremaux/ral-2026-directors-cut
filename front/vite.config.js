@@ -1,8 +1,10 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
+import { fileURLToPath, URL } from "node:url";
 
 export default defineConfig({
   plugins: [react()],
+  base: "/", // Certifique-se de que a base está configurada corretamente
   build: {
     outDir: "dist",
     assetsDir: "assets",
@@ -15,5 +17,9 @@ export default defineConfig({
       },
     },
   },
-  publicDir: "public",
+  resolve: {
+    alias: {
+      "@": fileURLToPath(new URL("./src", import.meta.url)),
+    },
+  },
 });
