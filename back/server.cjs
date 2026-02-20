@@ -195,9 +195,9 @@ app.post("/api/finalizar-relatorio", async (req, res) => {
 // Rota para listar arquivos (usando Supabase Storage)
 app.get("/api/list-files", async (req, res) => {
   try {
-    console.log(
-      "Tentando listar arquivos no bucket 'relatorios' na pasta 'download'",
-    );
+    console.log("Iniciando listagem de arquivos...");
+    console.log("SUPABASE_URL:", !!process.env.SUPABASE_URL);
+    console.log("SUPABASE_SECRET_KEY:", !!process.env.SUPABASE_SECRET_KEY);
 
     const { data, error } = await supabase.storage
       .from("relatorios")
@@ -210,7 +210,7 @@ app.get("/api/list-files", async (req, res) => {
         .json({ error: "Erro ao listar arquivos.", details: error.message });
     }
 
-    console.log("Arquivos listados com sucesso:", data);
+    console.log("Arquivos listados:", data);
     res.status(200).json(data);
   } catch (error) {
     console.error("Erro inesperado ao listar arquivos:", error);
