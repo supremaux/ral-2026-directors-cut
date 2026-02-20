@@ -23,7 +23,9 @@ export const ListarArquivos = () => {
     const fetchFiles = async () => {
       try {
         console.log("Fazendo requisição para listar arquivos...");
-        const response = await axios.get("/api/list-files");
+        const response = await axios.get(
+          "https://ral-2026-directors-cut.vercel.app/api/list-files",
+        );
         console.log("Resposta da API:", response.data);
 
         if (Array.isArray(response.data)) {

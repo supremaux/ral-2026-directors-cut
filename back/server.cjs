@@ -541,10 +541,11 @@ app.get("/api/list-files", async (req, res) => {
     console.log("Arquivos listados com sucesso:", data);
     res.status(200).json(data);
   } catch (error) {
-    console.error("Erro ao listar arquivos:", error);
-    res
-      .status(500)
-      .json({ error: "Erro ao listar arquivos.", details: error.message });
+    console.error("Erro inesperado ao listar arquivos:", error);
+    res.status(500).json({
+      error: "Erro inesperado ao listar arquivos.",
+      details: error.message,
+    });
   }
 });
 
