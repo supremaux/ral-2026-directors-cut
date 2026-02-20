@@ -23,10 +23,10 @@ export const ListarArquivos = () => {
     const fetchFiles = async () => {
       try {
         console.log("Fazendo requisição para listar arquivos...");
-        const response = await axios.get("/api/list-files"); // Use a URL completa se necessário
+        const response = await axios.get("/api/list-files");
         console.log("Resposta da API:", response.data);
 
-        if (response.data && Array.isArray(response.data)) {
+        if (Array.isArray(response.data)) {
           setFiles(
             response.data.map((file) => ({
               name: file.name,

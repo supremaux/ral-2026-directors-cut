@@ -15,17 +15,6 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.use(
-  cors({
-    origin: [
-      "http://localhost:5173",
-      "https://ral-2026-directors-cut.vercel.app/",
-    ],
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-  }),
-);
-
 // Checagem de saída
 app.get("/api/health", (req, res) => {
   console.log("Backend está rodando!");
@@ -579,39 +568,31 @@ app.get("/api/list-files", async (req, res) => {
 });
 
 // Rota para baixar um arquivo específico
-app.get("/api/download-file/:filename", async (req, res) => {
+app.get("/api/list-files", async (req, res) => {
   try {
-    const { filename } = req.params;
-    console.log("Tentando baixar o arquivo:", filename);
+    console.log(
+      "Tentando listar arquivos no bucket 'relatorios' na pasta 'download'",
+    );
 
-    // Baixar o arquivo do Supabase
     const { data, error } = await supabase.storage
       .from("relatorios")
-      .download(`download/${filename}`);
+      .list("download/", { limit: 100 });
 
     if (error) {
-      console.error("Erro ao baixar arquivo:", error);
-      return res.status(500).json({ error: "Erro ao baixar arquivo." });
+      console.error("Erro ao listar arquivos:", error);
+      return res
+        .status(500)
+        .json({ error: "Erro ao listar arquivos.", details: error.message });
     }
 
-    // Verificar se o arquivo foi baixado corretamente
-    if (!data) {
-      console.error("Arquivo não encontrado ou vazio.");
-      return res.status(404).json({ error: "Arquivo não encontrado." });
-    }
-
-    console.log("Arquivo baixado com sucesso. Tamanho:", data.byteLength);
-
-    // Enviar o arquivo como resposta
-    res.setHeader(
-      "Content-Type",
-      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-    );
-    res.setHeader("Content-Disposition", `attachment; filename=${filename}`);
-    res.send(data);
+    console.log("Arquivos listados com sucesso:", data);
+    res.status(200).json(data);
   } catch (error) {
-    console.error("Erro ao baixar arquivo:", error);
-    res.status(500).json({ error: "Erro ao baixar arquivo." });
+    console.error("Erro inesperado ao listar arquivos:", error);
+    res.status(500).json({
+      error: "Erro inesperado ao listar arquivos.",
+      details: error.message,
+    });
   }
 });
 
