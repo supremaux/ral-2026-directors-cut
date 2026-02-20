@@ -65,17 +65,6 @@ async function testSupabaseConnection() {
 
 testSupabaseConnection();
 
-// Configuração de tipo MIME no Express
-app.use(
-  express.static(path.join(__dirname, "../front/dist"), {
-    setHeaders: (res, filePath) => {
-      if (filePath.endsWith(".js")) {
-        res.setHeader("Content-Type", "application/javascript");
-      }
-    },
-  }),
-);
-
 // Rota para upload de termos (usando Supabase Storage)
 app.post("/upload-termo", async (req, res) => {
   try {
