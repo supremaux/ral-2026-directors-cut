@@ -13,7 +13,7 @@ export default function Paineladmin() {
   useEffect(() => {
     const auth = localStorage.getItem("auth");
     if (!auth) {
-      navigate("/login");
+      navigate("/"); // Redireciona para a página de login se não estiver autenticado
     }
   }, [navigate]);
 

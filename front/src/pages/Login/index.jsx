@@ -4,16 +4,21 @@ import axios from "axios";
 import { TbLockPassword } from "react-icons/tb";
 import styles from "./Login.module.css";
 import Logo from "../../assets/logo.png";
+import { useNavigate } from "react-router-dom";
 
 export default function Login() {
   const [usernameValue, setUsernameValue] = useState("");
   const [passwordValue, setPasswordValue] = useState("");
+  const navigate = useNavigate();
+
+  const API_BASE_URL =
+    import.meta.env.VITE_API_BASE_URL || "http://localhost:3001";
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const response = await axios.post(
-        "/api/login",
+        `${API_BASE_URL}/api/login`,
         {
           username: usernameValue,
           password: passwordValue,
@@ -26,7 +31,8 @@ export default function Login() {
       );
       console.log("Resposta do login:", response.data);
       if (response.data.success) {
-        // Redirecionar ou atualizar o estado de autenticação
+        localStorage.setItem("auth", "true"); // Salva o estado de autenticação
+        navigate("/paineladmin"); // Redireciona para a página de painel admin
       } else {
         alert(response.data.message);
       }
