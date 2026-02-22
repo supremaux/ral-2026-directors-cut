@@ -315,13 +315,11 @@ app.post("/api/login", (req, res) => {
     }
   } catch (error) {
     console.error("Erro no servidor:", error);
-    res
-      .status(500)
-      .json({
-        success: false,
-        message: "Erro interno no servidor.",
-        details: error.message,
-      });
+    res.status(500).json({
+      success: false,
+      message: "Erro interno no servidor.",
+      details: error.message,
+    });
   }
 });
 
