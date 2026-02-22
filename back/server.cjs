@@ -14,6 +14,9 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Middleware para processar formulários
+app.use(express.urlencoded({ extended: true }));
+
 // Checagem de saída
 app.get("/api/health", (req, res) => {
   console.log("Backend está rodando!");
@@ -310,11 +313,13 @@ app.post("/api/login", (req, res) => {
     }
   } catch (error) {
     console.error("Erro no servidor:", error);
-    res.status(500).json({
-      success: false,
-      message: "Erro interno no servidor.",
-      details: error.message,
-    });
+    res
+      .status(500)
+      .json({
+        success: false,
+        message: "Erro interno no servidor.",
+        details: error.message,
+      });
   }
 });
 
