@@ -69,7 +69,10 @@ export default function Login() {
                   onChange={(e) => setPasswordValue(e.target.value)}
                 />
               </Form.Group>
-              <Button type="submit">Entrar</Button>
+              <Button type="submit">
+                <TbLockPassword />
+                Entrar
+              </Button>
             </Form>
           </div>
         </Container>
