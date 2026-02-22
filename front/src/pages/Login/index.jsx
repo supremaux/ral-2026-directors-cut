@@ -12,20 +12,24 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      console.log("Enviando credenciais:", usernameValue, passwordValue);
-      const response = await axios.post("/api/login", {
-        username: usernameValue,
-        password: passwordValue,
-      });
-      console.log("Resposta do backend:", response.data);
+      const response = await axios.post(
+        "https://ral-2026-directors-cut.vercel.app/api/login",
+        {
+          username: username,
+          password: password,
+        },
+      );
+      console.log("Resposta do login:", response.data);
       if (response.data.success) {
-        localStorage.setItem("auth", "true");
-        window.location.href = "/paineladmin";
+        // Redirecionar ou atualizar o estado de autenticação
       } else {
-        alert("Usuário ou senha incorretos!");
+        alert(response.data.message);
       }
     } catch (error) {
-      console.error("Erro detalhado:", error.response?.data || error.message);
+      console.error(
+        "Erro ao fazer login:",
+        error.response?.data || error.message,
+      );
       alert("Erro ao fazer login. Tente novamente mais tarde.");
     }
   };

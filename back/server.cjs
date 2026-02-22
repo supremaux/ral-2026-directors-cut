@@ -277,13 +277,23 @@ app.delete("/api/delete-file/:filename", async (req, res) => {
 
 // Carregar usuários do arquivo JSON
 const usersPath = path.join(__dirname, "users.json");
+console.log("Caminho para users.json:", usersPath);
+
 const users = JSON.parse(fs.readFileSync(usersPath, "utf8"));
+console.log("Usuários carregados:", users);
 
 // Rota de login
 app.post("/api/login", (req, res) => {
   try {
     console.log("Recebendo requisição de login:", req.body);
     const { username, password } = req.body;
+
+    if (!username || !password) {
+      console.log("Usuário ou senha não fornecidos.");
+      return res
+        .status(400)
+        .json({ success: false, message: "Usuário ou senha não fornecidos." });
+    }
 
     const user = users.find(
       (u) => u.username === username && u.password === password,
@@ -300,9 +310,11 @@ app.post("/api/login", (req, res) => {
     }
   } catch (error) {
     console.error("Erro no servidor:", error);
-    res
-      .status(500)
-      .json({ success: false, message: "Erro interno no servidor." });
+    res.status(500).json({
+      success: false,
+      message: "Erro interno no servidor.",
+      details: error.message,
+    });
   }
 });
 
