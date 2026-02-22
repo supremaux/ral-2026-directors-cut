@@ -15,8 +15,8 @@ export default function Login() {
       const response = await axios.post(
         "https://ral-2026-directors-cut.vercel.app/api/login",
         {
-          username: username,
-          password: password,
+          username: usernameValue,
+          password: passwordValue,
         },
       );
       console.log("Resposta do login:", response.data);
