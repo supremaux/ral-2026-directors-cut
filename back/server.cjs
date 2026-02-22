@@ -342,3 +342,6 @@ process.on("uncaughtException", (err) => {
 process.on("unhandledRejection", (err) => {
   console.error("Unhandled Rejection:", err);
 });
+
+// Exportar a aplicação para uso em outras contextos
+module.exports = app;

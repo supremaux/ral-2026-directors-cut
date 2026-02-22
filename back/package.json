@@ -28,11 +28,13 @@
   },
   "nodemonConfig": {
     "watch": [
-      "src"
+      "."
     ],
-    "ext": "cjs",
+    "ext": "cjs,js,json",
     "ignore": [
-      "src/**/*.spec.cjs"
+      "node_modules",
+      "downloads",
+      "uploads"
     ],
     "exec": "node server.cjs"
   }
