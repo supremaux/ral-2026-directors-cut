@@ -13,7 +13,7 @@ export default function Login() {
     e.preventDefault();
     try {
       const response = await axios.post(
-        "https://ral-2026-directors-cut.vercel.app/api/login",
+        "/api/login",
         {
           username: usernameValue,
           password: passwordValue,
