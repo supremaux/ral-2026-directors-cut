@@ -12,6 +12,8 @@ require("dotenv").config();
 // Inicialize o app do Express
 const app = express();
 app.use(cors());
+
+// Middleware para processar JSON
 app.use(express.json());
 
 // Middleware para processar formulários

@@ -18,6 +18,11 @@ export default function Login() {
           username: usernameValue,
           password: passwordValue,
         },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        },
       );
       console.log("Resposta do login:", response.data);
       if (response.data.success) {
@@ -52,7 +57,6 @@ export default function Login() {
                 <Form.Label>Usuário</Form.Label>
                 <Form.Control
                   type="text"
-                  placeholder="Usuário"
                   value={usernameValue}
                   onChange={(e) => setUsernameValue(e.target.value)}
                 />
@@ -61,33 +65,13 @@ export default function Login() {
                 <Form.Label>Senha</Form.Label>
                 <Form.Control
                   type="password"
-                  placeholder="Senha"
                   value={passwordValue}
                   onChange={(e) => setPasswordValue(e.target.value)}
                 />
               </Form.Group>
-              <Row className="my-3">
-                <Col>
-                  <Form.Group>
-                    <Form.Check type="checkbox" label="Lembrar-me" />
-                  </Form.Group>
-                </Col>
-                <Col>
-                  <button type="submit" className="btn btn-primary">
-                    <TbLockPassword />
-                    &nbsp;Entrar
-                  </button>
-                </Col>
-              </Row>
+              <Button type="submit">Entrar</Button>
             </Form>
           </div>
-          <Row className="my-3">
-            <a href="https://wa.me/5567998951171">
-              <p className="text-white text-decoration-none">
-                Esqueci minha senha
-              </p>
-            </a>
-          </Row>
         </Container>
       </section>
     </>
