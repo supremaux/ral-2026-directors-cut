@@ -35,7 +35,6 @@ const corsOptions = {
   allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true,
 };
-
 app.use(cors(corsOptions));
 
 // Configuração do Multer
@@ -223,7 +222,7 @@ app.get("/api/list-files", async (req, res) => {
   }
 });
 
-// Rota para baixar um arquivo específico
+// Rota para baixar arquivos (usando Supabase Storage)
 app.get("/api/download-file/:filename", async (req, res) => {
   try {
     const { filename } = req.params;
@@ -245,13 +244,17 @@ app.get("/api/download-file/:filename", async (req, res) => {
       return res.status(404).json({ error: "Arquivo não encontrado." });
     }
 
-    console.log("Arquivo baixado com sucesso. Tamanho:", data.byteLength);
+    const arrayBuffer = await data.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
+
+    console.log("Arquivo baixado com sucesso. Tamanho:", buffer.length);
+
     res.setHeader(
       "Content-Type",
       "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
     );
-    res.setHeader("Content-Disposition", `attachment; filename=${filename}`);
-    res.send(data);
+    res.setHeader("Content-Disposition", `attachment; filename="${filename}"`);
+    res.status(200).send(buffer);
   } catch (error) {
     console.error("Erro ao baixar arquivo:", error);
     res

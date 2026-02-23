@@ -50,6 +50,29 @@ export const ListarArquivos = () => {
     loadFiles();
   }, []);
 
+  const handleDownload = async (fileName) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:3001/api/download-file/${fileName}`,
+        {
+          responseType: "blob",
+        },
+      );
+
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", fileName);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Erro ao baixar arquivo:", error);
+      alert("Erro ao baixar arquivo. Tente novamente mais tarde.");
+    }
+  };
+
   const handleDelete = async (fileName) => {
     try {
       await axios.delete(`/api/delete-file/${fileName}`);
@@ -117,8 +140,11 @@ export const ListarArquivos = () => {
                     <td>{file.date}</td>
                     <td>
                       <a
-                        href={`/api/download-file/${file.name}`}
-                        download
+                        href="#"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          handleDownload(file.name);
+                        }}
                         className={styles.downloadButton}
                       >
                         <IoMdCloudDownload /> Download
